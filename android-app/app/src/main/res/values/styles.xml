@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Shape Appearances. -->
+    <style name="ShapeAppearance.QHope.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerSize">@dimen/dp_16</item>
+    </style>
+
+    <style name="ShapeAppearance.QHope.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerSize">@dimen/dp_8</item>
+    </style>
+</resources>
