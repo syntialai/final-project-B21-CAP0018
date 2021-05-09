@@ -18,6 +18,23 @@
         <item name="colorTextMedium">@color/black_blue_900_60</item>
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
 
+        <!-- Text Appearances. -->
+        <item name="textAppearanceHeadline1">@style/TextAppearance.QHope.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.QHope.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.QHope.Headline3</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearance.QHope.Headline4</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.QHope.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.QHope.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.QHope.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.QHope.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.QHope.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.QHope.Body2</item>
+        <item name="textAppearanceButton">@style/TextAppearance.QHope.Button</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.QHope.Caption</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.QHope.Overline</item>
+        
         <!-- Customize your theme here. -->
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.QHope.LargeComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.QHope.MediumComponent</item>
     </style>
 </resources>
