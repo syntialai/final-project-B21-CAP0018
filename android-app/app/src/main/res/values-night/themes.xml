@@ -37,5 +37,7 @@
         <!-- Customize your theme here. -->
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.QHope.LargeComponent</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.QHope.MediumComponent</item>
+        <item name="cardViewStyle">@style/Widget.QHope.CardView</item>
+        <item name="android:searchViewStyle">@style/Widget.QHope.SearchView</item>
     </style>
 </resources>
