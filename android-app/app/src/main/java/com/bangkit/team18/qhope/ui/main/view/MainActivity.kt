@@ -1,7 +1,8 @@
-package com.bangkit.team18.qhope
+package com.bangkit.team18.qhope.ui.main.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.bangkit.team18.qhope.R
 
 class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {

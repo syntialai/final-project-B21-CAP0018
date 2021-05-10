@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.bangkit.team18.qhope.utils.view.SnackbarUtils
 
 abstract class BaseFragment<VB : ViewBinding>(
     private val viewBindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB) : Fragment(),
@@ -72,5 +73,13 @@ abstract class BaseFragment<VB : ViewBinding>(
     } else {
       requestPermissionLauncher.launch(permission)
     }
+  }
+
+  protected fun showErrorToast(messageId: Int) {
+    SnackbarUtils.showErrorSnackbar(binding.root, getString(messageId))
+  }
+
+  protected fun showToast(messageId: Int) {
+    SnackbarUtils.showSnackbar(binding.root, getString(messageId))
   }
 }
