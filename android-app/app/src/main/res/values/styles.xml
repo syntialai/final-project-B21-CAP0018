@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="Behaviour.QHope.ScrollingViewBehaviour" parent="">
+        <item name="layout_behavior">@string/appbar_scrolling_view_behavior</item>
+    </style>
+
     <!-- Shape Appearances. -->
     <style name="ShapeAppearance.QHope.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
         <item name="cornerSize">@dimen/dp_16</item>
@@ -25,5 +29,9 @@
         <item name="android:searchHintIcon">@drawable/ic_search</item>
         <item name="android:paddingStart">@dimen/dp_minus_4</item>
         <item name="android:queryBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="Widget.QHope.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="titleTextAppearance">?attr/textAppearanceHeadline3</item>
     </style>
 </resources>

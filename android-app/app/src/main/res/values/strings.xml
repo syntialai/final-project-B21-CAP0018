@@ -2,4 +2,7 @@
     <string name="app_name">Q-Hope</string>
 
     <string name="close_action">Close</string>
+    <string name="home_label">Home</string>
+    <string name="history_label">History</string>
+    <string name="profile_label">Profile</string>
 </resources>
