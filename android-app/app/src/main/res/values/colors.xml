@@ -21,4 +21,12 @@
     <!-- White -->
     <color name="white">#FFFFFFFF</color>
     <color name="white_87">#DEFFFFFF</color>
+
+    <!-- Green -->
+    <color name="green_100">#B9F6CA</color>
+    <color name="green_700">#00C853</color>
+
+    <!-- Red -->
+    <color name="red_100_60">#99FF958C</color>
+    <color name="red_700">#D50000</color>
 </resources>

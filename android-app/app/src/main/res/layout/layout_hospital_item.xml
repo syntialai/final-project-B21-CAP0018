@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.circularreveal.cardview.CircularRevealCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_8">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/image_view_hospital_item"
+            android:layout_width="@dimen/dp_90"
+            android:layout_height="@dimen/dp_120"
+            android:paddingStart="@dimen/dp_0"
+            android:paddingEnd="@dimen/dp_16"
+            app:shapeAppearance="?attr/shapeAppearanceMediumComponent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/text_view_hospital_item_name"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAppearance="?attr/textAppearanceHeadline4"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_view_hospital_item"
+            tools:text="Hospital" />
+
+        <TextView
+            android:id="@+id/text_view_hospital_item_type"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/colorTextMedium"
+            app:layout_constraintTop_toBottomOf="@id/text_view_hospital_item_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_view_hospital_item"
+            tools:text="Hospital" />
+
+        <TextView
+            android:id="@+id/text_view_hospital_item_address"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?attr/colorTextMedium"
+            app:layout_constraintTop_toBottomOf="@id/text_view_hospital_item_type"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_view_hospital_item"
+            tools:text="Hospital" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_hospital_item_room_available"
+            style="@style/Widget.Chip.Info.Small.Green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipIcon="@drawable/ic_available"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_hospital_item"
+            app:layout_constraintStart_toEndOf="@id/image_view_hospital_item"
+            tools:text="Available" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_hospital_item_room_not_available"
+            style="@style/Widget.Chip.Info.Small.Red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipIcon="@drawable/ic_not_available"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_hospital_item"
+            app:layout_constraintStart_toEndOf="@id/image_view_hospital_item"
+            tools:text="Not Available" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_hospital_item_book_room"
+            style="?attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/book_a_room_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_hospital_item" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.circularreveal.cardview.CircularRevealCardView>
