@@ -36,6 +36,7 @@ abstract class BaseFragment<VB : ViewBinding>(
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
+    mContext = context
     intentLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) { result ->
       if (result.resultCode == Activity.RESULT_OK) {

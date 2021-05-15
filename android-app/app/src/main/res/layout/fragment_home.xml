@@ -8,7 +8,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/dp_16"
         tools:context=".ui.home.view.HomeFragment">
 
@@ -58,13 +58,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.appcompat.widget.SearchView
+        <SearchView
             android:id="@+id/search_view_home"
-            style="@style/Widget.QHope.SearchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_20"
             android:queryHint="@string/search_hint"
+            android:theme="@style/Widget.QHope.SearchView"
             app:layout_constraintTop_toBottomOf="@id/text_view_your_location"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

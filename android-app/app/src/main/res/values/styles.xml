@@ -42,9 +42,8 @@
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
         <item name="android:iconifiedByDefault">false</item>
         <item name="android:searchIcon">@drawable/ic_search</item>
-        <item name="android:searchHintIcon">@drawable/ic_search</item>
         <item name="android:paddingStart">@dimen/dp_minus_4</item>
-        <item name="android:queryBackground">@android:color/transparent</item>
+        <item name="android:queryBackground">@null</item>
     </style>
 
     <style name="Widget.QHope.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">

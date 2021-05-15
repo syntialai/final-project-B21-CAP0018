@@ -11,13 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_main"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title="@string/app_name"
-            app:layout_scrollFlags="scroll|enterAlways|snap" />
-
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout_main"
             android:layout_width="match_parent"

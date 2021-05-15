@@ -2,40 +2,64 @@ package com.bangkit.team18.qhope.ui.home.view
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.location.Geocoder
 import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.view.View
-import androidx.appcompat.widget.SearchView
+import android.widget.SearchView
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentHomeBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.home.adapter.HomeAdapter
 import com.bangkit.team18.qhope.ui.home.adapter.HospitalItemCallback
+import com.bangkit.team18.qhope.utils.location.LocationManager
+import com.bangkit.team18.qhope.utils.view.DataUtils.orFalse
 import com.bangkit.team18.qhope.utils.view.ViewUtils.showOrRemove
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import java.util.Locale
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
-    LocationListener, HospitalItemCallback {
+    HospitalItemCallback {
+
+  companion object {
+    fun newInstance() = HomeFragment()
+  }
 
   private val homeAdapter by lazy {
     HomeAdapter(this)
   }
 
-  private lateinit var locationManager: LocationManager
+  private val locationManager by lazy {
+    LocationManager(mContext, object : LocationCallback() {
+
+      override fun onLocationResult(result: LocationResult) {
+        setLocation(result.lastLocation)
+      }
+    })
+  }
 
   override fun setupViews() {
-    locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     setupRecyclerView()
     setupSearchView()
+    getLocation()
+  }
+
+  override fun onPause() {
+    super.onPause()
+    locationManager.stopUpdateLocation()
+  }
+
+  override fun onResume() {
+    super.onResume()
+    if (locationManager.receivingLocationUpdates.orFalse().not()) {
+      locationManager.startUpdateLocation()
+    }
   }
 
   override fun onClick(view: View?) {
     with(binding) {
       when (view) {
-        viewYourLocationListener -> checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+        viewYourLocationListener -> getLocation()
       }
     }
   }
@@ -48,22 +72,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     // TODO: Go to book transaction
   }
 
-  override fun onLocationChanged(location: Location) {
-    // TODO: Change recommendation by location latitude and longitude
-    launchJob {
-      val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(location.latitude,
-          location.longitude, 1)
-      binding.textViewYourLocation.text = addresses[0].getAddressLine(0)
-    }
-  }
-
   @SuppressLint("MissingPermission")
   override fun onPermissionGrantedChange(isGranted: Boolean) {
     if (isGranted) {
-      locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, this)
+      locationManager.startUpdateLocation()
     } else {
       showErrorToast(R.string.failed_to_get_location_message)
     }
+  }
+
+  private fun getLocation() {
+    checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+  }
+
+  private fun setLocation(location: Location) {
+    // TODO: Change recommendation by location latitude and longitude
+    val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(location.latitude,
+        location.longitude, 1)
+    binding.textViewYourLocation.text = addresses[0].getAddressLine(0)
   }
 
   private fun setupRecyclerView() {

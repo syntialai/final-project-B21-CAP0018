@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.bangkit.team18.qhope.ui.home.view.HomeFragment
 
 class MainAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
@@ -17,7 +18,9 @@ class MainAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
 
   override fun getItemCount(): Int = MAIN_PAGER_COUNT
 
-  override fun createFragment(position: Int): Fragment {
-    TODO("Not yet implemented")
+  // TODO: Add required fragment
+  override fun createFragment(position: Int): Fragment = when(position) {
+    HOME_FRAGMENT_INDEX -> HomeFragment.newInstance()
+    else -> Fragment()
   }
 }

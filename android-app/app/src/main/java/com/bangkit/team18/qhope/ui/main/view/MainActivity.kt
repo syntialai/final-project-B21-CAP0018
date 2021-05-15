@@ -10,15 +10,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
   override fun setupViews() {
-    setSupportActionBar(binding.toolbarMain)
-    setupTabLayoutAndViewPager()
-  }
-
-  override fun onClick(v: View?) {
-    // No implementation needed
-  }
-
-  private fun setupTabLayoutAndViewPager() {
     binding.apply {
       viewPagerMain.adapter = MainAdapter(supportFragmentManager, lifecycle)
       TabLayoutMediator(tabLayoutMain, viewPagerMain) { tab, position ->
@@ -30,5 +21,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
       }.attach()
     }
+  }
+
+  override fun onClick(v: View?) {
+    // No implementation needed
   }
 }
