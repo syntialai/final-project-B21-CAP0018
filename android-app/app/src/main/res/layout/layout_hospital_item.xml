@@ -4,28 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/dp_12"
     android:clickable="true"
     android:focusable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dp_8">
+        android:paddingStart="@dimen/dp_0"
+        android:paddingEnd="@dimen/dp_8">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/image_view_hospital_item"
             android:layout_width="@dimen/dp_90"
             android:layout_height="@dimen/dp_120"
+            android:layout_marginVertical="@dimen/dp_8"
+            android:layout_marginStart="@dimen/dp_8"
             android:paddingStart="@dimen/dp_0"
             android:paddingEnd="@dimen/dp_16"
             app:shapeAppearance="?attr/shapeAppearanceMediumComponent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/text_view_hospital_item_name"
             android:layout_width="@dimen/dp_0"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
             android:ellipsize="end"
             android:singleLine="true"
             android:textAppearance="?attr/textAppearanceHeadline4"
@@ -66,20 +72,24 @@
             style="@style/Widget.Chip.Info.Small.Green"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:chipIcon="@drawable/ic_available"
             app:layout_constraintBottom_toBottomOf="@id/image_view_hospital_item"
             app:layout_constraintStart_toEndOf="@id/image_view_hospital_item"
-            tools:text="Available" />
+            tools:text="Available"
+            tools:visibility="visible" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_hospital_item_room_not_available"
             style="@style/Widget.Chip.Info.Small.Red"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:chipIcon="@drawable/ic_not_available"
             app:layout_constraintBottom_toBottomOf="@id/image_view_hospital_item"
             app:layout_constraintStart_toEndOf="@id/image_view_hospital_item"
-            tools:text="Not Available" />
+            tools:text="Not Available"
+            tools:visibility="visible" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_hospital_item_book_room"
@@ -88,7 +98,7 @@
             android:layout_height="wrap_content"
             android:text="@string/book_a_room_label"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/image_view_hospital_item" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.circularreveal.cardview.CircularRevealCardView>

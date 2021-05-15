@@ -59,7 +59,7 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.SearchView
-            android:id="@+id/search_view_clickable_home"
+            android:id="@+id/search_view_home"
             style="@style/Widget.QHope.SearchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -77,12 +77,12 @@
             android:text="@string/recommendation_hospitals_label"
             android:textAppearance="?attr/textAppearanceHeadline4"
             android:textColor="?attr/colorOnSurface"
-            app:layout_constraintTop_toBottomOf="@id/search_view_clickable_home"
+            app:layout_constraintTop_toBottomOf="@id/search_view_home"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_hospitals"
+            android:id="@+id/recycler_view_recommended_hospitals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_16"
@@ -91,6 +91,19 @@
             app:layout_constraintTop_toBottomOf="@id/text_view_recommendation_hospitals_label"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_hospital_search_results"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:clipToPadding="false"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/search_view_home"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

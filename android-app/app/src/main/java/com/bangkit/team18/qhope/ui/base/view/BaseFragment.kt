@@ -12,8 +12,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.bangkit.team18.qhope.utils.view.SnackbarUtils
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 abstract class BaseFragment<VB : ViewBinding>(
     private val viewBindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB) : Fragment(),
@@ -27,6 +31,8 @@ abstract class BaseFragment<VB : ViewBinding>(
   private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
   protected lateinit var intentLauncher: ActivityResultLauncher<Intent>
+
+  protected var lifecycleJob: Job? = null
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -81,5 +87,13 @@ abstract class BaseFragment<VB : ViewBinding>(
 
   protected fun showToast(messageId: Int) {
     SnackbarUtils.showSnackbar(binding.root, getString(messageId))
+  }
+
+  protected fun launchJob(block: () -> Unit) {
+    lifecycleJob?.cancel()
+    lifecycleJob = lifecycleScope.launch {
+      delay(500)
+      block.invoke()
+    }
   }
 }
