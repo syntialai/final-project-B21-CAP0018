@@ -38,5 +38,6 @@
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.QHope.MediumComponent</item>
         <item name="cardViewStyle">@style/Widget.QHope.CardView</item>
         <item name="android:searchViewStyle">@style/Widget.QHope.SearchView</item>
+        <item name="toolbarStyle">@style/Widget.QHope.Toolbar</item>
     </style>
 </resources>
