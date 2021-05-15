@@ -16,7 +16,7 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/image_view_hospital_item"
-            android:layout_width="@dimen/dp_90"
+            android:layout_width="@dimen/dp_106"
             android:layout_height="@dimen/dp_120"
             android:layout_marginVertical="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"

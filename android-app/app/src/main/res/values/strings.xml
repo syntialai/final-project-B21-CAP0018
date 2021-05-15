@@ -20,6 +20,13 @@
     <string name="history_label">History</string>
     <string name="history_empty_state_title">Your history is empty.</string>
     <string name="history_empty_state_description">Let\'s start booking a hospital room.</string>
+    <string name="history_status_completed">Completed</string>
+    <string name="history_status_ongoing">On going</string>
+    <string name="history_status_cancelled">Cancelled</string>
+    <plurals name="history_night_state">
+        <item quantity="one">●  %d night</item>
+        <item quantity="other">●  %d nights</item>
+    </plurals>
 
     <!-- Profile -->
     <string name="profile_label">Profile</string>
