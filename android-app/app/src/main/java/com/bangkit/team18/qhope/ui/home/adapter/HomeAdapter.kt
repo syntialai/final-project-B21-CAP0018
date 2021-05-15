@@ -10,7 +10,7 @@ import com.bangkit.team18.qhope.ui.base.adapter.BaseDiffCallback
 import com.bangkit.team18.qhope.utils.view.DataUtils.orZero
 import com.bangkit.team18.qhope.utils.view.ViewUtils.showOrRemove
 
-class HomeAdapter(private val hospitalItemCallback: HospitalItemCallback) :
+class HomeAdapter(private val homeHospitalItemCallback: HomeHospitalItemCallback) :
     BaseAdapter<Hospital, LayoutHospitalItemBinding>(diffCallback) {
 
   companion object {
@@ -33,10 +33,10 @@ class HomeAdapter(private val hospitalItemCallback: HospitalItemCallback) :
     override fun bind(data: Hospital) {
       binding.apply {
         root.setOnClickListener {
-          hospitalItemCallback.onClickListener(data.id.orEmpty())
+          homeHospitalItemCallback.onClickListener(data.id.orEmpty())
         }
         buttonHospitalItemBookRoom.setOnClickListener {
-          hospitalItemCallback.onBookHospitalButtonClick(data.id.orEmpty())
+          homeHospitalItemCallback.onBookHospitalButtonClick(data.id.orEmpty())
         }
 
         imageViewHospitalItem.loadImage(data.image, R.drawable.drawable_hospital_placeholder)
