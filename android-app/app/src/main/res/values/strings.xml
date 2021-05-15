@@ -18,10 +18,15 @@
 
     <!-- History -->
     <string name="history_label">History</string>
+    <string name="history_empty_state_title">Your history is empty.</string>
+    <string name="history_empty_state_description">Let\'s start booking a hospital room.</string>
 
     <!-- Profile -->
     <string name="profile_label">Profile</string>
 
     <!-- Search -->
     <string name="search_hint">Find hospital</string>
+
+    <!-- Other -->
+    <string name="empty_state_label">Empty state</string>
 </resources>

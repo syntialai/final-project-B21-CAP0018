@@ -2,4 +2,11 @@
 <resources>
     <!-- Additional color for text. -->
     <attr name="colorTextMedium" format="color" />
+
+    <!-- Styleable -->
+    <declare-styleable name="EmptyStateView">
+        <attr name="image" format="reference" />
+        <attr name="title" format="string" />
+        <attr name="description" format="string" />
+    </declare-styleable>
 </resources>
