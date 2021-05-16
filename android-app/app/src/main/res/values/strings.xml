@@ -24,6 +24,23 @@
         <item quantity="one">●  %d night</item>
         <item quantity="other">●  %d nights</item>
     </plurals>
+    <string name="booking_id_label">Booking ID</string>
+    <string name="booking_date_label">Booked at</string>
+    <string name="booking_status_label">Status</string>
+    <string name="booked_hospital_label">Booked Hospital</string>
+    <string name="booking_info_label">Booking Info</string>
+    <string name="check_in_at_label">Check In at</string>
+    <string name="check_out_at_label">Check Out at</string>
+    <string name="room_cost_per_day_label">Room Cost per Day</string>
+    <string name="patient_data_label">Patient Data</string>
+    <string name="patient_name_label">Full Name</string>
+    <string name="patient_birth_date_label">Birth Date</string>
+    <string name="patient_email_label">Email</string>
+    <string name="patient_phone_number_label">Phone Number</string>
+    <string name="patient_no_ktp_label">Patient KTP Number</string>
+    <string name="patient_address_label">Patient Address in KTP</string>
+    <string name="patient_gender_label">Gender</string>
+    <string name="patient_referral_letter_label">Patient Referral Letter</string>
 
     <!-- Profile -->
     <string name="profile_label">Profile</string>
@@ -33,4 +50,5 @@
 
     <!-- Other -->
     <string name="empty_state_label">Empty state</string>
+    <string name="referral_letter_content_description">Pdf</string>
 </resources>

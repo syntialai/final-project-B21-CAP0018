@@ -9,4 +9,12 @@
         <attr name="title" format="string" />
         <attr name="description" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="ReferralLetterCard">
+        <attr name="image_type" format="enum">
+            <enum name="PDF" value="0" />
+            <enum name="IMAGE" value="1" />
+        </attr>
+        <attr name="file_name" format="string" />
+    </declare-styleable>
 </resources>
