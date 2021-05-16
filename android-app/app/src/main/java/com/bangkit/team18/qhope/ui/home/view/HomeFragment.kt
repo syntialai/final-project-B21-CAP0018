@@ -10,7 +10,7 @@ import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentHomeBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.home.adapter.HomeAdapter
-import com.bangkit.team18.qhope.ui.home.adapter.HospitalItemCallback
+import com.bangkit.team18.qhope.ui.home.adapter.HomeHospitalItemCallback
 import com.bangkit.team18.qhope.utils.location.LocationManager
 import com.bangkit.team18.qhope.utils.view.DataUtils.orFalse
 import com.bangkit.team18.qhope.utils.view.ViewUtils.showOrRemove
@@ -19,7 +19,7 @@ import com.google.android.gms.location.LocationResult
 import java.util.Locale
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
-    HospitalItemCallback {
+    HomeHospitalItemCallback {
 
   companion object {
     fun newInstance() = HomeFragment()

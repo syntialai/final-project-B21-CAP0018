@@ -1,6 +1,6 @@
 package com.bangkit.team18.qhope.ui.home.adapter
 
-interface HospitalItemCallback {
+interface HomeHospitalItemCallback {
 
   fun onClickListener(id: String)
 

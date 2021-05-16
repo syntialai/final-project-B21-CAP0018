@@ -13,9 +13,11 @@
     <!-- DP -->
     <dimen name="dp_300">300dp</dimen>
     <dimen name="dp_120">120dp</dimen>
-    <dimen name="dp_90">90dp</dimen>
+    <dimen name="dp_106">106dp</dimen>
     <dimen name="dp_80">80dp</dimen>
+    <dimen name="dp_76">76dp</dimen>
     <dimen name="dp_64">64dp</dimen>
+    <dimen name="dp_60">60dp</dimen>
     <dimen name="dp_56">56dp</dimen>
     <dimen name="dp_48">48dp</dimen>
     <dimen name="dp_32">32dp</dimen>
@@ -25,6 +27,7 @@
     <dimen name="dp_12">12dp</dimen>
     <dimen name="dp_8">8dp</dimen>
     <dimen name="dp_4">4dp</dimen>
+    <dimen name="dp_1">1dp</dimen>
     <dimen name="dp_0">0dp</dimen>
     <dimen name="dp_minus_4">-4dp</dimen>
 
