@@ -1,6 +1,7 @@
 package com.bangkit.team18.qhope.utils.view
 
 import androidx.lifecycle.LiveData
+import java.util.Locale
 
 object DataUtils {
 
@@ -13,4 +14,8 @@ object DataUtils {
   fun Long?.orZero() = this ?: 0L
 
   fun LiveData<Boolean>.orFalse() = this.value ?: false
+
+  fun <T : Enum<T>> Enum<T>?.getText() = this?.name?.replaceFirstChar {
+    it.titlecase(Locale.ROOT)
+  }.orEmpty()
 }

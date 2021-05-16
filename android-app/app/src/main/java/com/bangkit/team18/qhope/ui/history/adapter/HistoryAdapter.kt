@@ -9,9 +9,9 @@ import com.bangkit.team18.qhope.model.history.HistoryStatus
 import com.bangkit.team18.qhope.ui.base.adapter.BaseAdapter
 import com.bangkit.team18.qhope.ui.base.adapter.BaseDiffCallback
 import com.bangkit.team18.qhope.ui.base.adapter.OnItemClickListener
+import com.bangkit.team18.qhope.utils.view.DataUtils.getText
 import com.bangkit.team18.qhope.utils.view.DataUtils.orZero
 import com.bangkit.team18.qhope.utils.view.ViewUtils.remove
-import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class HistoryAdapter(private val onItemClickListener: OnItemClickListener) :
@@ -56,9 +56,7 @@ class HistoryAdapter(private val onItemClickListener: OnItemClickListener) :
         }
 
         with(textViewHistoryItemStatus) {
-          text = data.status?.name?.replaceFirstChar {
-            it.titlecase(Locale.ROOT)
-          }.orEmpty()
+          text = data.status.getText()
           setTextColor(getStatusColor(data.status))
           setBackgroundColor(getStatusColor(data.status))
         }
