@@ -17,11 +17,11 @@ abstract class BaseActivity<VB : ViewBinding>(private val inflater: (LayoutInfla
     super.onCreate(savedInstanceState)
     _binding = inflater.invoke(layoutInflater)
     setContentView(binding.root)
-    setupViews()
+    setupViews(savedInstanceState)
     setupObserver()
   }
 
-  abstract fun setupViews()
+  abstract fun setupViews(savedInstanceState: Bundle?)
 
   open fun setupObserver() {}
 

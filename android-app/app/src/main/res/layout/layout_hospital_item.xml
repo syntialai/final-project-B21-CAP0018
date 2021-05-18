@@ -69,7 +69,7 @@
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_hospital_item_room_available"
-            style="@style/Widget.Chip.Info.Small.Green"
+            style="@style/Widget.QHope.Chip.Info.Small.Green"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -81,7 +81,7 @@
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_hospital_item_room_not_available"
-            style="@style/Widget.Chip.Info.Small.Red"
+            style="@style/Widget.QHope.Chip.Info.Small.Red"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"

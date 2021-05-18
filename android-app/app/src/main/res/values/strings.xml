@@ -16,6 +16,11 @@
         <item quantity="other">Available</item>
     </plurals>
 
+    <!-- Booking -->
+    <string name="hospital_detail_description">Hospital Detail</string>
+    <string name="location_label">Location</string>
+    <string name="telephone_label">Telephone Number</string>
+
     <!-- History -->
     <string name="history_label">History</string>
     <string name="history_empty_state_title">Your history is empty.</string>

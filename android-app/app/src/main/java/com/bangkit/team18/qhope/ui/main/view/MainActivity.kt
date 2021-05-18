@@ -1,5 +1,6 @@
 package com.bangkit.team18.qhope.ui.main.view
 
+import android.os.Bundle
 import android.view.View
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityMainBinding
@@ -9,7 +10,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
-  override fun setupViews() {
+  override fun setupViews(savedInstanceState: Bundle?) {
     binding.apply {
       viewPagerMain.adapter = MainAdapter(supportFragmentManager, lifecycle)
       TabLayoutMediator(tabLayoutMain, viewPagerMain) { tab, position ->
