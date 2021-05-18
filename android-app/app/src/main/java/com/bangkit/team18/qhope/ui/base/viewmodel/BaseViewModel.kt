@@ -11,8 +11,10 @@ import kotlinx.coroutines.launch
 
 abstract class BaseViewModel : ViewModel() {
 
-  protected fun launchViewModelScope(block: suspend () -> Unit,
-      dispatcher: CoroutineDispatcher = Dispatchers.Main) {
+  protected fun launchViewModelScope(
+    block: suspend () -> Unit,
+    dispatcher: CoroutineDispatcher = Dispatchers.Main
+  ) {
     viewModelScope.launch(dispatcher) {
       block.invoke()
     }

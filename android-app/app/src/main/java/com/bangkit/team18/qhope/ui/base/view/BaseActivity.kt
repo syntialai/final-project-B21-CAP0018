@@ -8,7 +8,7 @@ import androidx.viewbinding.ViewBinding
 import com.bangkit.team18.qhope.utils.view.SnackbarUtils
 
 abstract class BaseActivity<VB : ViewBinding>(private val inflater: (LayoutInflater) -> VB) :
-    AppCompatActivity(), View.OnClickListener {
+  AppCompatActivity(), View.OnClickListener {
 
   private var _binding: VB? = null
   protected val binding get() = _binding as VB

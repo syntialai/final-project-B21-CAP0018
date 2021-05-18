@@ -16,8 +16,9 @@ import androidx.viewbinding.ViewBinding
 import com.bangkit.team18.qhope.utils.view.SnackbarUtils
 
 abstract class BaseFragment<VB : ViewBinding>(
-    private val viewBindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB) : Fragment(),
-    View.OnClickListener {
+  private val viewBindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB
+) : Fragment(),
+  View.OnClickListener {
 
   private var _binding: VB? = null
   protected val binding get() = _binding as VB
@@ -31,13 +32,15 @@ abstract class BaseFragment<VB : ViewBinding>(
   override fun onAttach(context: Context) {
     super.onAttach(context)
     intentLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()) { result ->
+      ActivityResultContracts.StartActivityForResult()
+    ) { result ->
       if (result.resultCode == Activity.RESULT_OK) {
         onIntentResult(result.data)
       }
     }
     requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()) { isGranted ->
+      ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
       onPermissionGrantedChange(isGranted)
     }
   }
@@ -46,8 +49,10 @@ abstract class BaseFragment<VB : ViewBinding>(
 
   open fun onPermissionGrantedChange(isGranted: Boolean) {}
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-      savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+    inflater: LayoutInflater, container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     _binding = viewBindingInflater.invoke(inflater, container, false)
     return binding.root
   }
