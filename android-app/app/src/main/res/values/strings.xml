@@ -20,6 +20,8 @@
     <string name="hospital_detail_description">Hospital Detail</string>
     <string name="location_label">Location</string>
     <string name="telephone_label">Telephone Number</string>
+    <string name="room_type_label">Room Type</string>
+    <string name="per_day_label">per Day</string>
 
     <!-- History -->
     <string name="history_label">History</string>

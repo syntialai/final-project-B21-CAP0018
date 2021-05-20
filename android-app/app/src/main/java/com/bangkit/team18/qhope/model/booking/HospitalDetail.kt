@@ -4,21 +4,21 @@ import com.google.android.gms.maps.model.LatLng
 
 data class HospitalDetail(
 
-    var id: String? = null,
+    val id: String,
+    
+    val name: String,
 
-    var name: String? = null,
+    val image: String,
 
-    var image: String? = null,
+    val type: String,
 
-    var type: String? = null,
+    val description: String?,
 
-    var description: String? = null,
+    val address: String,
 
-    var address: String? = null,
+    val location: LatLng?,
 
-    var location: LatLng? = null,
+    val telephone: String?,
 
-    var telephone: String? = null,
-
-    var availableRoomCount: Int? = null
+    val availableRoomCount: Int
 )

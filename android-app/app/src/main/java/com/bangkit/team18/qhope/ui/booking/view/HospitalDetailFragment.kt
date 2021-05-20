@@ -5,8 +5,8 @@ import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentHospitalDetailBinding
 import com.bangkit.team18.qhope.model.booking.HospitalDetail
+import com.bangkit.team18.qhope.model.booking.RoomType
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
-import com.bangkit.team18.qhope.utils.view.DataUtils.orZero
 import com.bangkit.team18.qhope.utils.view.ViewUtils.loadImage
 import com.bangkit.team18.qhope.utils.view.ViewUtils.showOrRemove
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -15,6 +15,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.chip.Chip
 
 class HospitalDetailFragment :
     BaseFragment<FragmentHospitalDetailBinding>(FragmentHospitalDetailBinding::inflate),
@@ -45,6 +46,15 @@ class HospitalDetailFragment :
     }
   }
 
+  private fun getTypeChip(index: Int, text: String): Chip {
+    return (layoutInflater.inflate(R.layout.layout_hospital_detail_chip_type,
+        binding.chipGroupHospitalDetailRoomType, false) as Chip).apply {
+      this.id = index
+      this.text = text
+      this.isChecked = index == 0
+    }
+  }
+
   private fun processBook() {
     // TODO: Get data and go to booking confirmation
     findNavController().navigate(
@@ -59,9 +69,9 @@ class HospitalDetailFragment :
 
   private fun setHospitalData(hospital: HospitalDetail) {
     binding.apply {
-      buttonHospitalDetailBook.isEnabled = hospital.availableRoomCount?.orZero()!! > 0
+      buttonHospitalDetailBook.isEnabled = hospital.availableRoomCount > 0
 
-      imageViewHospitalDetail.loadImage(mContext, hospital.image.orEmpty(),
+      imageViewHospitalDetail.loadImage(mContext, hospital.image,
           R.drawable.drawable_hospital_placeholder)
 
       textViewHospitalDetailName.text = hospital.name
@@ -74,7 +84,24 @@ class HospitalDetailFragment :
       groupHospitalDetailPhone.showOrRemove(hospital.telephone.isNullOrBlank().not())
     }
     hospital.location?.let { location ->
-      updateLocation(location, hospital.name.orEmpty())
+      updateLocation(location, hospital.name)
+    }
+  }
+
+  private fun setupPriceByType(roomType: RoomType) {
+    // TODO: call viewmodel to update checked roomtype
+    binding.textViewHospitalDetailPrice.text = roomType.price
+  }
+
+  private fun setupTypeData(roomTypes: List<RoomType>) {
+    binding.chipGroupHospitalDetailRoomType.apply {
+      removeAllViews()
+      roomTypes.forEachIndexed { index, roomType ->
+        addView(getTypeChip(index, roomType.name))
+      }
+      setOnCheckedChangeListener { _, checkedId ->
+        setupPriceByType(roomTypes[checkedId])
+      }
     }
   }
 
@@ -82,6 +109,7 @@ class HospitalDetailFragment :
     binding.apply {
       spinKitLoadHospitalDetail.showOrRemove(isLoading)
       layoutHospitalDetail.showOrRemove(isLoading.not())
+      layoutCheckoutHospital.showOrRemove(isLoading.not())
     }
   }
 
