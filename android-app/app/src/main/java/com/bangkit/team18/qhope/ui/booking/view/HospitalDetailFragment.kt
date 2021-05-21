@@ -93,6 +93,14 @@ class HospitalDetailFragment :
     binding.textViewHospitalDetailPrice.text = roomType.price
   }
 
+  private fun setupRoomAvailability(availableRoomCount: Int) {
+    val isAvailable = availableRoomCount > 0
+    binding.apply {
+      chipHospitalItemRoomAvailable.showOrRemove(isAvailable)
+      chipHospitalItemRoomNotAvailable.showOrRemove(isAvailable.not())
+    }
+  }
+
   private fun setupTypeData(roomTypes: List<RoomType>) {
     binding.chipGroupHospitalDetailRoomType.apply {
       removeAllViews()
@@ -101,6 +109,7 @@ class HospitalDetailFragment :
       }
       setOnCheckedChangeListener { _, checkedId ->
         setupPriceByType(roomTypes[checkedId])
+        setupRoomAvailability(roomTypes[checkedId].availableRoomCount)
       }
     }
   }

@@ -82,6 +82,9 @@ dependencies {
   // Spin Kit
   implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
+  // Calendar Views
+  implementation 'com.github.kizitonwose:CalendarView:1.0.4'
+
   // Coroutines
   implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3'
   testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3'
