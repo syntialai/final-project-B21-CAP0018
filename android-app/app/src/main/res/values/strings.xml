@@ -26,7 +26,9 @@
     <string name="not_available_label">Not Available</string>
     <string name="confirm_booking_label">Confirm Booking</string>
     <string name="selected_room_type_label">Selected Room</string>
+    <string name="selected_room_type">[%s Room] %s</string>
     <string name="select_date_label">Select Date</string>
+    <string name="select_check_in_time_label">Select Check-in Time</string>
     <string name="time_selected_label">Check-in Time Selected</string>
     <string name="upload_doctor_referral_letter_label">Upload Doctor\'s Referral Letter</string>
     <string name="upload_your_referral_letter_label">Upload Your Referral Letter</string>

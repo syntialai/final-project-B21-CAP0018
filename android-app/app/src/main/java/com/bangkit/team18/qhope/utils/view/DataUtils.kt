@@ -1,6 +1,7 @@
 package com.bangkit.team18.qhope.utils.view
 
 import androidx.lifecycle.LiveData
+import java.util.Calendar
 import java.util.Locale
 
 object DataUtils {
@@ -18,4 +19,13 @@ object DataUtils {
   fun <T : Enum<T>> Enum<T>?.getText() = this?.name?.replaceFirstChar {
     it.titlecase(Locale.ROOT)
   }.orEmpty()
+
+  fun getCurrentAnd3DaysLaterTimestamp(): Pair<Long, Long> {
+    val currentTimestamp = System.currentTimeMillis()
+    val calendar = Calendar.getInstance().apply {
+      timeInMillis = currentTimestamp
+    }
+    calendar.add(Calendar.DAY_OF_MONTH, 3)
+    return Pair(currentTimestamp, calendar.timeInMillis)
+  }
 }
