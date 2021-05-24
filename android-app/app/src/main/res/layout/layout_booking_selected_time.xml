@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_12">
+
+        <TextView
+            android:id="@+id/text_view_booking_time_label"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:text="@string/time_selected_label"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/colorTextMedium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/barrier_booking_edit_time"
+            app:layout_constraintBottom_toTopOf="@+id/text_view_booking_time"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/text_view_booking_time"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceHeadline3"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_booking_time_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/barrier_booking_edit_time"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="08:00 AM" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_booking_edit_time"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:barrierDirection="start"
+            app:barrierMargin="@dimen/dp_minus_16"
+            app:constraint_referenced_ids="button_booking_edit_time" />
+
+        <ImageButton
+            android:id="@+id/button_booking_edit_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_12"
+            android:contentDescription="@string/time_selected_label"
+            android:src="@drawable/ic_edit"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/white" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

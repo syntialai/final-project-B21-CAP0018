@@ -1,18 +1,19 @@
 package com.bangkit.team18.qhope.model.history
 
-import java.util.Date
-
 data class History(
 
-    var id: String? = null,
+    val id: String,
 
-    var hospitalName: String? = null,
+    val hospitalName: String,
 
-    var hospitalImage: String? = null,
+    val hospitalImage: String,
 
-    var startDate: Date? = null,
+    val startDate: String,
 
-    var endDate: Date? = null,
+    val endDate: String,
 
-    var status: HistoryStatus? = null
+    // TODO: Get by -> val nightCount = TimeUnit.MILLISECONDS.toDays(endDate.time - data.startDate.time.orZero()).toInt()
+    val nightCount: Int?,
+
+    val status: HistoryStatus
 )

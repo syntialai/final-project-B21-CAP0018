@@ -21,22 +21,27 @@
     </style>
 
     <!-- Widget -->
+    <style name="Widget.QHope.ImageButton" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/drawable_rounded_button_background</item>
+        <item name="android:padding">@dimen/dp_12</item>
+    </style>
+
     <style name="Widget.QHope.CardView" parent="Widget.MaterialComponents.CardView">
         <item name="android:clipToPadding">false</item>
     </style>
 
-    <style name="Widget.Chip.Info.Small" parent="Widget.MaterialComponents.Chip.Action">
+    <style name="Widget.QHope.Chip.Info.Small" parent="Widget.MaterialComponents.Chip.Action">
         <item name="android:clickable">false</item>
         <item name="android:focusable">false</item>
         <item name="chipMinTouchTargetSize">@dimen/dp_20</item>
     </style>
 
-    <style name="Widget.Chip.Info.Small.Green" parent="Widget.Chip.Info.Small">
+    <style name="Widget.QHope.Chip.Info.Small.Green" parent="Widget.QHope.Chip.Info.Small">
         <item name="android:textColor">@color/green_700</item>
         <item name="chipBackgroundColor">@color/green_100</item>
     </style>
 
-    <style name="Widget.Chip.Info.Small.Red" parent="Widget.Chip.Info.Small">
+    <style name="Widget.QHope.Chip.Info.Small.Red" parent="Widget.QHope.Chip.Info.Small">
         <item name="android:textColor">@color/red_700</item>
         <item name="chipBackgroundColor">@color/red_100_60</item>
     </style>
@@ -50,6 +55,11 @@
         <item name="android:searchIcon">@drawable/ic_search</item>
         <item name="android:paddingStart">@dimen/dp_minus_4</item>
         <item name="android:queryBackground">@null</item>
+    </style>
+
+    <style name="Widget.QHope.SpinKit" parent="SpinKitView.Large">
+        <item name="SpinKit_Color">?attr/colorPrimary</item>
+        <item name="SpinKit_Style">CubeGrid</item>
     </style>
 
     <style name="Widget.QHope.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">

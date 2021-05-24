@@ -10,9 +10,6 @@ import com.bangkit.team18.qhope.ui.base.adapter.BaseAdapter
 import com.bangkit.team18.qhope.ui.base.adapter.BaseDiffCallback
 import com.bangkit.team18.qhope.ui.base.adapter.OnItemClickListener
 import com.bangkit.team18.qhope.utils.view.DataUtils.getText
-import com.bangkit.team18.qhope.utils.view.DataUtils.orZero
-import com.bangkit.team18.qhope.utils.view.ViewUtils.remove
-import java.util.concurrent.TimeUnit
 
 class HistoryAdapter(private val onItemClickListener: OnItemClickListener) :
     BaseAdapter<History, LayoutBookingHistoryItemBinding>(diffCallback) {
@@ -35,24 +32,19 @@ class HistoryAdapter(private val onItemClickListener: OnItemClickListener) :
   inner class HistoryViewHolder(binding: LayoutBookingHistoryItemBinding) :
       BaseViewHolder(binding) {
 
-    // TODO: Format date to right format
     override fun bind(data: History) {
       binding.apply {
         root.setOnClickListener {
-          onItemClickListener.onClickListener(data.id.orEmpty())
+          onItemClickListener.onClickListener(data.id)
         }
 
         imageViewHistoryItem.loadImage(data.hospitalImage, R.drawable.drawable_hospital_placeholder)
 
         textViewHistoryItemName.text = data.hospitalName
-        textViewHistoryItemDate.text = data.startDate.toString()
-        data.endDate?.let { endDate ->
-          val nightCount = TimeUnit.MILLISECONDS.toDays(
-              endDate.time - data.startDate?.time.orZero()).toInt()
+        textViewHistoryItemDate.text = data.startDate
+        data.nightCount?.let { nightCount ->
           textViewHistoryItemNight.text = context.resources.getQuantityString(
               R.plurals.history_night_state, nightCount, nightCount)
-        } ?: run {
-          textViewHistoryItemNight.remove()
         }
 
         with(textViewHistoryItemStatus) {

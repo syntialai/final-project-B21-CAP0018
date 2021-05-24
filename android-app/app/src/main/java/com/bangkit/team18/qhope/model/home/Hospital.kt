@@ -2,15 +2,15 @@ package com.bangkit.team18.qhope.model.home
 
 data class Hospital(
 
-    var id: String? = null,
+    val id: String,
 
-    var name: String? = null,
+    val name: String,
 
-    var image: String? = null,
+    val image: String,
 
-    var type: String? = null,
+    val type: String,
 
-    var address: String? = null,
+    val address: String,
 
-    var availableRoomCount: Int? = null
+    val availableRoomCount: Int
 )
