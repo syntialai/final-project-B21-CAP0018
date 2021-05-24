@@ -2,13 +2,13 @@ package com.bangkit.team18.qhope.ui.history.view
 
 import android.os.Bundle
 import android.view.View
+import com.bangkit.team18.core.domain.model.history.HistoryStatus
+import com.bangkit.team18.core.domain.model.home.Hospital
 import com.bangkit.team18.core.utils.view.DataUtils.getText
 import com.bangkit.team18.core.utils.view.ViewUtils.loadImage
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityHistoryDetailBinding
-import com.bangkit.team18.qhope.model.history.HistoryStatus
-import com.bangkit.team18.qhope.model.home.Hospital
 import com.bangkit.team18.qhope.ui.base.view.BaseActivity
 
 class HistoryDetailActivity :

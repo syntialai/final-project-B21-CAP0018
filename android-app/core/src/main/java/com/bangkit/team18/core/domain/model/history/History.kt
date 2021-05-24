@@ -1,4 +1,4 @@
-package com.bangkit.team18.qhope.model.history
+package com.bangkit.team18.core.domain.model.history
 
 data class History(
 
