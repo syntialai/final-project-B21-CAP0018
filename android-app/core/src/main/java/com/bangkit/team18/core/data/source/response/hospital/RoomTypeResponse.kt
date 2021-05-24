@@ -3,6 +3,7 @@ package com.bangkit.team18.core.data.source.response.hospital
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.PropertyName
 
+// TODO: Add name
 data class RoomTypeResponse(
 
     @DocumentId

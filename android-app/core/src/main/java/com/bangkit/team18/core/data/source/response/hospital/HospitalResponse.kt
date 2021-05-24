@@ -4,6 +4,7 @@ import com.firebase.geofire.GeoLocation
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.PropertyName
 
+// TODO: Add image, state and country
 data class HospitalResponse(
 
     @DocumentId

@@ -1,5 +1,6 @@
 package com.bangkit.team18.core.data.repository
 
+import com.bangkit.team18.core.data.mapper.HospitalMapper
 import com.bangkit.team18.core.data.repository.base.FetchDataWrapper
 import com.bangkit.team18.core.data.source.HospitalRemoteDataSource
 import com.bangkit.team18.core.data.source.response.hospital.HospitalResponse
@@ -24,7 +25,7 @@ class HospitalRepositoryImpl(private val hospitalRemoteDataSource: HospitalRemot
       }
 
       override fun mapData(response: List<HospitalResponse>): List<Hospital> {
-        TODO("Not yet implemented")
+        return HospitalMapper.mapToHospitals(response)
       }
     }.getData().flowOn(ioDispatcher)
   }
@@ -36,7 +37,7 @@ class HospitalRepositoryImpl(private val hospitalRemoteDataSource: HospitalRemot
       }
 
       override fun mapData(response: HospitalResponse): Hospital {
-        TODO("Not yet implemented")
+        return HospitalMapper.mapToHospital(response)
       }
     }.getData().flowOn(ioDispatcher)
   }
@@ -48,7 +49,7 @@ class HospitalRepositoryImpl(private val hospitalRemoteDataSource: HospitalRemot
       }
 
       override fun mapData(response: List<RoomTypeResponse>): List<RoomType> {
-        TODO("Not yet implemented")
+        return HospitalMapper.mapToRoomTypes(response)
       }
     }.getData().flowOn(ioDispatcher)
   }
