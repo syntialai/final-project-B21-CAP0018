@@ -2,11 +2,11 @@ package com.bangkit.team18.qhope.ui.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.bangkit.team18.core.domain.model.home.Hospital
 import com.bangkit.team18.core.utils.view.DataUtils.orZero
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.LayoutHospitalItemBinding
-import com.bangkit.team18.qhope.model.home.Hospital
 import com.bangkit.team18.qhope.ui.base.adapter.BaseAdapter
 import com.bangkit.team18.qhope.ui.base.adapter.BaseDiffCallback
 

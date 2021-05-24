@@ -2,12 +2,12 @@ package com.bangkit.team18.qhope.ui.booking.view
 
 import android.view.View
 import androidx.navigation.fragment.findNavController
+import com.bangkit.team18.core.domain.model.booking.HospitalDetail
+import com.bangkit.team18.core.domain.model.booking.RoomType
 import com.bangkit.team18.core.utils.view.ViewUtils.loadImage
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentHospitalDetailBinding
-import com.bangkit.team18.qhope.model.booking.HospitalDetail
-import com.bangkit.team18.qhope.model.booking.RoomType
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap

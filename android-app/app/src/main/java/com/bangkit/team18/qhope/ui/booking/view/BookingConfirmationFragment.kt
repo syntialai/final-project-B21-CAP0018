@@ -3,13 +3,13 @@ package com.bangkit.team18.qhope.ui.booking.view
 import android.content.Intent
 import android.net.Uri
 import android.view.View
+import com.bangkit.team18.core.domain.model.booking.RoomType
 import com.bangkit.team18.core.utils.view.DataUtils
 import com.bangkit.team18.core.utils.view.PickerUtils
 import com.bangkit.team18.core.utils.view.ViewUtils.show
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentBookingConfirmationBinding
-import com.bangkit.team18.qhope.model.booking.RoomType
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import java.util.Calendar
 

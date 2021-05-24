@@ -1,4 +1,4 @@
-package com.bangkit.team18.qhope.model.booking
+package com.bangkit.team18.core.domain.model.booking
 
 import com.google.android.gms.maps.model.LatLng
 

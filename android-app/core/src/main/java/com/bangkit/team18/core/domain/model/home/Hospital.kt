@@ -1,4 +1,4 @@
-package com.bangkit.team18.qhope.model.home
+package com.bangkit.team18.core.domain.model.home
 
 data class Hospital(
 

@@ -28,8 +28,8 @@ abstract class BaseRemoteDataSource {
   protected fun <T : Any> CollectionReference.loadData(
       clazz: Class<T>): Flow<List<T>> = callbackFlow {
     val subscription = addSnapshotListener { snapshot, error ->
-      error?.let { error ->
-        close(error)
+      error?.let { err ->
+        close(err)
         return@addSnapshotListener
       } ?: run {
         if (snapshot.isNull() || snapshot!!.isEmpty) {
@@ -49,8 +49,8 @@ abstract class BaseRemoteDataSource {
 
   protected fun <T : Any> DocumentReference.loadData(clazz: Class<T>): Flow<T?> = callbackFlow {
     val subscription = addSnapshotListener { snapshot, error ->
-      error?.let { error ->
-        close(error)
+      error?.let { err ->
+        close(err)
         return@addSnapshotListener
       } ?: run {
         if (snapshot.isNull() || snapshot!!.exists()) {
