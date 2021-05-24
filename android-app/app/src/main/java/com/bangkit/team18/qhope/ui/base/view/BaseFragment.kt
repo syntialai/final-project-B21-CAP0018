@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
-import com.bangkit.team18.qhope.utils.view.SnackbarUtils
+import com.bangkit.team18.qhope.utils.SnackbarUtils
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

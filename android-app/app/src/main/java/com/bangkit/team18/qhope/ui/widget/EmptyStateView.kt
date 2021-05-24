@@ -6,9 +6,9 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.core.content.withStyledAttributes
+import com.bangkit.team18.core.utils.view.ViewUtils.remove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.LayoutEmptyStateViewBinding
-import com.bangkit.team18.qhope.utils.view.ViewUtils.remove
 
 class EmptyStateView constructor(context: Context, attrs: AttributeSet) :
     LinearLayout(context, attrs) {

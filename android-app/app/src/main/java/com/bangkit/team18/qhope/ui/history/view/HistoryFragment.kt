@@ -1,11 +1,11 @@
 package com.bangkit.team18.qhope.ui.history.view
 
 import android.view.View
+import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.databinding.FragmentHistoryBinding
 import com.bangkit.team18.qhope.ui.base.adapter.OnItemClickListener
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.history.adapter.HistoryAdapter
-import com.bangkit.team18.qhope.utils.view.ViewUtils.showOrRemove
 
 class HistoryFragment : BaseFragment<FragmentHistoryBinding>(FragmentHistoryBinding::inflate),
     OnItemClickListener {

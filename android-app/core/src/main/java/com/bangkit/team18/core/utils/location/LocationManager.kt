@@ -1,5 +1,6 @@
-package com.bangkit.team18.qhope.utils.location
+package com.bangkit.team18.core.utils.location
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Looper
 import androidx.lifecycle.LiveData
@@ -34,6 +35,7 @@ class LocationManager(private val context: Context,
     }
   }
 
+  @SuppressLint("MissingPermission")
   fun startUpdateLocation() {
     try {
       _receivingLocationUpdates.value = true

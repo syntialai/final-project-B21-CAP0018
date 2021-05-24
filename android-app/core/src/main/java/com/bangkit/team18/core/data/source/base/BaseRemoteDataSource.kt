@@ -1,0 +1,107 @@
+package com.bangkit.team18.core.data.source.base
+
+import com.bangkit.team18.core.utils.view.DataUtils.isNull
+import com.bangkit.team18.core.utils.view.DataUtils.orZero
+import com.firebase.geofire.GeoFireUtils
+import com.firebase.geofire.GeoLocation
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+
+@ExperimentalCoroutinesApi
+abstract class BaseRemoteDataSource {
+
+  companion object {
+    private const val GEO_HASH = "geohash"
+    private const val LAT = "lat"
+    private const val LNG = "lng"
+    private const val DEFAULT_RADIUS = 10000
+  }
+
+  protected fun <T : Any> CollectionReference.loadData(
+      clazz: Class<T>): Flow<List<T>> = callbackFlow {
+    val subscription = addSnapshotListener { snapshot, error ->
+      error?.let { error ->
+        close(error)
+        return@addSnapshotListener
+      } ?: run {
+        if (snapshot.isNull() || snapshot!!.isEmpty) {
+          offer(emptyList<T>())
+        } else {
+          offer(snapshot.map { document ->
+            document.toObject(clazz)
+          })
+        }
+      }
+    }
+
+    awaitClose {
+      subscription.remove()
+    }
+  }
+
+  protected fun <T : Any> DocumentReference.loadData(clazz: Class<T>): Flow<T?> = callbackFlow {
+    val subscription = addSnapshotListener { snapshot, error ->
+      error?.let { error ->
+        close(error)
+        return@addSnapshotListener
+      } ?: run {
+        if (snapshot.isNull() || snapshot!!.exists()) {
+          offer(null)
+        } else {
+          offer(snapshot.toObject(clazz))
+        }
+      }
+    }
+
+    awaitClose {
+      subscription.remove()
+    }
+  }
+
+  protected fun <T : Any> CollectionReference.loadNearby(clazz: Class<T>, location: GeoLocation,
+      radiusInMeter: Int = DEFAULT_RADIUS): Flow<List<T>> = callbackFlow {
+    val nearbyTasks = getQueryBounds(this@loadNearby, location, radiusInMeter)
+    Tasks.whenAllComplete(nearbyTasks).addOnCompleteListener {
+      val validDocuments = getFilteredData(nearbyTasks, location, radiusInMeter)
+      offer(validDocuments.mapNotNull { snapshot ->
+        snapshot.toObject(clazz)
+      })
+    }.addOnFailureListener {
+      close(it)
+    }.addOnCanceledListener {
+      close()
+    }
+  }
+
+  private fun getQueryBounds(reference: CollectionReference, location: GeoLocation,
+      radiusInMeter: Int): ArrayList<Task<QuerySnapshot>> {
+    val bounds = GeoFireUtils.getGeoHashQueryBounds(location, radiusInMeter.toDouble())
+    val tasks = arrayListOf<Task<QuerySnapshot>>()
+    bounds.forEach { bound ->
+      tasks.add(reference.orderBy(GEO_HASH).startAt(bound.startHash).endAt(bound.endHash).get())
+    }
+    return tasks
+  }
+
+  private fun getFilteredData(tasks: ArrayList<Task<QuerySnapshot>>, location: GeoLocation,
+      radiusInMeter: Int): ArrayList<DocumentSnapshot> {
+    val filteredDocuments = arrayListOf<DocumentSnapshot>()
+    tasks.forEach { task ->
+      filteredDocuments.addAll(task.result.documents.filter { document ->
+        val lat = document.getDouble(LAT).orZero()
+        val lng = document.getDouble(LNG).orZero()
+
+        GeoFireUtils.getDistanceBetween(GeoLocation(lat, lng), location) <= radiusInMeter
+      })
+    }
+    return filteredDocuments
+  }
+}

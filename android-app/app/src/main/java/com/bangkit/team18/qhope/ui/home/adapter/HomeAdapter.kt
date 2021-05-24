@@ -2,13 +2,13 @@ package com.bangkit.team18.qhope.ui.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.bangkit.team18.core.utils.view.DataUtils.orZero
+import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.LayoutHospitalItemBinding
 import com.bangkit.team18.qhope.model.home.Hospital
 import com.bangkit.team18.qhope.ui.base.adapter.BaseAdapter
 import com.bangkit.team18.qhope.ui.base.adapter.BaseDiffCallback
-import com.bangkit.team18.qhope.utils.view.DataUtils.orZero
-import com.bangkit.team18.qhope.utils.view.ViewUtils.showOrRemove
 
 class HomeAdapter(private val homeHospitalItemCallback: HomeHospitalItemCallback) :
     BaseAdapter<Hospital, LayoutHospitalItemBinding>(diffCallback) {

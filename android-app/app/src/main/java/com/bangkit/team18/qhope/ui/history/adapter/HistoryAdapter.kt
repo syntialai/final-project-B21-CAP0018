@@ -2,6 +2,7 @@ package com.bangkit.team18.qhope.ui.history.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.bangkit.team18.core.utils.view.DataUtils.getText
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.LayoutBookingHistoryItemBinding
 import com.bangkit.team18.qhope.model.history.History
@@ -9,7 +10,6 @@ import com.bangkit.team18.qhope.model.history.HistoryStatus
 import com.bangkit.team18.qhope.ui.base.adapter.BaseAdapter
 import com.bangkit.team18.qhope.ui.base.adapter.BaseDiffCallback
 import com.bangkit.team18.qhope.ui.base.adapter.OnItemClickListener
-import com.bangkit.team18.qhope.utils.view.DataUtils.getText
 
 class HistoryAdapter(private val onItemClickListener: OnItemClickListener) :
     BaseAdapter<History, LayoutBookingHistoryItemBinding>(diffCallback) {
