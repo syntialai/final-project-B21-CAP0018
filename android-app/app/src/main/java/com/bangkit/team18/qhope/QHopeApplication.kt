@@ -5,6 +5,8 @@ import com.bangkit.team18.core.di.dispatcherModule
 import com.bangkit.team18.core.di.firebaseModule
 import com.bangkit.team18.core.di.remoteDataSourceModule
 import com.bangkit.team18.core.di.repositoryModule
+import com.bangkit.team18.core.di.useCaseModule
+import com.bangkit.team18.qhope.di.viewModelModule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -19,7 +21,8 @@ class QHopeApplication : Application() {
     startKoin {
       androidLogger(Level.DEBUG)
       androidContext(this@QHopeApplication)
-      modules(listOf(dispatcherModule, firebaseModule, remoteDataSourceModule, repositoryModule))
+      modules(listOf(dispatcherModule, firebaseModule, remoteDataSourceModule, repositoryModule,
+          useCaseModule, viewModelModule))
     }
   }
 }
