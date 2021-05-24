@@ -1,4 +1,4 @@
-package com.bangkit.team18.qhope.utils.view
+package com.bangkit.team18.core.utils.view
 
 import androidx.lifecycle.LiveData
 import java.util.Calendar
@@ -13,6 +13,8 @@ object DataUtils {
   fun Int?.orZero() = this ?: 0
 
   fun Long?.orZero() = this ?: 0L
+
+  fun Double?.orZero() = this ?: 0.0
 
   fun LiveData<Boolean>.orFalse() = this.value ?: false
 

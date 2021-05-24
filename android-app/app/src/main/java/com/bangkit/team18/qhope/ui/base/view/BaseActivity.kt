@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
-import com.bangkit.team18.qhope.utils.view.SnackbarUtils
+import com.bangkit.team18.qhope.utils.SnackbarUtils
 
 abstract class BaseActivity<VB : ViewBinding>(private val inflater: (LayoutInflater) -> VB) :
     AppCompatActivity(), View.OnClickListener {

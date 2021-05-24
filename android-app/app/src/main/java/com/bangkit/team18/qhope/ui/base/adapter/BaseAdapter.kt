@@ -7,7 +7,7 @@ import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.bangkit.team18.qhope.utils.view.ViewUtils.loadImage
+import com.bangkit.team18.core.utils.view.ViewUtils.loadImage
 
 abstract class BaseAdapter<T : Any, VB : ViewBinding>(diffCallback: BaseDiffCallback<T>) :
     ListAdapter<T, BaseAdapter<T, VB>.BaseViewHolder>(diffCallback) {

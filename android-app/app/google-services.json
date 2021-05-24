@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "613609637569",
+    "project_id": "q-hope",
+    "storage_bucket": "q-hope.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613609637569:android:d448befc18861ff87bf640",
+        "android_client_info": {
+          "package_name": "com.bangkit.team18.qhope"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "613609637569-71d1b2ovpqj3g8hf58m7dou1ad6ddml4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bangkit.team18.qhope",
+            "certificate_hash": "99f4f159b540c9520ad019538f1203c6ff5653cb"
+          }
+        },
+        {
+          "client_id": "613609637569-9bnh19egbvo68jmshjrdgjghnqalqmnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnTgSQX25753DsfC3vml6xt7Bq19bwcgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "613609637569-9bnh19egbvo68jmshjrdgjghnqalqmnj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

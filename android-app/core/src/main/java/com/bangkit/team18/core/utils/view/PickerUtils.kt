@@ -1,4 +1,4 @@
-package com.bangkit.team18.qhope.utils.view
+package com.bangkit.team18.core.utils.view
 
 import androidx.annotation.StringRes
 import com.google.android.material.timepicker.MaterialTimePicker
