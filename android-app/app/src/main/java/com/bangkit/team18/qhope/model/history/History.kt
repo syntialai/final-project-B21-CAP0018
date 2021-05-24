@@ -12,5 +12,8 @@ data class History(
 
     val endDate: String,
 
+    // TODO: Get by -> val nightCount = TimeUnit.MILLISECONDS.toDays(endDate.time - data.startDate.time.orZero()).toInt()
+    val nightCount: Int?,
+
     val status: HistoryStatus
 )
