@@ -79,8 +79,8 @@ dependencies {
   androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3'
 
   // Koin DI
-  testImplementation "org.koin:koin-test:2.1.0"
-  androidTestImplementation ("org.koin:koin-test:2.1.0") { exclude group: 'org.mockito' }
+  testImplementation "org.koin:koin-test:2.0.1"
+  androidTestImplementation ("org.koin:koin-test:2.0.1") { exclude group: 'org.mockito' }
 
   // Room DB
   kapt "androidx.room:room-compiler:2.3.0"
