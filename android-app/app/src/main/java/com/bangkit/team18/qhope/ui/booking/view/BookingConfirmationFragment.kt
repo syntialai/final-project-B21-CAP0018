@@ -11,10 +11,12 @@ import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentBookingConfirmationBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
+import com.bangkit.team18.qhope.ui.booking.viewmodel.BookingConfirmationViewModel
 import java.util.Calendar
 
 class BookingConfirmationFragment :
-    BaseFragment<FragmentBookingConfirmationBinding>(FragmentBookingConfirmationBinding::inflate) {
+    BaseFragment<FragmentBookingConfirmationBinding, BookingConfirmationViewModel>(
+        FragmentBookingConfirmationBinding::inflate, BookingConfirmationViewModel::class) {
 
   companion object {
     private const val GOOGLE_DRIVE_VIEWER = "http://drive.google.com/viewer?url="
@@ -48,6 +50,13 @@ class BookingConfirmationFragment :
   override fun onIntentResult(data: Intent?) {
     data?.data?.let {
       val filePath = it
+    }
+  }
+
+  override fun showLoadingState(isLoading: Boolean) {
+    binding.apply {
+      spinKitLoadBookingConfirm.showOrRemove(isLoading)
+      layoutBookingConfirm.showOrRemove(isLoading.not())
     }
   }
 
@@ -102,13 +111,6 @@ class BookingConfirmationFragment :
         // TODO: Call view model to set selected date
         timePicker.show(parentFragmentManager, OPEN_TIME_PICKER)
       }
-    }
-  }
-
-  private fun showLoadingState(isLoading: Boolean) {
-    binding.apply {
-      spinKitLoadBookingConfirm.showOrRemove(isLoading)
-      layoutBookingConfirm.showOrRemove(isLoading.not())
     }
   }
 

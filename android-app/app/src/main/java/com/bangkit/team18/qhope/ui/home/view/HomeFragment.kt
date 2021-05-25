@@ -14,12 +14,13 @@ import com.bangkit.team18.qhope.databinding.FragmentHomeBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.home.adapter.HomeAdapter
 import com.bangkit.team18.qhope.ui.home.adapter.HomeHospitalItemCallback
+import com.bangkit.team18.qhope.ui.home.viewmodel.HomeViewModel
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import java.util.Locale
 
-class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
-    HomeHospitalItemCallback {
+class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(FragmentHomeBinding::inflate,
+    HomeViewModel::class), HomeHospitalItemCallback {
 
   companion object {
     fun newInstance() = HomeFragment()
@@ -77,7 +78,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     if (isGranted) {
       locationManager.startUpdateLocation()
     } else {
-      showErrorToast(R.string.failed_to_get_location_message)
+      showErrorToast(defaultMessageId = R.string.failed_to_get_location_message)
     }
   }
 

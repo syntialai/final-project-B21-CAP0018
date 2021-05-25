@@ -9,10 +9,12 @@ import com.bangkit.team18.core.utils.view.ViewUtils.loadImage
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityHistoryDetailBinding
-import com.bangkit.team18.qhope.ui.base.view.BaseActivity
+import com.bangkit.team18.qhope.ui.base.view.BaseActivityViewModel
+import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryDetailViewModel
 
 class HistoryDetailActivity :
-    BaseActivity<ActivityHistoryDetailBinding>(ActivityHistoryDetailBinding::inflate) {
+    BaseActivityViewModel<ActivityHistoryDetailBinding, HistoryDetailViewModel>(
+        ActivityHistoryDetailBinding::inflate, HistoryDetailViewModel::class) {
 
   override fun setupViews(savedInstanceState: Bundle?) {
     binding.apply {
