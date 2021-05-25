@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
@@ -78,6 +79,27 @@ abstract class BaseRemoteDataSource {
       close(it)
     }.addOnCanceledListener {
       close()
+    }
+  }
+
+  protected fun <T : Any> Query.loadData(clazz: Class<T>): Flow<List<T>> = callbackFlow {
+    val subscription = addSnapshotListener { snapshot, error ->
+      error?.let { err ->
+        close(err)
+        return@addSnapshotListener
+      } ?: run {
+        if (snapshot.isNull() || snapshot!!.isEmpty) {
+          offer(emptyList<T>())
+        } else {
+          offer(snapshot.map { document ->
+            document.toObject(clazz)
+          })
+        }
+      }
+    }
+
+    awaitClose {
+      subscription.remove()
     }
   }
 

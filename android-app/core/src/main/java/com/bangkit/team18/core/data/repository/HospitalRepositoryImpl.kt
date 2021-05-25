@@ -53,4 +53,16 @@ class HospitalRepositoryImpl(private val hospitalRemoteDataSource: HospitalRemot
       }
     }.getData().flowOn(ioDispatcher)
   }
+
+  override suspend fun searchHospitals(query: String): Flow<ResponseWrapper<List<Hospital>>> {
+    return object : FetchDataWrapper<List<HospitalResponse>, List<Hospital>>() {
+      override fun fetchData(): Flow<List<HospitalResponse>> {
+        return hospitalRemoteDataSource.searchHospitals(query)
+      }
+
+      override fun mapData(response: List<HospitalResponse>): List<Hospital> {
+        return HospitalMapper.mapToHospitals(response)
+      }
+    }.getData().flowOn(ioDispatcher)
+  }
 }

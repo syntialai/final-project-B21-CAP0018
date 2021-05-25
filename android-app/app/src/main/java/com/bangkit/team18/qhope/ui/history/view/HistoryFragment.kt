@@ -12,6 +12,10 @@ class HistoryFragment :
     BaseFragment<FragmentHistoryBinding, HistoryViewModel>(FragmentHistoryBinding::inflate,
         HistoryViewModel::class), OnItemClickListener {
 
+  companion object {
+    fun newInstance() = HistoryFragment()
+  }
+
   private val historyAdapter by lazy {
     HistoryAdapter(this)
   }

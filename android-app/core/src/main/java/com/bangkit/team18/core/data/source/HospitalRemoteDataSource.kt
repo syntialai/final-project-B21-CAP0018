@@ -12,4 +12,6 @@ interface HospitalRemoteDataSource {
   fun getHospitalDetail(id: String): Flow<HospitalResponse?>
 
   fun getHospitalRoomTypes(id: String): Flow<List<RoomTypeResponse>>
+
+  fun searchHospitals(query: String): Flow<List<HospitalResponse>>
 }

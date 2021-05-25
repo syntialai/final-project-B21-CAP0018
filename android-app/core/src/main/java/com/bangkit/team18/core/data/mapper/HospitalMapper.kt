@@ -7,6 +7,8 @@ import com.bangkit.team18.core.domain.model.home.Hospital
 
 object HospitalMapper {
 
+  const val NAME_FIELD = "nama_rumah_sakit"
+
   fun mapToHospitals(responses: List<HospitalResponse>): List<Hospital> {
     return DataMapper.mapToModels(responses, ::mapToHospital)
   }

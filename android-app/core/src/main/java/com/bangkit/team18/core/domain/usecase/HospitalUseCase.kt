@@ -13,4 +13,6 @@ interface HospitalUseCase {
   suspend fun getHospitalDetail(id: String): Flow<ResponseWrapper<Hospital>>
 
   suspend fun getHospitalRoomTypes(id: String): Flow<ResponseWrapper<List<RoomType>>>
+
+  suspend fun searchHospitals(query: String): Flow<ResponseWrapper<List<Hospital>>>
 }

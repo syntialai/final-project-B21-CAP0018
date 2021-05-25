@@ -1,5 +1,6 @@
 package com.bangkit.team18.core.data.source.impl
 
+import com.bangkit.team18.core.data.mapper.HospitalMapper
 import com.bangkit.team18.core.data.source.HospitalRemoteDataSource
 import com.bangkit.team18.core.data.source.base.BaseRemoteDataSource
 import com.bangkit.team18.core.data.source.config.CollectionConstants
@@ -11,7 +12,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
-class HospitalRemoteDataSourceImpl(private val db: FirebaseFirestore) : BaseRemoteDataSource(),
+class HospitalRemoteDataSourceImpl(db: FirebaseFirestore) : BaseRemoteDataSource(),
     HospitalRemoteDataSource {
 
   private val hospitalCollections = db.collection(CollectionConstants.HOSPITAL_COLLECTION)
@@ -27,5 +28,10 @@ class HospitalRemoteDataSourceImpl(private val db: FirebaseFirestore) : BaseRemo
   override fun getHospitalRoomTypes(id: String): Flow<List<RoomTypeResponse>> {
     return hospitalCollections.document(id).collection(
         CollectionConstants.ROOM_COLLECTION).loadData(RoomTypeResponse::class.java)
+  }
+
+  override fun searchHospitals(query: String): Flow<List<HospitalResponse>> {
+    return hospitalCollections.whereGreaterThanOrEqualTo(HospitalMapper.NAME_FIELD, query).loadData(
+            HospitalResponse::class.java)
   }
 }
