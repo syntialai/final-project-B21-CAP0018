@@ -1,4 +1,4 @@
-package com.bangkit.team18.qhope.utils.view
+package com.bangkit.team18.core.utils.view
 
 import android.content.Context
 import android.view.View

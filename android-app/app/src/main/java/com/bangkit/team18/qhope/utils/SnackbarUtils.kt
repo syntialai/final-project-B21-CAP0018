@@ -1,9 +1,9 @@
-package com.bangkit.team18.qhope.utils.view
+package com.bangkit.team18.qhope.utils
 
 import android.view.View
 import androidx.core.content.ContextCompat
+import com.bangkit.team18.core.utils.view.ViewUtils.remove
 import com.bangkit.team18.qhope.R
-import com.bangkit.team18.qhope.utils.view.ViewUtils.remove
 import com.google.android.material.snackbar.Snackbar
 
 object SnackbarUtils {
