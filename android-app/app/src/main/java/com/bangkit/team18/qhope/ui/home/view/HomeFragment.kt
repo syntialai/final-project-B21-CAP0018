@@ -2,7 +2,6 @@ package com.bangkit.team18.qhope.ui.home.view
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.location.Geocoder
 import android.location.Location
 import android.view.View
 import android.widget.SearchView
@@ -11,15 +10,16 @@ import com.bangkit.team18.core.utils.view.DataUtils.orFalse
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentHomeBinding
+import com.bangkit.team18.qhope.ui.base.adapter.OnItemClickListener
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.home.adapter.HomeAdapter
-import com.bangkit.team18.qhope.ui.home.adapter.HomeHospitalItemCallback
+import com.bangkit.team18.qhope.ui.home.viewmodel.HomeViewModel
+import com.bangkit.team18.qhope.utils.Router
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
-import java.util.Locale
 
-class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
-    HomeHospitalItemCallback {
+class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(FragmentHomeBinding::inflate,
+    HomeViewModel::class), OnItemClickListener {
 
   companion object {
     fun newInstance() = HomeFragment()
@@ -44,6 +44,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     getLocation()
   }
 
+  override fun setupObserver() {
+    super.setupObserver()
+
+    viewModel.nearbyHospitals.observe(viewLifecycleOwner, { nearbyHospitals ->
+      showSearchResults(false)
+      homeAdapter.submitList(nearbyHospitals)
+    })
+    viewModel.searchHospitalResults.observe(viewLifecycleOwner, { searchResults ->
+      showSearchResults(true)
+      homeAdapter.submitList(searchResults)
+    })
+  }
+
   override fun onPause() {
     super.onPause()
     locationManager.stopUpdateLocation()
@@ -65,11 +78,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
   }
 
   override fun onClickListener(id: String) {
-    // TODO: Go to hospital details
-  }
-
-  override fun onBookHospitalButtonClick(id: String) {
-    // TODO: Go to book transaction
+    Router.goToHospitalDetails(mContext, id)
   }
 
   @SuppressLint("MissingPermission")
@@ -77,8 +86,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     if (isGranted) {
       locationManager.startUpdateLocation()
     } else {
-      showErrorToast(R.string.failed_to_get_location_message)
+      showErrorToast(defaultMessageId = R.string.failed_to_get_location_message)
     }
+  }
+
+  override fun showLoadingState(isLoading: Boolean) {
+    binding.spinKitLoadHome.showOrRemove(isLoading)
   }
 
   private fun getLocation() {
@@ -86,10 +99,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
   }
 
   private fun setLocation(location: Location) {
-    // TODO: Change recommendation by location latitude and longitude
-    val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(location.latitude,
-        location.longitude, 1)
-    binding.textViewYourLocation.text = addresses[0].getAddressLine(0)
+    viewModel.fetchNearbyHospitals(location.latitude, location.longitude)
+    // TODO: Uncomment this when use real device
+//    val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(location.latitude,
+//        location.longitude, 1)
+//    binding.textViewYourLocation.text = addresses[0].getAddressLine(0)
   }
 
   private fun setupRecyclerView() {
@@ -110,16 +124,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
       setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
         override fun onQueryTextSubmit(query: String?): Boolean {
-          // TODO: Do search
-          showSearchResults(true)
+          viewModel.searchHospital(query.orEmpty())
           clearFocus()
           return true
         }
 
         override fun onQueryTextChange(newText: String?): Boolean {
-          launchJob {
-            // TODO: Do search
-            showSearchResults(true)
+          newText?.let {
+            launchJob {
+              viewModel.searchHospital(it)
+            }
+          } ?: run {
+            showSearchResults(false)
           }
           return false
         }

@@ -13,4 +13,6 @@ class HospitalInteractor(private val hospitalRepository: HospitalRepository) : H
 
   override suspend fun getHospitalRoomTypes(id: String) = hospitalRepository.getHospitalRoomTypes(
       id)
+
+  override suspend fun searchHospitals(query: String) = hospitalRepository.searchHospitals(query)
 }

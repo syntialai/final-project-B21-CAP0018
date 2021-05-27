@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.bangkit.team18.qhope.ui.history.view.HistoryFragment
 import com.bangkit.team18.qhope.ui.home.view.HomeFragment
 
 class MainAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
@@ -21,6 +22,7 @@ class MainAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
   // TODO: Add required fragment
   override fun createFragment(position: Int): Fragment = when(position) {
     HOME_FRAGMENT_INDEX -> HomeFragment.newInstance()
+    HISTORY_FRAGMENT_INDEX -> HistoryFragment.newInstance()
     else -> Fragment()
   }
 }

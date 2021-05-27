@@ -20,11 +20,11 @@ class HospitalRepositoryImpl(private val hospitalRemoteDataSource: HospitalRemot
   override suspend fun getNearbyHospitals(
       location: GeoLocation): Flow<ResponseWrapper<List<Hospital>>> {
     return object : FetchDataWrapper<List<HospitalResponse>, List<Hospital>>() {
-      override fun fetchData(): Flow<List<HospitalResponse>> {
+      override suspend fun fetchData(): Flow<List<HospitalResponse>> {
         return hospitalRemoteDataSource.getNearbyHospitals(location)
       }
 
-      override fun mapData(response: List<HospitalResponse>): List<Hospital> {
+      override suspend fun mapData(response: List<HospitalResponse>): List<Hospital> {
         return HospitalMapper.mapToHospitals(response)
       }
     }.getData().flowOn(ioDispatcher)
@@ -32,11 +32,11 @@ class HospitalRepositoryImpl(private val hospitalRemoteDataSource: HospitalRemot
 
   override suspend fun getHospitalDetail(id: String): Flow<ResponseWrapper<Hospital>> {
     return object : FetchDataWrapper<HospitalResponse, Hospital>() {
-      override fun fetchData(): Flow<HospitalResponse?> {
+      override suspend fun fetchData(): Flow<HospitalResponse?> {
         return hospitalRemoteDataSource.getHospitalDetail(id)
       }
 
-      override fun mapData(response: HospitalResponse): Hospital {
+      override suspend fun mapData(response: HospitalResponse): Hospital {
         return HospitalMapper.mapToHospital(response)
       }
     }.getData().flowOn(ioDispatcher)
@@ -44,12 +44,24 @@ class HospitalRepositoryImpl(private val hospitalRemoteDataSource: HospitalRemot
 
   override suspend fun getHospitalRoomTypes(id: String): Flow<ResponseWrapper<List<RoomType>>> {
     return object : FetchDataWrapper<List<RoomTypeResponse>, List<RoomType>>() {
-      override fun fetchData(): Flow<List<RoomTypeResponse>> {
+      override suspend fun fetchData(): Flow<List<RoomTypeResponse>> {
         return hospitalRemoteDataSource.getHospitalRoomTypes(id)
       }
 
-      override fun mapData(response: List<RoomTypeResponse>): List<RoomType> {
+      override suspend fun mapData(response: List<RoomTypeResponse>): List<RoomType> {
         return HospitalMapper.mapToRoomTypes(response)
+      }
+    }.getData().flowOn(ioDispatcher)
+  }
+
+  override suspend fun searchHospitals(query: String): Flow<ResponseWrapper<List<Hospital>>> {
+    return object : FetchDataWrapper<List<HospitalResponse>, List<Hospital>>() {
+      override suspend fun fetchData(): Flow<List<HospitalResponse>> {
+        return hospitalRemoteDataSource.searchHospitals(query)
+      }
+
+      override suspend fun mapData(response: List<HospitalResponse>): List<Hospital> {
+        return HospitalMapper.mapToHospitals(response)
       }
     }.getData().flowOn(ioDispatcher)
   }

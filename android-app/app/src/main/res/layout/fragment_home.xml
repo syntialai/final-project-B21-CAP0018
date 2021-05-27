@@ -64,7 +64,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_20"
             android:queryHint="@string/search_hint"
-            android:theme="@style/Widget.QHope.SearchView"
             app:layout_constraintTop_toBottomOf="@id/text_view_your_location"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -104,6 +103,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:visibility="visible" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/spin_kit_load_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_24"
+            android:indeterminate="true"
+            app:layout_constraintTop_toBottomOf="@id/text_view_recommendation_hospitals_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

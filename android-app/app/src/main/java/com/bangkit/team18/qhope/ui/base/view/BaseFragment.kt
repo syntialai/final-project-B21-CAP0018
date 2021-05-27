@@ -14,17 +14,25 @@ import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
+import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
+import com.bangkit.team18.qhope.R
+import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModel
 import com.bangkit.team18.qhope.utils.SnackbarUtils
+import kotlin.reflect.KClass
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-abstract class BaseFragment<VB : ViewBinding>(
-    private val viewBindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB) : Fragment(),
+abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
+    private val viewBindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB,
+    viewModelClazz: KClass<VM>) : Fragment(),
     View.OnClickListener {
 
   private var _binding: VB? = null
   protected val binding get() = _binding as VB
+
+  protected val viewModel: VM by viewModel(viewModelClazz)
 
   protected lateinit var mContext: Context
 
@@ -72,7 +80,18 @@ abstract class BaseFragment<VB : ViewBinding>(
 
   abstract fun setupViews()
 
-  open fun setupObserver() {}
+  open fun setupObserver() {
+    viewModel.fetchStatus.observe(viewLifecycleOwner, {
+      it?.let { response ->
+        checkErrorState(response)
+        showLoadingState(response is ResponseWrapper.Loading)
+      }
+    })
+  }
+
+  open fun showEmptyState(isEmpty: Boolean) {}
+
+  open fun showLoadingState(isLoading: Boolean) {}
 
   protected fun checkPermission(permission: String) {
     if (checkSelfPermission(mContext, permission) == PackageManager.PERMISSION_GRANTED) {
@@ -82,8 +101,8 @@ abstract class BaseFragment<VB : ViewBinding>(
     }
   }
 
-  protected fun showErrorToast(messageId: Int) {
-    SnackbarUtils.showErrorSnackbar(binding.root, getString(messageId))
+  protected fun showErrorToast(message: String? = null, defaultMessageId: Int) {
+    SnackbarUtils.showErrorSnackbar(binding.root, message ?: getString(defaultMessageId))
   }
 
   protected fun showToast(messageId: Int) {
@@ -95,6 +114,15 @@ abstract class BaseFragment<VB : ViewBinding>(
     lifecycleJob = lifecycleScope.launch {
       delay(500)
       block.invoke()
+    }
+  }
+
+  private fun checkErrorState(wrapper: ResponseWrapper<*>) {
+    when (wrapper) {
+      is ResponseWrapper.Error -> showErrorToast(wrapper.message, R.string.unknown_error_message)
+      is ResponseWrapper.NetworkError -> showErrorToast(null, R.string.no_connection_message)
+      else -> {
+      }
     }
   }
 }

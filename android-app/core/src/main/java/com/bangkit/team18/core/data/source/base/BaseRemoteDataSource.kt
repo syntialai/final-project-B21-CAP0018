@@ -9,11 +9,15 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 abstract class BaseRemoteDataSource {
@@ -26,18 +30,20 @@ abstract class BaseRemoteDataSource {
   }
 
   protected fun <T : Any> CollectionReference.loadData(
-      clazz: Class<T>): Flow<List<T>> = callbackFlow {
+      clazz: Class<T>): Flow<List<T>> = channelFlow {
     val subscription = addSnapshotListener { snapshot, error ->
       error?.let { err ->
         close(err)
         return@addSnapshotListener
       } ?: run {
-        if (snapshot.isNull() || snapshot!!.isEmpty) {
-          offer(emptyList<T>())
-        } else {
-          offer(snapshot.map { document ->
-            document.toObject(clazz)
-          })
+        launch {
+          if (snapshot.isNull() || snapshot!!.isEmpty) {
+            send(emptyList<T>())
+          } else {
+            send(snapshot.map { document ->
+              document.toObject(clazz)
+            })
+          }
         }
       }
     }
@@ -78,6 +84,33 @@ abstract class BaseRemoteDataSource {
       close(it)
     }.addOnCanceledListener {
       close()
+    }
+
+    awaitClose {
+      nearbyTasks.forEach { _ ->
+        cancel()
+      }
+    }
+  }
+
+  protected fun <T : Any> Query.loadData(clazz: Class<T>): Flow<List<T>> = callbackFlow {
+    val subscription = addSnapshotListener { snapshot, error ->
+      error?.let { err ->
+        close(err)
+        return@addSnapshotListener
+      } ?: run {
+        if (snapshot.isNull() || snapshot!!.isEmpty) {
+          offer(emptyList<T>())
+        } else {
+          offer(snapshot.map { document ->
+            document.toObject(clazz)
+          })
+        }
+      }
+    }
+
+    awaitClose {
+      subscription.remove()
     }
   }
 

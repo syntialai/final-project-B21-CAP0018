@@ -9,6 +9,7 @@ import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentHospitalDetailBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
+import com.bangkit.team18.qhope.ui.booking.viewmodel.HospitalDetailViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -17,9 +18,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.chip.Chip
 
-class HospitalDetailFragment :
-    BaseFragment<FragmentHospitalDetailBinding>(FragmentHospitalDetailBinding::inflate),
-    OnMapReadyCallback {
+class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, HospitalDetailViewModel>(
+    FragmentHospitalDetailBinding::inflate, HospitalDetailViewModel::class), OnMapReadyCallback {
 
   companion object {
     private const val DEFAULT_ZOOM = 15f
@@ -35,6 +35,14 @@ class HospitalDetailFragment :
     googleMap = map
     // TODO: Update location and get data from viewmodel
 //    updateLocation()
+  }
+
+  override fun showLoadingState(isLoading: Boolean) {
+    binding.apply {
+      spinKitLoadHospitalDetail.showOrRemove(isLoading)
+      layoutHospitalDetail.showOrRemove(isLoading.not())
+      layoutCheckoutHospital.showOrRemove(isLoading.not())
+    }
   }
 
   override fun onClick(view: View?) {
@@ -111,14 +119,6 @@ class HospitalDetailFragment :
         setupPriceByType(roomTypes[checkedId])
         setupRoomAvailability(roomTypes[checkedId].availableRoomCount)
       }
-    }
-  }
-
-  private fun showLoadingState(isLoading: Boolean) {
-    binding.apply {
-      spinKitLoadHospitalDetail.showOrRemove(isLoading)
-      layoutHospitalDetail.showOrRemove(isLoading.not())
-      layoutCheckoutHospital.showOrRemove(isLoading.not())
     }
   }
 

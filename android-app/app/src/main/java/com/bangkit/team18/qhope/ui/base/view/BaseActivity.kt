@@ -18,15 +18,12 @@ abstract class BaseActivity<VB : ViewBinding>(private val inflater: (LayoutInfla
     _binding = inflater.invoke(layoutInflater)
     setContentView(binding.root)
     setupViews(savedInstanceState)
-    setupObserver()
   }
 
   abstract fun setupViews(savedInstanceState: Bundle?)
 
-  open fun setupObserver() {}
-
-  protected fun showErrorToast(messageId: Int) {
-    SnackbarUtils.showErrorSnackbar(binding.root, getString(messageId))
+  protected fun showErrorToast(message: String?, defaultMessageId: Int) {
+    SnackbarUtils.showErrorSnackbar(binding.root, message ?: getString(defaultMessageId))
   }
 
   protected fun showToast(messageId: Int) {
