@@ -2,7 +2,6 @@ package com.bangkit.team18.qhope.ui.home.view
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.location.Geocoder
 import android.location.Location
 import android.view.View
 import android.widget.SearchView
@@ -18,7 +17,6 @@ import com.bangkit.team18.qhope.ui.home.viewmodel.HomeViewModel
 import com.bangkit.team18.qhope.utils.Router
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
-import java.util.Locale
 
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(FragmentHomeBinding::inflate,
     HomeViewModel::class), OnItemClickListener {
@@ -92,15 +90,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(FragmentHo
     }
   }
 
+  override fun showLoadingState(isLoading: Boolean) {
+    binding.spinKitLoadHome.showOrRemove(isLoading)
+  }
+
   private fun getLocation() {
     checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
   }
 
   private fun setLocation(location: Location) {
     viewModel.fetchNearbyHospitals(location.latitude, location.longitude)
-    val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(location.latitude,
-        location.longitude, 1)
-    binding.textViewYourLocation.text = addresses[0].getAddressLine(0)
+    // TODO: Uncomment this when use real device
+//    val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(location.latitude,
+//        location.longitude, 1)
+//    binding.textViewYourLocation.text = addresses[0].getAddressLine(0)
   }
 
   private fun setupRecyclerView() {

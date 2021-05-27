@@ -17,20 +17,20 @@ class HospitalRemoteDataSourceImpl(db: FirebaseFirestore) : BaseRemoteDataSource
 
   private val hospitalCollections = db.collection(CollectionConstants.HOSPITAL_COLLECTION)
 
-  override fun getNearbyHospitals(location: GeoLocation): Flow<List<HospitalResponse>> {
-    return hospitalCollections.loadNearby(HospitalResponse::class.java, location)
+  override suspend fun getNearbyHospitals(location: GeoLocation): Flow<List<HospitalResponse>> {
+    return hospitalCollections.loadData(HospitalResponse::class.java)
   }
 
-  override fun getHospitalDetail(id: String): Flow<HospitalResponse?> {
+  override suspend fun getHospitalDetail(id: String): Flow<HospitalResponse?> {
     return hospitalCollections.document(id).loadData(HospitalResponse::class.java)
   }
 
-  override fun getHospitalRoomTypes(id: String): Flow<List<RoomTypeResponse>> {
+  override suspend fun getHospitalRoomTypes(id: String): Flow<List<RoomTypeResponse>> {
     return hospitalCollections.document(id).collection(
         CollectionConstants.ROOM_COLLECTION).loadData(RoomTypeResponse::class.java)
   }
 
-  override fun searchHospitals(query: String): Flow<List<HospitalResponse>> {
+  override suspend fun searchHospitals(query: String): Flow<List<HospitalResponse>> {
     return hospitalCollections.whereGreaterThanOrEqualTo(HospitalMapper.NAME_FIELD, query).loadData(
             HospitalResponse::class.java)
   }

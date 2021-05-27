@@ -1,8 +1,7 @@
 package com.bangkit.team18.core.data.source.response.hospital
 
-import com.firebase.geofire.GeoLocation
 import com.google.firebase.firestore.DocumentId
-import com.google.firebase.firestore.PropertyName
+import com.google.firebase.firestore.GeoPoint
 
 // TODO: Add image, state and country
 data class HospitalResponse(
@@ -10,49 +9,36 @@ data class HospitalResponse(
     @DocumentId
     val id: String,
 
-    @PropertyName("nama_rumah_sakit")
-    val name: String,
+    val nama_rumah_sakit: String,
 
-    @PropertyName("alamat_rumah_sakit")
-    val address: GeoLocation,
+    val alamat_rumah_sakit: GeoPoint,
 
-    @PropertyName("alamat_str")
-    val addressStr: String,
+    val alamat_str: String,
 
-    @PropertyName("email")
     val email: String,
 
-    @PropertyName("jenis_rumah_sakit")
-    val type: String,
+    val jenis_rumah_sakit: String,
 
-    @PropertyName("kecamatan")
-    val districts: String,
+    val kecamatan: String,
 
-    @PropertyName("kelurahan")
-    val subDistrict: String,
+    val kelurahan: String,
 
-    @PropertyName("kode_pos")
-    val postalCode: String,
+    val kode_pos: String,
 
-    @PropertyName("kota_administrasi")
-    val administrationCity: String,
+    val kota_administrasi: String,
 
-    @PropertyName("nomor_fax")
-    val faxNumber: String,
+    val nomor_fax: String,
 
-    @PropertyName("nomor_telepon")
-    val telephoneNumber: String,
+    val nomor_telepon: String,
 
-    @PropertyName("telepon_humas")
-    val publicRelationPhoneNumber: String,
+    val telepon_humas: String,
 
-    @PropertyName("website")
     val website: String
 ) {
   constructor() : this(
       "",
       "",
-      GeoLocation(0.0, 0.0),
+      GeoPoint(0.0, 0.0),
       "",
       "",
       "",

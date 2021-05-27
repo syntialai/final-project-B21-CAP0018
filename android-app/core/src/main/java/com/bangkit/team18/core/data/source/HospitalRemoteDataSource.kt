@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface HospitalRemoteDataSource {
 
-  fun getNearbyHospitals(location: GeoLocation): Flow<List<HospitalResponse>>
+  suspend fun getNearbyHospitals(location: GeoLocation): Flow<List<HospitalResponse>>
 
-  fun getHospitalDetail(id: String): Flow<HospitalResponse?>
+  suspend fun getHospitalDetail(id: String): Flow<HospitalResponse?>
 
-  fun getHospitalRoomTypes(id: String): Flow<List<RoomTypeResponse>>
+  suspend fun getHospitalRoomTypes(id: String): Flow<List<RoomTypeResponse>>
 
-  fun searchHospitals(query: String): Flow<List<HospitalResponse>>
+  suspend fun searchHospitals(query: String): Flow<List<HospitalResponse>>
 }

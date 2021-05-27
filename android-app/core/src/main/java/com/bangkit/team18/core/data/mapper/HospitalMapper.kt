@@ -4,6 +4,8 @@ import com.bangkit.team18.core.data.source.response.hospital.HospitalResponse
 import com.bangkit.team18.core.data.source.response.hospital.RoomTypeResponse
 import com.bangkit.team18.core.domain.model.booking.RoomType
 import com.bangkit.team18.core.domain.model.home.Hospital
+import com.firebase.geofire.GeoLocation
+import com.google.firebase.firestore.GeoPoint
 
 object HospitalMapper {
 
@@ -20,10 +22,10 @@ object HospitalMapper {
   // TODO: Update missing items
   fun mapToHospital(response: HospitalResponse) = Hospital(
       id = response.id,
-      name = response.name,
+      name = response.nama_rumah_sakit,
       image = "",
-      type = response.type,
-      location = response.address,
+      type = response.jenis_rumah_sakit,
+      location = getGeoLocation(response.alamat_rumah_sakit),
       address = getAddress(response),
       availableRoomCount = 0
   )
@@ -36,10 +38,13 @@ object HospitalMapper {
   )
 
   private fun getAddress(response: HospitalResponse) = arrayListOf(
-      response.addressStr,
-      response.subDistrict,
-      response.districts,
-      response.administrationCity,
-      response.postalCode
+      response.alamat_str,
+      response.kelurahan,
+      response.kecamatan,
+      response.kota_administrasi,
+      response.kode_pos
   ).joinToString()
+
+  private fun getGeoLocation(geoPoint: GeoPoint) = GeoLocation(geoPoint.latitude,
+      geoPoint.longitude)
 }

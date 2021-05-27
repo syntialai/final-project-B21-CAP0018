@@ -4,32 +4,29 @@ import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import java.io.IOException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.transform
 
 abstract class FetchDataWrapper<Response, Model> {
 
-  protected abstract fun fetchData(): Flow<Response?>
+  protected abstract suspend fun fetchData(): Flow<Response?>
 
-  protected abstract fun mapData(response: Response): Model
+  protected abstract suspend fun mapData(response: Response): Model
 
   suspend fun getData(): Flow<ResponseWrapper<Model>> {
-    return flow {
-      fetchData().onStart {
-        emit(ResponseWrapper.Loading<Model>())
-      }.catch { exception ->
-        emit(if (isNetworkError(exception)) {
-          ResponseWrapper.NetworkError<Model>()
-        } else {
-          ResponseWrapper.Error(exception.message)
-        })
-      }.collectLatest { response ->
-        response?.let {
-          val model = mapData(it)
-          emit(ResponseWrapper.Success(model))
-        }
+    return fetchData().transform<Response?, ResponseWrapper<Model>> { value ->
+      value?.let {
+        val model = mapData(it)
+        emit(ResponseWrapper.Success(model))
       }
+    }.onStart {
+      emit(ResponseWrapper.Loading<Model>())
+    }.catch { exception ->
+      emit(if (isNetworkError(exception)) {
+        ResponseWrapper.NetworkError<Model>()
+      } else {
+        ResponseWrapper.Error(exception.message)
+      })
     }
   }
 

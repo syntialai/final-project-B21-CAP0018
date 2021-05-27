@@ -20,6 +20,7 @@ class QHopeApplication : Application() {
     super.onCreate()
     startKoin {
       androidLogger(Level.DEBUG)
+      androidLogger(Level.ERROR)
       androidContext(this@QHopeApplication)
       modules(listOf(dispatcherModule, firebaseModule, remoteDataSourceModule, repositoryModule,
           useCaseModule, viewModelModule))

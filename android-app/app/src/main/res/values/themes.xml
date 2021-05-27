@@ -40,6 +40,5 @@
         <item name="android:searchViewStyle">@style/Widget.QHope.SearchView</item>
         <item name="toolbarStyle">@style/Widget.QHope.Toolbar</item>
         <item name="imageButtonStyle">@style/Widget.QHope.ImageButton</item>
-        <item name="SpinKitViewStyle">@style/Widget.QHope.SpinKit</item>
     </style>
 </resources>
