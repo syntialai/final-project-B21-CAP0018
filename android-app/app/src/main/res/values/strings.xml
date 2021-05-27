@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">Q-Hope</string>
-
     <string name="close_action">Close</string>
 
-<<<<<<< HEAD
     <!--  Login  -->
     <string name="welcome_icon">Welcome icon</string>
     <string name="indonesian_phone_code">+62</string>
@@ -16,7 +14,7 @@
     <string name="resend_otp_label">Resend OTP</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-=======
+
     <!-- Home -->
     <string name="home_label">Home</string>
     <string name="your_location_label">Your location</string>
@@ -82,5 +80,4 @@
     <!-- Other -->
     <string name="empty_state_label">Empty state</string>
     <string name="referral_letter_content_description">Pdf</string>
->>>>>>> ad59e5d9f9ef41705d4e091e6e8a1a2e236aee1c
 </resources>
