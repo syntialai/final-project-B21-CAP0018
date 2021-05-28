@@ -10,20 +10,25 @@ import com.bangkit.team18.core.utils.view.DataUtils.orFalse
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentHomeBinding
-import com.bangkit.team18.qhope.ui.base.adapter.OnItemClickListener
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.home.adapter.HomeAdapter
+import com.bangkit.team18.qhope.ui.home.adapter.HomeHospitalItemCallback
 import com.bangkit.team18.qhope.ui.home.viewmodel.HomeViewModel
 import com.bangkit.team18.qhope.utils.Router
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import org.koin.android.ext.android.inject
 
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(FragmentHomeBinding::inflate,
-    HomeViewModel::class), OnItemClickListener {
+    HomeViewModel::class), HomeHospitalItemCallback {
 
   companion object {
     fun newInstance() = HomeFragment()
   }
+
+  private val storage: FirebaseStorage by inject()
 
   private val homeAdapter by lazy {
     HomeAdapter(this)
@@ -79,6 +84,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(FragmentHo
 
   override fun onClickListener(id: String) {
     Router.goToHospitalDetails(mContext, id)
+  }
+
+  override fun getStorageRef(imagePath: String): StorageReference {
+    return storage.getReference(imagePath)
   }
 
   @SuppressLint("MissingPermission")

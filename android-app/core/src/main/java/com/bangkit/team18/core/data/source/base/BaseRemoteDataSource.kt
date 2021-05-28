@@ -1,6 +1,5 @@
 package com.bangkit.team18.core.data.source.base
 
-import android.util.Log
 import com.bangkit.team18.core.utils.view.DataUtils.isNull
 import com.bangkit.team18.core.utils.view.DataUtils.orZero
 import com.firebase.geofire.GeoFireUtils
@@ -38,7 +37,6 @@ abstract class BaseRemoteDataSource {
         return@addSnapshotListener
       } ?: run {
         launch {
-          Log.d("SNAPSHOT: ", "isNull: ${snapshot.isNull()}, isEmpty: ${snapshot?.isEmpty ?: true}")
           if (snapshot.isNull() || snapshot!!.isEmpty) {
             send(emptyList<T>())
           } else {

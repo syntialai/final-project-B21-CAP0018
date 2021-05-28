@@ -8,6 +8,8 @@ data class RoomTypeResponse(
     @DocumentId
     val id: String,
 
+    val name: String,
+
     val price: Double,
 
     val total_room: Int,
@@ -15,6 +17,7 @@ data class RoomTypeResponse(
     val available_room: Int,
 ) {
   constructor() : this(
+      "",
       "",
       0.0,
       0,

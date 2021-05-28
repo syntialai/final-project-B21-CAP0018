@@ -6,15 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.booking.view.HospitalDetailFragment">
 
-    <ImageButton
-        android:id="@+id/button_hospital_detail_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_12"
-        android:src="@drawable/ic_arrow_back"
-        app:tint="?attr/colorSurface"
-        tools:ignore="ContentDescription" />
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -204,6 +195,16 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <ImageButton
+        android:id="@+id/button_hospital_detail_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_12"
+        android:layout_gravity="top|start"
+        android:src="@drawable/ic_arrow_back"
+        app:tint="?attr/colorSurface"
+        tools:ignore="ContentDescription" />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/spin_kit_load_hospital_detail"

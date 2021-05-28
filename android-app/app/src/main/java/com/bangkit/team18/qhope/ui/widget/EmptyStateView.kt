@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
-import androidx.core.content.withStyledAttributes
 import com.bangkit.team18.core.utils.view.ViewUtils.remove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.LayoutEmptyStateViewBinding
@@ -15,9 +14,11 @@ class EmptyStateView constructor(context: Context, attrs: AttributeSet) :
 
   private lateinit var binding: LayoutEmptyStateViewBinding
 
+  private val styledAttributes = context.obtainStyledAttributes(attrs, R.styleable.EmptyStateView)
+
   init {
     initBinding()
-    context.withStyledAttributes(attrs, R.styleable.EmptyStateView) {
+    styledAttributes.apply {
       setImageRes(getDrawable(R.styleable.EmptyStateView_image))
       setTitle(getString(R.styleable.EmptyStateView_title))
       setDescription(getString(R.styleable.EmptyStateView_description))

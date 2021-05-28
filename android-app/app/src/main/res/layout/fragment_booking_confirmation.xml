@@ -118,6 +118,8 @@
                 android:layout_marginHorizontal="@dimen/dp_12"
                 android:layout_marginTop="@dimen/dp_12"
                 android:visibility="gone"
+                app:file_name="Your Referral Letter Card"
+                app:image_type="PDF"
                 app:layout_constraintTop_toBottomOf="@id/button_booking_confirm_upload_letter"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -8,7 +8,7 @@ data class HospitalDetail(
     
     val name: String,
 
-    val image: String,
+    val imagePath: String,
 
     val type: String,
 

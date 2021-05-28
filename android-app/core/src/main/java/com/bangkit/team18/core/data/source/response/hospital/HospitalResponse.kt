@@ -17,6 +17,8 @@ data class HospitalResponse(
 
     val email: String,
 
+    val foto_rumah_sakit: String,
+
     val jenis_rumah_sakit: String,
 
     val kecamatan: String,
@@ -39,6 +41,7 @@ data class HospitalResponse(
       "",
       "",
       GeoPoint(0.0, 0.0),
+      "",
       "",
       "",
       "",
