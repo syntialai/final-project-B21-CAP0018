@@ -12,7 +12,7 @@
 
     <!-- DP -->
     <dimen name="dp_300">300dp</dimen>
-    <dimen name="dp_120">120dp</dimen>
+    <dimen name="dp_150">150dp</dimen>
     <dimen name="dp_106">106dp</dimen>
     <dimen name="dp_100">100dp</dimen>
     <dimen name="dp_80">80dp</dimen>

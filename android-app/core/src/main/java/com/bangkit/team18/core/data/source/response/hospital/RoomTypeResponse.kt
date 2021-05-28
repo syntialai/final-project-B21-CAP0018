@@ -1,7 +1,6 @@
 package com.bangkit.team18.core.data.source.response.hospital
 
 import com.google.firebase.firestore.DocumentId
-import com.google.firebase.firestore.PropertyName
 
 // TODO: Add name
 data class RoomTypeResponse(
@@ -11,11 +10,9 @@ data class RoomTypeResponse(
 
     val price: Double,
 
-    @PropertyName("total_room")
-    val totalRoom: Int,
+    val total_room: Int,
 
-    @PropertyName("available_room")
-    val availableRoom: Int,
+    val available_room: Int,
 ) {
   constructor() : this(
       "",
