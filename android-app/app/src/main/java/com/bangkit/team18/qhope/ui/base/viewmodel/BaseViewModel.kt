@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -12,33 +13,38 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel : ViewModel() {
+    private var _fetchStatus = MutableLiveData<ResponseWrapper<*>>()
+    val fetchStatus: LiveData<ResponseWrapper<*>>
+        get() = _fetchStatus
 
-  private var _fetchStatus = MutableLiveData<ResponseWrapper<*>>()
-  val fetchStatus: LiveData<ResponseWrapper<*>>
-    get() = _fetchStatus
-
-  protected fun launchViewModelScope(block: suspend () -> Unit,
-      dispatcher: CoroutineDispatcher = Dispatchers.Main) {
-    viewModelScope.launch(dispatcher) {
-      block.invoke()
+    protected fun launchViewModelScope(
+        block: suspend () -> Unit,
+        dispatcher: CoroutineDispatcher = Dispatchers.Main
+    ) {
+        viewModelScope.launch(dispatcher) {
+            block.invoke()
+        }
     }
-  }
 
-  protected suspend fun <T> Flow<ResponseWrapper<T>>.runFlow(onSuccessFetch: (T) -> Unit,
-      onFailFetch: (() -> Unit)? = null) {
-    collect { data ->
-      checkResponse(data, onSuccessFetch, onFailFetch)
+    protected suspend fun <T> Flow<ResponseWrapper<T>>.runFlow(
+        onSuccessFetch: (T) -> Unit,
+        onFailFetch: (() -> Unit)? = null
+    ) {
+        collect { data ->
+            checkResponse(data, onSuccessFetch, onFailFetch)
+        }
     }
-  }
 
-  private fun <T> checkResponse(wrapper: ResponseWrapper<T>, onSuccessFetch: (T) -> Unit,
-      onFailFetch: (() -> Unit)?) {
-    _fetchStatus.value = wrapper
-    when (wrapper) {
-      is ResponseWrapper.Success -> onSuccessFetch.invoke(wrapper.data)
-      is ResponseWrapper.Loading -> {
-      }
-      else -> onFailFetch?.invoke()
+    private fun <T> checkResponse(
+        wrapper: ResponseWrapper<T>, onSuccessFetch: (T) -> Unit,
+        onFailFetch: (() -> Unit)?
+    ) {
+        _fetchStatus.value = wrapper
+        when (wrapper) {
+            is ResponseWrapper.Success -> onSuccessFetch.invoke(wrapper.data)
+            is ResponseWrapper.Loading -> {
+            }
+            else -> onFailFetch?.invoke()
+        }
     }
-  }
 }

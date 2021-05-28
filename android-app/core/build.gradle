@@ -89,4 +89,7 @@ dependencies {
   api "androidx.paging:paging-runtime-ktx:3.0.0"
   api "androidx.paging:paging-compose:1.0.0-alpha09"
   testImplementation "androidx.paging:paging-common-ktx:3.0.0"
+
+  // Timber
+  api "com.jakewharton.timber:timber:4.7.1"
 }
