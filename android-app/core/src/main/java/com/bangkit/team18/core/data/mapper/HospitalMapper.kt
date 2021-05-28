@@ -24,7 +24,7 @@ object HospitalMapper {
   fun mapToHospitalDetail(response: HospitalResponse) = HospitalDetail(
       id = response.id,
       name = response.nama_rumah_sakit,
-      image = "",
+      imagePath = response.foto_rumah_sakit,
       type = response.jenis_rumah_sakit,
       location = getLatLng(response.alamat_rumah_sakit),
       address = getAddress(response),
@@ -33,11 +33,10 @@ object HospitalMapper {
       availableRoomCount = 0
   )
 
-  // TODO: Update missing items
   private fun mapToHospital(response: HospitalResponse) = Hospital(
       id = response.id,
       name = response.nama_rumah_sakit,
-      image = "",
+      image = response.foto_rumah_sakit,
       type = response.jenis_rumah_sakit,
       location = getGeoLocation(response.alamat_rumah_sakit),
       address = getAddress(response),
@@ -46,7 +45,7 @@ object HospitalMapper {
 
   private fun mapToRoomType(response: RoomTypeResponse) = RoomType(
       id = response.id,
-      name = "",
+      name = response.name,
       price = DataMapper.toFormattedPrice(response.price),
       availableRoomCount = response.available_room
   )

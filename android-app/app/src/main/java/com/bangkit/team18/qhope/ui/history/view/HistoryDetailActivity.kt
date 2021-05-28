@@ -5,7 +5,7 @@ import android.view.View
 import com.bangkit.team18.core.domain.model.history.HistoryStatus
 import com.bangkit.team18.core.domain.model.home.Hospital
 import com.bangkit.team18.core.utils.view.DataUtils.getText
-import com.bangkit.team18.core.utils.view.ViewUtils.loadImage
+import com.bangkit.team18.core.utils.view.ViewUtils.loadImageFromStorage
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityHistoryDetailBinding
@@ -58,7 +58,7 @@ class HistoryDetailActivity :
 
   private fun setBookingDataHospitalInfo(hospital: Hospital) {
     binding.layoutHistoryDetailBookingData.apply {
-      imageViewBookingDataHospital.loadImage(this@HistoryDetailActivity, hospital.image,
+      imageViewBookingDataHospital.loadImageFromStorage(this@HistoryDetailActivity, hospital.image,
           R.drawable.drawable_hospital_placeholder)
       textViewBookingDataHospitalName.text = hospital.name
       textViewBookingDataHospitalType.text = hospital.type

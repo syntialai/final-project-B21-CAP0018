@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_12"
+        android:layout_gravity="top|start"
         android:src="@drawable/ic_arrow_back"
         app:tint="?attr/colorSurface"
         tools:ignore="ContentDescription" />

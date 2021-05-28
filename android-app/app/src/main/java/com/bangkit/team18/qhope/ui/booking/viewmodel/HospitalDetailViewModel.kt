@@ -19,6 +19,8 @@ class HospitalDetailViewModel(private val hospitalUseCase: HospitalUseCase) : Ba
   val hospitalRoomTypes: LiveData<List<RoomType>>
     get() = _hospitalRoomTypes
 
+  private var selectedRoomType: RoomType? = null
+
   fun fetchHospitalDetails() {
     if (isIdInitialized()) {
       launchViewModelScope({
@@ -30,7 +32,15 @@ class HospitalDetailViewModel(private val hospitalUseCase: HospitalUseCase) : Ba
     }
   }
 
-  fun fetchHospitalRoomTypes() {
+  fun getSelectedRoomType() = selectedRoomType
+
+  fun getId() = _id
+
+  fun selectRoomType(roomType: RoomType) {
+    selectedRoomType = roomType
+  }
+
+  private fun fetchHospitalRoomTypes() {
     launchViewModelScope({
       hospitalUseCase.getHospitalRoomTypes(_id).runFlow({ data ->
         _hospitalRoomTypes.value = data
