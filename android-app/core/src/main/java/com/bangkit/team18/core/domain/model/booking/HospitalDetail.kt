@@ -16,9 +16,9 @@ data class HospitalDetail(
 
     val address: String,
 
-    val location: LatLng?,
+    val location: LatLng,
 
-    val telephone: String?,
+    val telephone: String,
 
     val availableRoomCount: Int
 )

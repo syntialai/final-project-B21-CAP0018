@@ -1,5 +1,6 @@
 package com.bangkit.team18.core.data.source.base
 
+import android.util.Log
 import com.bangkit.team18.core.utils.view.DataUtils.isNull
 import com.bangkit.team18.core.utils.view.DataUtils.orZero
 import com.firebase.geofire.GeoFireUtils
@@ -37,6 +38,7 @@ abstract class BaseRemoteDataSource {
         return@addSnapshotListener
       } ?: run {
         launch {
+          Log.d("SNAPSHOT: ", "isNull: ${snapshot.isNull()}, isEmpty: ${snapshot?.isEmpty ?: true}")
           if (snapshot.isNull() || snapshot!!.isEmpty) {
             send(emptyList<T>())
           } else {
@@ -53,16 +55,18 @@ abstract class BaseRemoteDataSource {
     }
   }
 
-  protected fun <T : Any> DocumentReference.loadData(clazz: Class<T>): Flow<T?> = callbackFlow {
+  protected fun <T : Any> DocumentReference.loadData(clazz: Class<T>): Flow<T?> = channelFlow {
     val subscription = addSnapshotListener { snapshot, error ->
       error?.let { err ->
         close(err)
         return@addSnapshotListener
       } ?: run {
-        if (snapshot.isNull() || snapshot!!.exists()) {
-          offer(null)
-        } else {
-          offer(snapshot.toObject(clazz))
+        launch {
+          if (snapshot.isNull() || snapshot!!.exists().not()) {
+            send(null)
+          } else {
+            send(snapshot.toObject(clazz))
+          }
         }
       }
     }
@@ -93,18 +97,20 @@ abstract class BaseRemoteDataSource {
     }
   }
 
-  protected fun <T : Any> Query.loadData(clazz: Class<T>): Flow<List<T>> = callbackFlow {
+  protected fun <T : Any> Query.loadData(clazz: Class<T>): Flow<List<T>> = channelFlow {
     val subscription = addSnapshotListener { snapshot, error ->
       error?.let { err ->
         close(err)
         return@addSnapshotListener
       } ?: run {
-        if (snapshot.isNull() || snapshot!!.isEmpty) {
-          offer(emptyList<T>())
-        } else {
-          offer(snapshot.map { document ->
-            document.toObject(clazz)
-          })
+        launch {
+          if (snapshot.isNull() || snapshot!!.isEmpty) {
+            send(emptyList<T>())
+          } else {
+            send(snapshot.map { document ->
+              document.toObject(clazz)
+            })
+          }
         }
       }
     }

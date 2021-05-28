@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:613609637569:android:d448befc18861ff87bf640",
+        "mobilesdk_app_id": "1:613609637569:android:8694aef277fa59c47bf640",
         "android_client_info": {
           "package_name": "com.bangkit.team18.qhope"
         }
@@ -28,7 +28,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAnTgSQX25753DsfC3vml6xt7Bq19bwcgQ"
+          "current_key": "AIzaSyCs4CtCLhGt5NE6lJWviujdhqFSpE3jx38"
         }
       ],
       "services": {

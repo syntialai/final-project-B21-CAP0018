@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_hospitalDetailFragment_to_bookingConfirmationFragment"
             app:destination="@id/bookingConfirmationFragment" />
+        <argument
+            android:name="id"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/bookingConfirmationFragment"
@@ -23,4 +26,10 @@
             android:id="@+id/action_bookingConfirmationFragment_to_hospitalDetailFragment"
             app:destination="@id/hospitalDetailFragment" />
     </fragment>
+    <action
+        android:id="@+id/action_global_hospitalDetailFragment"
+        app:destination="@id/hospitalDetailFragment"
+        app:popUpToInclusive="true"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/hospitalDetailFragment" />
 </navigation>

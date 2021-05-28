@@ -6,6 +6,7 @@ import com.bangkit.team18.core.data.source.HospitalRemoteDataSource
 import com.bangkit.team18.core.data.source.response.hospital.HospitalResponse
 import com.bangkit.team18.core.data.source.response.hospital.RoomTypeResponse
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
+import com.bangkit.team18.core.domain.model.booking.HospitalDetail
 import com.bangkit.team18.core.domain.model.booking.RoomType
 import com.bangkit.team18.core.domain.model.home.Hospital
 import com.bangkit.team18.core.domain.repository.HospitalRepository
@@ -30,14 +31,14 @@ class HospitalRepositoryImpl(private val hospitalRemoteDataSource: HospitalRemot
     }.getData().flowOn(ioDispatcher)
   }
 
-  override suspend fun getHospitalDetail(id: String): Flow<ResponseWrapper<Hospital>> {
-    return object : FetchDataWrapper<HospitalResponse, Hospital>() {
+  override suspend fun getHospitalDetail(id: String): Flow<ResponseWrapper<HospitalDetail>> {
+    return object : FetchDataWrapper<HospitalResponse, HospitalDetail>() {
       override suspend fun fetchData(): Flow<HospitalResponse?> {
         return hospitalRemoteDataSource.getHospitalDetail(id)
       }
 
-      override suspend fun mapData(response: HospitalResponse): Hospital {
-        return HospitalMapper.mapToHospital(response)
+      override suspend fun mapData(response: HospitalResponse): HospitalDetail {
+        return HospitalMapper.mapToHospitalDetail(response)
       }
     }.getData().flowOn(ioDispatcher)
   }

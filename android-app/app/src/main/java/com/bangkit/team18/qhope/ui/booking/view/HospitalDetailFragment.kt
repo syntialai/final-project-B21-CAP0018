@@ -1,6 +1,7 @@
 package com.bangkit.team18.qhope.ui.booking.view
 
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.domain.model.booking.HospitalDetail
 import com.bangkit.team18.core.domain.model.booking.RoomType
@@ -31,10 +32,30 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
     setupGoogleMaps()
   }
 
+  override fun setupObserver() {
+    super.setupObserver()
+
+    viewModel.initializeId(arguments?.getString(RoomBookingActivity.ID).orEmpty())
+    viewModel.fetchHospitalDetails()
+
+    viewModel.hospital.observe(viewLifecycleOwner, {
+      it?.let { data ->
+        setHospitalData(data)
+      }
+    })
+    viewModel.hospitalRoomTypes.observe(viewLifecycleOwner, {
+      it?.let { roomTypes ->
+        setupRoomAvailability(roomTypes.size)
+        setupTypeData(roomTypes)
+      }
+    })
+  }
+
   override fun onMapReady(map: GoogleMap) {
     googleMap = map
-    // TODO: Update location and get data from viewmodel
-//    updateLocation()
+    viewModel.hospital.value?.let { hospital ->
+      updateLocation(hospital.location, hospital.name)
+    }
   }
 
   override fun showLoadingState(isLoading: Boolean) {
@@ -70,9 +91,11 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
   }
 
   private fun setupGoogleMaps() {
-    val mapFragment = parentFragmentManager.findFragmentById(
+    val mapFragment = childFragmentManager.findFragmentById(
         R.id.fragment_hospital_detail_location_maps) as SupportMapFragment
-    mapFragment.getMapAsync(this)
+    lifecycleScope.launchWhenResumed {
+      mapFragment.getMapAsync(this@HospitalDetailFragment)
+    }
   }
 
   private fun setHospitalData(hospital: HospitalDetail) {
@@ -89,11 +112,9 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
       textViewHospitalDetailPhone.text = hospital.telephone
 
       textViewHospitalDetailDescription.showOrRemove(hospital.description.isNullOrBlank().not())
-      groupHospitalDetailPhone.showOrRemove(hospital.telephone.isNullOrBlank().not())
+      groupHospitalDetailPhone.showOrRemove(hospital.telephone.isNotBlank())
     }
-    hospital.location?.let { location ->
-      updateLocation(location, hospital.name)
-    }
+    updateLocation(hospital.location, hospital.name)
   }
 
   private fun setupPriceByType(roomType: RoomType) {
@@ -106,6 +127,7 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
     binding.apply {
       chipHospitalItemRoomAvailable.showOrRemove(isAvailable)
       chipHospitalItemRoomNotAvailable.showOrRemove(isAvailable.not())
+      buttonHospitalDetailBook.isEnabled = isAvailable
     }
   }
 
