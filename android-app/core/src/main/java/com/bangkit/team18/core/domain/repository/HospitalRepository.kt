@@ -1,9 +1,9 @@
 package com.bangkit.team18.core.domain.repository
 
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
-import com.bangkit.team18.core.domain.model.booking.HospitalDetail
-import com.bangkit.team18.core.domain.model.booking.RoomType
 import com.bangkit.team18.core.domain.model.home.Hospital
+import com.bangkit.team18.core.domain.model.hospital.HospitalDetail
+import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.firebase.geofire.GeoLocation
 import kotlinx.coroutines.flow.Flow
 

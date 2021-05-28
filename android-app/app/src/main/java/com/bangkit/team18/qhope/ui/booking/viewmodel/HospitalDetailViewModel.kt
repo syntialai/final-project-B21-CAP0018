@@ -2,8 +2,8 @@ package com.bangkit.team18.qhope.ui.booking.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.bangkit.team18.core.domain.model.booking.HospitalDetail
-import com.bangkit.team18.core.domain.model.booking.RoomType
+import com.bangkit.team18.core.domain.model.hospital.HospitalDetail
+import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.domain.usecase.HospitalUseCase
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModel
 

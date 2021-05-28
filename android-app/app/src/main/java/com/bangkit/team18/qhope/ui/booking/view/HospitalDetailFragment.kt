@@ -3,8 +3,8 @@ package com.bangkit.team18.qhope.ui.booking.view
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.bangkit.team18.core.domain.model.booking.HospitalDetail
-import com.bangkit.team18.core.domain.model.booking.RoomType
+import com.bangkit.team18.core.domain.model.hospital.HospitalDetail
+import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.utils.view.ViewUtils.loadImageFromStorage
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R

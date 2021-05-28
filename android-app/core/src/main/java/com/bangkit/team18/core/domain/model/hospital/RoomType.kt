@@ -1,4 +1,4 @@
-package com.bangkit.team18.core.domain.model.booking
+package com.bangkit.team18.core.domain.model.hospital
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
