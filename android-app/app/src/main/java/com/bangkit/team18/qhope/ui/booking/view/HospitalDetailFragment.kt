@@ -25,7 +25,7 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
     FragmentHospitalDetailBinding::inflate, HospitalDetailViewModel::class), OnMapReadyCallback {
 
   companion object {
-    private const val DEFAULT_ZOOM = 20f
+    private const val DEFAULT_ZOOM = 16f
   }
 
   private val storage: FirebaseStorage by inject()
@@ -33,6 +33,10 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
   private var googleMap: GoogleMap? = null
 
   override fun setupViews() {
+    binding.apply {
+      buttonHospitalDetailBack.setOnClickListener(this@HospitalDetailFragment)
+      buttonHospitalDetailBook.setOnClickListener(this@HospitalDetailFragment)
+    }
     setupGoogleMaps()
   }
 
