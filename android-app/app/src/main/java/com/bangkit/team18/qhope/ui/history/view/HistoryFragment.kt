@@ -7,6 +7,7 @@ import com.bangkit.team18.qhope.ui.base.adapter.OnItemClickListener
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.history.adapter.HistoryAdapter
 import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryViewModel
+import com.bangkit.team18.qhope.utils.Router
 
 class HistoryFragment :
     BaseFragment<FragmentHistoryBinding, HistoryViewModel>(FragmentHistoryBinding::inflate,
@@ -27,12 +28,23 @@ class HistoryFragment :
     }
   }
 
+  override fun setupObserver() {
+    super.setupObserver()
+
+    viewModel.initializeUserId()
+    viewModel.fetchUserBookingHistories()
+    viewModel.bookingHistories.observe(this, { histories ->
+      showEmptyState(histories.isEmpty())
+      historyAdapter.submitList(histories)
+    })
+  }
+
   override fun onClick(view: View?) {
     // No Implementation Needed
   }
 
   override fun showEmptyState(isEmpty: Boolean) {
-    with(binding) {
+    binding.apply {
       viewHistoryEmptyState.showOrRemove(isEmpty)
       recyclerViewBookingHistory.showOrRemove(isEmpty.not())
     }
@@ -43,6 +55,6 @@ class HistoryFragment :
   }
 
   override fun onClickListener(id: String) {
-    // TODO: Go to history detail
+    Router.goToHistoryDetail(mContext, id)
   }
 }
