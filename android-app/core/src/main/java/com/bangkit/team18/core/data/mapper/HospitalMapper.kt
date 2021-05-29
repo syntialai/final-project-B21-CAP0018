@@ -2,9 +2,9 @@ package com.bangkit.team18.core.data.mapper
 
 import com.bangkit.team18.core.data.source.response.hospital.HospitalResponse
 import com.bangkit.team18.core.data.source.response.hospital.RoomTypeResponse
-import com.bangkit.team18.core.domain.model.booking.HospitalDetail
-import com.bangkit.team18.core.domain.model.booking.RoomType
 import com.bangkit.team18.core.domain.model.home.Hospital
+import com.bangkit.team18.core.domain.model.hospital.HospitalDetail
+import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.GeoPoint

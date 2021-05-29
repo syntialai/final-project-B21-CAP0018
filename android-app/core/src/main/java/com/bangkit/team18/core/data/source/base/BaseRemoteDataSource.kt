@@ -11,6 +11,9 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
@@ -115,6 +118,16 @@ abstract class BaseRemoteDataSource {
 
     awaitClose {
       subscription.remove()
+    }
+  }
+
+  protected suspend fun CollectionReference.addData(data: HashMap<String, Any>) {
+    return suspendCoroutine { continuation ->
+      add(data).addOnCompleteListener {
+        continuation.resume(Unit)
+      }.addOnFailureListener { exception ->
+        continuation.resumeWithException(exception)
+      }
     }
   }
 
