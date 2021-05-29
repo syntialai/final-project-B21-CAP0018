@@ -1,5 +1,6 @@
 package com.bangkit.team18.core.data.source.base
 
+import android.net.Uri
 import com.bangkit.team18.core.utils.view.DataUtils.isNull
 import com.bangkit.team18.core.utils.view.DataUtils.orZero
 import com.firebase.geofire.GeoFireUtils
@@ -11,6 +12,9 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
+import com.google.firebase.storage.ktx.storageMetadata
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -123,12 +127,35 @@ abstract class BaseRemoteDataSource {
 
   protected suspend fun CollectionReference.addData(data: HashMap<String, Any>) {
     return suspendCoroutine { continuation ->
-      add(data).addOnCompleteListener {
+      add(data).addOnSuccessListener {
         continuation.resume(Unit)
       }.addOnFailureListener { exception ->
         continuation.resumeWithException(exception)
       }
     }
+  }
+
+  protected suspend fun StorageReference.addFile(fileUri: Uri, contentType: String): Flow<Boolean> {
+    val metadata = storageMetadata {
+      this.contentType = contentType
+    }
+    return channelFlow {
+      val storageTask = putFile(fileUri, metadata).addOnSuccessListener {
+        launch {
+          send(true)
+        }
+      }.addOnFailureListener { exception ->
+        close(exception)
+      }
+
+      awaitClose {
+        storageTask.cancel()
+      }
+    }
+  }
+
+  private fun getPercentage(task: UploadTask.TaskSnapshot): Int {
+    return (task.bytesTransferred.toFloat() / task.totalByteCount.toFloat()).toInt() * 100
   }
 
   private fun getQueryBounds(reference: CollectionReference, location: GeoLocation,

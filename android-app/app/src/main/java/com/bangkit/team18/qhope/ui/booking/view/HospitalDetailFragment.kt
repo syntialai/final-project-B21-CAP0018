@@ -5,6 +5,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.domain.model.hospital.HospitalDetail
 import com.bangkit.team18.core.domain.model.hospital.RoomType
+import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.core.utils.view.ViewUtils.loadImageFromStorage
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
@@ -94,10 +95,10 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
   }
 
   private fun processBook() {
-    viewModel.getSelectedRoomType()?.let { selectedRoomType ->
+    if (viewModel.getBookedHospital().isNotNull() && viewModel.getSelectedRoomType().isNotNull()) {
       findNavController().navigate(
           HospitalDetailFragmentDirections.actionHospitalDetailFragmentToBookingConfirmationFragment(
-              viewModel.getId(), selectedRoomType))
+              viewModel.getBookedHospital()!!, viewModel.getSelectedRoomType()!!))
     }
   }
 
@@ -133,7 +134,7 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
 
   private fun setupPriceByType(roomType: RoomType) {
     viewModel.selectRoomType(roomType)
-    binding.textViewHospitalDetailPrice.text = roomType.price
+    binding.textViewHospitalDetailPrice.text = viewModel.mapToFormattedPrice(roomType.price)
   }
 
   private fun setupRoomAvailability(availableRoomCount: Int) {

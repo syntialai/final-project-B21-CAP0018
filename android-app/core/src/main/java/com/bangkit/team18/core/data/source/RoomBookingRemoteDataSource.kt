@@ -1,7 +1,9 @@
 package com.bangkit.team18.core.data.source
 
+import android.net.Uri
 import com.bangkit.team18.core.data.source.response.history.HistoryDetailResponse
 import com.bangkit.team18.core.data.source.response.history.HistoryResponse
+import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import kotlinx.coroutines.flow.Flow
 
 interface RoomBookingRemoteDataSource {
@@ -12,5 +14,5 @@ interface RoomBookingRemoteDataSource {
 
   suspend fun createBooking(bookingHashmap: HashMap<String, Any>)
 
-  suspend fun uploadReferralLetter(userId: String): Flow<String>
+  suspend fun uploadReferralLetter(userId: String, fileUri: Uri): Flow<ResponseWrapper<String>>
 }

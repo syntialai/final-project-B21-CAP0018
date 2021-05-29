@@ -1,10 +1,14 @@
 package com.bangkit.team18.core.utils.view
 
 import androidx.lifecycle.LiveData
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 object DataUtils {
+
+  const val HH_MM_A_12H_FORMAT = "hh:mm a"
 
   fun <T> T.isNull() = this == null
 
@@ -15,6 +19,8 @@ object DataUtils {
   fun Long?.orZero() = this ?: 0L
 
   fun Double?.orZero() = this ?: 0.0
+
+  fun Boolean?.orFalse() = this ?: false
 
   fun LiveData<Boolean>.orFalse() = this.value ?: false
 
@@ -29,5 +35,9 @@ object DataUtils {
     }
     calendar.add(Calendar.DAY_OF_MONTH, 3)
     return Pair(currentTimestamp, calendar.timeInMillis)
+  }
+
+  fun toFormattedTime(date: Date, pattern: String): String {
+    return SimpleDateFormat(pattern, Locale.getDefault()).format(date)
   }
 }

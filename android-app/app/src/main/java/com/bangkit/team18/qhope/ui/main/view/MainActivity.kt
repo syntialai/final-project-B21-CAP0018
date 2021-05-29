@@ -6,6 +6,7 @@ import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityMainBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseActivity
 import com.bangkit.team18.qhope.ui.main.adapter.MainAdapter
+import com.bangkit.team18.qhope.utils.Router
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
@@ -21,6 +22,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
           else -> null
         }
       }.attach()
+      viewPagerMain.setCurrentItem(
+          intent.getIntExtra(Router.PARAM_MAIN_FIRST_FRAGMENT, MainAdapter.HOME_FRAGMENT_INDEX),
+          true)
     }
   }
 

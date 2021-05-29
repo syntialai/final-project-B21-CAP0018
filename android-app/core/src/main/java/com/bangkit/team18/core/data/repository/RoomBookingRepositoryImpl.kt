@@ -1,5 +1,6 @@
 package com.bangkit.team18.core.data.repository
 
+import android.net.Uri
 import com.bangkit.team18.core.data.mapper.BookingMapper
 import com.bangkit.team18.core.data.repository.base.FetchDataWrapper
 import com.bangkit.team18.core.data.repository.base.UpdateDataWrapper
@@ -7,7 +8,7 @@ import com.bangkit.team18.core.data.source.RoomBookingRemoteDataSource
 import com.bangkit.team18.core.data.source.response.history.HistoryDetailResponse
 import com.bangkit.team18.core.data.source.response.history.HistoryResponse
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
-import com.bangkit.team18.core.domain.model.booking.Booking
+import com.bangkit.team18.core.domain.model.booking.BookingDetail
 import com.bangkit.team18.core.domain.model.history.History
 import com.bangkit.team18.core.domain.model.history.HistoryDetail
 import com.bangkit.team18.core.domain.repository.RoomBookingRepository
@@ -15,7 +16,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 
-class RoomBookingRepositoryImpl(private val roomBookingRemoteDataSource: RoomBookingRemoteDataSource,
+class RoomBookingRepositoryImpl(
+    private val roomBookingRemoteDataSource: RoomBookingRemoteDataSource,
     private val ioDispatcher: CoroutineDispatcher) : RoomBookingRepository {
 
   override suspend fun getUserBookings(userId: String): Flow<ResponseWrapper<List<History>>> {
@@ -42,16 +44,17 @@ class RoomBookingRepositoryImpl(private val roomBookingRemoteDataSource: RoomBoo
     }.getData().flowOn(ioDispatcher)
   }
 
-  override suspend fun createBooking(booking: Booking): Flow<ResponseWrapper<Boolean>> {
-    val bookingHashmap = BookingMapper.mapToBookingHashmap(booking)
+  override suspend fun createBooking(bookingDetail: BookingDetail): Flow<ResponseWrapper<Boolean>> {
+    val bookingHashmap = BookingMapper.mapToBookingHashmap(bookingDetail)
     return object : UpdateDataWrapper<Unit>() {
       override suspend fun doUpdate() {
         roomBookingRemoteDataSource.createBooking(bookingHashmap)
       }
-    }.updateData()
+    }.updateData().flowOn(ioDispatcher)
   }
 
-  override suspend fun uploadReferralLetter(userId: String): Flow<ResponseWrapper<String>> {
-    TODO("Not yet implemented")
+  override suspend fun uploadReferralLetter(userId: String,
+      fileUri: Uri): Flow<ResponseWrapper<String>> {
+    return roomBookingRemoteDataSource.uploadReferralLetter(userId, fileUri)
   }
 }

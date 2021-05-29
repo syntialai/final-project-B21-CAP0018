@@ -1,6 +1,7 @@
 package com.bangkit.team18.core.domain.usecase.interactor
 
-import com.bangkit.team18.core.domain.model.booking.Booking
+import android.net.Uri
+import com.bangkit.team18.core.domain.model.booking.BookingDetail
 import com.bangkit.team18.core.domain.repository.RoomBookingRepository
 import com.bangkit.team18.core.domain.usecase.RoomBookingUseCase
 
@@ -13,9 +14,9 @@ class RoomBookingInteractor(private val roomBookingRepository: RoomBookingReposi
   override suspend fun getUserBookingDetail(
       id: String) = roomBookingRepository.getUserBookingDetail(id)
 
-  override suspend fun createBooking(booking: Booking) = roomBookingRepository.createBooking(
-      booking)
+  override suspend fun createBooking(
+      bookingDetail: BookingDetail) = roomBookingRepository.createBooking(bookingDetail)
 
-  override suspend fun uploadReferralLetter(
-      userId: String) = roomBookingRepository.uploadReferralLetter(userId)
+  override suspend fun uploadReferralLetter(userId: String,
+      fileUri: Uri) = roomBookingRepository.uploadReferralLetter(userId, fileUri)
 }

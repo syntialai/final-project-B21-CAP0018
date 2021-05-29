@@ -31,6 +31,10 @@ abstract class BaseViewModel : ViewModel() {
     }
   }
 
+  protected fun <T> MutableLiveData<T>.publishChanges() {
+    this.value = this.value
+  }
+
   private fun <T> checkResponse(wrapper: ResponseWrapper<T>, onSuccessFetch: (T) -> Unit,
       onFailFetch: (() -> Unit)?) {
     _fetchStatus.value = wrapper

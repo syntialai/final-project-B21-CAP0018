@@ -2,6 +2,7 @@ package com.bangkit.team18.core.data.mapper
 
 import com.bangkit.team18.core.data.source.response.hospital.HospitalResponse
 import com.bangkit.team18.core.data.source.response.hospital.RoomTypeResponse
+import com.bangkit.team18.core.domain.model.booking.BookedHospital
 import com.bangkit.team18.core.domain.model.home.Hospital
 import com.bangkit.team18.core.domain.model.hospital.HospitalDetail
 import com.bangkit.team18.core.domain.model.hospital.RoomType
@@ -33,6 +34,14 @@ object HospitalMapper {
       availableRoomCount = 0
   )
 
+  fun mapToBookedHospital(hospitalDetail: HospitalDetail) = BookedHospital(
+      id = hospitalDetail.id,
+      address = hospitalDetail.address,
+      name = hospitalDetail.name,
+      imagePath = hospitalDetail.imagePath,
+      type = hospitalDetail.type
+  )
+
   private fun mapToHospital(response: HospitalResponse) = Hospital(
       id = response.id,
       name = response.nama_rumah_sakit,
@@ -46,7 +55,7 @@ object HospitalMapper {
   private fun mapToRoomType(response: RoomTypeResponse) = RoomType(
       id = response.id,
       name = response.name,
-      price = DataMapper.toFormattedPrice(response.price),
+      price = response.price,
       availableRoomCount = response.available_room
   )
 

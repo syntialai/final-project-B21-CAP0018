@@ -10,7 +10,7 @@ data class RoomType(
 
     val name: String,
 
-    val price: String,
+    val price: Double,
 
     val availableRoomCount: Int
 ): Parcelable

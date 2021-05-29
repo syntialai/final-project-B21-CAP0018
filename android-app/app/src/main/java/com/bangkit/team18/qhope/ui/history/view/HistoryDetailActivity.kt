@@ -2,7 +2,9 @@ package com.bangkit.team18.qhope.ui.history.view
 
 import android.os.Bundle
 import android.view.View
+import com.bangkit.team18.core.domain.model.history.HistoryStatus
 import com.bangkit.team18.core.domain.model.home.Hospital
+import com.bangkit.team18.core.utils.view.DataUtils.getText
 import com.bangkit.team18.core.utils.view.ViewUtils.loadImageFromStorage
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
