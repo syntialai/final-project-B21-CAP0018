@@ -3,6 +3,7 @@ package com.bangkit.team18.qhope.ui.booking.view
 import android.content.Intent
 import android.net.Uri
 import android.view.View
+import androidx.navigation.fragment.navArgs
 import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.utils.view.DataUtils
 import com.bangkit.team18.core.utils.view.PickerUtils
@@ -14,6 +15,7 @@ import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.booking.viewmodel.BookingConfirmationViewModel
 import java.util.Calendar
 
+// TODO: Add checking condition for PDF
 class BookingConfirmationFragment :
     BaseFragment<FragmentBookingConfirmationBinding, BookingConfirmationViewModel>(
         FragmentBookingConfirmationBinding::inflate, BookingConfirmationViewModel::class) {
@@ -25,13 +27,7 @@ class BookingConfirmationFragment :
     private const val HTML_TYPE = "text/html"
   }
 
-  private val timePicker by lazy {
-    PickerUtils.getTimePicker(R.string.select_check_in_time_label).apply {
-      addOnPositiveButtonClickListener {
-        // TODO: Call viewmodel to update time
-      }
-    }
-  }
+  private val args: BookingConfirmationFragmentArgs by navArgs()
 
   override fun setupViews() {
     binding.apply {
@@ -42,14 +38,34 @@ class BookingConfirmationFragment :
     }
   }
 
+  override fun setupObserver() {
+    super.setupObserver()
+
+    viewModel.setBookingDetail(args.bookedHospital, args.roomType)
+    viewModel.bookingDetail.observe(viewLifecycleOwner, {
+      it?.let { bookingDetail ->
+        setRoomData(bookingDetail.hospital.name, bookingDetail.selectedRoomType)
+        setSelectedDate(bookingDetail.selectedDateTime)
+        setSelectedTime(bookingDetail.selectedDateTime)
+      }
+    })
+    viewModel.isBooked.observe(viewLifecycleOwner, {
+      it?.let { isBooked ->
+        if (isBooked) {
+          openSuccessBookBottomSheet()
+        }
+      }
+    })
+  }
+
   override fun onResume() {
     super.onResume()
     setupCalendarView()
   }
 
   override fun onIntentResult(data: Intent?) {
-    data?.data?.let {
-      val filePath = it
+    data?.data?.let { fileUri ->
+      viewModel.uploadReferralLetter(fileUri)
     }
   }
 
@@ -63,11 +79,9 @@ class BookingConfirmationFragment :
   override fun onClick(view: View?) {
     binding.apply {
       when (view) {
-        buttonBookingConfirmBook -> { /* TODO: Call view model to confirm book */
-        }
+        buttonBookingConfirmBook -> viewModel.processBook()
         buttonBookingConfirmUploadLetter -> uploadPdf()
-        layoutBookingTimeSelected.buttonBookingEditTime -> timePicker.show(parentFragmentManager,
-            OPEN_TIME_PICKER)
+        layoutBookingTimeSelected.buttonBookingEditTime -> showTimePicker()
       }
     }
   }
@@ -77,6 +91,11 @@ class BookingConfirmationFragment :
       setDataAndType(Uri.parse(GOOGLE_DRIVE_VIEWER + pdfUrl), HTML_TYPE)
     }
     startActivity(pdfIntent)
+  }
+
+  private fun openSuccessBookBottomSheet() {
+    SuccessBookBottomSheetDialogFragment.newInstance().show(parentFragmentManager,
+        SuccessBookBottomSheetDialogFragment.OPEN_SUCCESS_BOOK_BOTTOM_SHEET)
   }
 
   private fun setReferralLetterData(fileName: String, fileUrl: String) {
@@ -93,12 +112,19 @@ class BookingConfirmationFragment :
     binding.layoutBookingSelectedRoomInfo.apply {
       textViewBookingSelectedRoom.text = getString(R.string.selected_room_type, roomType.name,
           hospitalName)
-      textViewBookingSelectedRoomPrice.text = roomType.price
+      textViewBookingSelectedRoomPrice.text = viewModel.mapToFormattedPrice(roomType.price)
     }
   }
 
-  private fun setSelectedTime(time: String) {
-    binding.layoutBookingTimeSelected.textViewBookingTime.text = time
+  private fun setSelectedDate(calendar: Calendar) {
+    binding.calendarBookingConfirmSelectDate.date = calendar.timeInMillis
+  }
+
+  private fun setSelectedTime(calendar: Calendar) {
+    binding.layoutBookingTimeSelected.apply {
+      root.show()
+      textViewBookingTime.text = DataUtils.toFormattedTime(calendar.time, DataUtils.HH_MM_A_12H_FORMAT)
+    }
   }
 
   private fun setupCalendarView() {
@@ -107,10 +133,21 @@ class BookingConfirmationFragment :
       minDate = timestamp.first
       maxDate = timestamp.second
       setOnDateChangeListener { _, year, month, dayOfMonth ->
-        val selectedDate = Calendar.getInstance().set(year, month, dayOfMonth)
-        // TODO: Call view model to set selected date
-        timePicker.show(parentFragmentManager, OPEN_TIME_PICKER)
+        viewModel.setSelectedDate(year, month, dayOfMonth)
+        showTimePicker()
       }
+    }
+  }
+
+  private fun showTimePicker() {
+    val timeSelected = viewModel.getSelectedTime()
+    val timePicker = PickerUtils.getTimePicker(R.string.select_check_in_time_label,
+        timeSelected.first, timeSelected.second)
+    timePicker.addOnPositiveButtonClickListener {
+      viewModel.setSelectedTime(timePicker.hour, timePicker.minute)
+    }
+    if (timePicker.isVisible.not()) {
+      timePicker.show(parentFragmentManager, OPEN_TIME_PICKER)
     }
   }
 

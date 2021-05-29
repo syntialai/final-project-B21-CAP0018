@@ -26,11 +26,11 @@
             android:id="@+id/action_bookingConfirmationFragment_to_hospitalDetailFragment"
             app:destination="@id/hospitalDetailFragment" />
         <argument
-            android:name="hospitalId"
-            app:argType="string" />
+            android:name="bookedHospital"
+            app:argType="com.bangkit.team18.core.domain.model.booking.BookedHospital" />
         <argument
             android:name="roomType"
-            app:argType="com.bangkit.team18.core.domain.model.booking.RoomType" />
+            app:argType="com.bangkit.team18.core.domain.model.hospital.RoomType" />
     </fragment>
     <action
         android:id="@+id/action_global_hospitalDetailFragment"

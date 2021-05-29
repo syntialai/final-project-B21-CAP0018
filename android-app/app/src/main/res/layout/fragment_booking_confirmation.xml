@@ -23,9 +23,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/dp_16"
             android:clipToPadding="false"
-            android:paddingBottom="@dimen/dp_100"
-            android:visibility="gone"
-            tools:visibility="visible">
+            android:paddingBottom="@dimen/dp_100">
 
             <TextView
                 android:id="@+id/text_view_booking_confirm_selected_room_label"
@@ -144,7 +142,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:enabled="false"
             android:text="@string/confirm_booking_label" />
     </LinearLayout>
 
