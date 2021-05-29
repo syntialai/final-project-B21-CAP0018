@@ -38,10 +38,10 @@ class HistoryAdapter(private val onItemClickListener: OnItemClickListener) :
           onItemClickListener.onClickListener(data.id)
         }
 
-        imageViewHistoryItem.loadImage(data.hospitalImage, R.drawable.drawable_hospital_placeholder)
+        imageViewHistoryItem.loadImage(data.hospitalImagePath, R.drawable.drawable_hospital_placeholder)
 
         textViewHistoryItemName.text = data.hospitalName
-        textViewHistoryItemDate.text = data.startDate
+        textViewHistoryItemDate.text = data.createdAt
         data.nightCount?.let { nightCount ->
           textViewHistoryItemNight.text = context.resources.getQuantityString(
               R.plurals.history_night_state, nightCount, nightCount)

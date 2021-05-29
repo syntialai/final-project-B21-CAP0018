@@ -20,10 +20,26 @@ abstract class FetchDataWrapper<Response, Model> {
         emit(ResponseWrapper.Success(model))
       }
     }.onStart {
-      emit(ResponseWrapper.Loading<Model>())
+      emit(ResponseWrapper.Loading())
     }.catch { exception ->
       emit(if (isNetworkError(exception)) {
-        ResponseWrapper.NetworkError<Model>()
+        ResponseWrapper.NetworkError()
+      } else {
+        ResponseWrapper.Error(exception.message)
+      })
+    }
+  }
+
+  suspend fun updateData(): Flow<ResponseWrapper<Model>> {
+    return fetchData().transform<Response?, ResponseWrapper<Model>> { value ->
+      value?.let {
+        emit(ResponseWrapper.Success(mapData(it)))
+      }
+    }.onStart {
+      emit(ResponseWrapper.Loading())
+    }.catch { exception ->
+      emit(if (isNetworkError(exception)) {
+        ResponseWrapper.NetworkError()
       } else {
         ResponseWrapper.Error(exception.message)
       })

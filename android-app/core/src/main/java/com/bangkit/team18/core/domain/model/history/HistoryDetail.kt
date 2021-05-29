@@ -1,6 +1,6 @@
 package com.bangkit.team18.core.domain.model.history
 
-data class History(
+data class HistoryDetail(
 
     val id: String,
 
@@ -8,7 +8,9 @@ data class History(
 
     val hospitalImagePath: String,
 
-    val createdAt: String,
+    val startDate: String,
+
+    val endDate: String,
 
     val nightCount: Int?,
 
