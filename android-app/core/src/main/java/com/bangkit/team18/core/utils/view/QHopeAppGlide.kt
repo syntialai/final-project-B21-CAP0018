@@ -11,10 +11,14 @@ import java.io.InputStream
 @GlideModule
 class QHopeAppGlide : AppGlideModule() {
 
-  override fun registerComponents(context: android.content.Context, glide: Glide,
-      registry: Registry) {
+  override fun registerComponents(
+    context: android.content.Context, glide: Glide,
+    registry: Registry
+  ) {
     super.registerComponents(context, glide, registry)
-    registry.append(StorageReference::class.java, InputStream::class.java,
-        FirebaseImageLoader.Factory())
+    registry.append(
+      StorageReference::class.java, InputStream::class.java,
+      FirebaseImageLoader.Factory()
+    )
   }
 }

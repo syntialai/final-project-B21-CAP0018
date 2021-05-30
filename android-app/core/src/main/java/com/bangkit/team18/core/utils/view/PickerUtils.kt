@@ -9,13 +9,15 @@ object PickerUtils {
   private const val HOUR_12 = 12
   private const val MINUTE_0 = 0
 
-  fun getTimePicker(@StringRes titleRes: Int, hour: Int? = null,
-      minute: Int? = null): MaterialTimePicker {
+  fun getTimePicker(
+    @StringRes titleRes: Int, hour: Int? = null,
+    minute: Int? = null
+  ): MaterialTimePicker {
     return MaterialTimePicker.Builder()
-        .setTimeFormat(TimeFormat.CLOCK_12H)
-        .setHour(hour ?: HOUR_12)
-        .setMinute(minute ?: MINUTE_0)
-        .setTitleText(titleRes)
-        .build()
+      .setTimeFormat(TimeFormat.CLOCK_12H)
+      .setHour(hour ?: HOUR_12)
+      .setMinute(minute ?: MINUTE_0)
+      .setTitleText(titleRes)
+      .build()
   }
 }

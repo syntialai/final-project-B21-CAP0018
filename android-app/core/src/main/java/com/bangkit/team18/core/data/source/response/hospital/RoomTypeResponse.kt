@@ -5,22 +5,22 @@ import com.google.firebase.firestore.DocumentId
 // TODO: Add name
 data class RoomTypeResponse(
 
-    @DocumentId
-    val id: String,
+  @DocumentId
+  val id: String,
 
-    val name: String,
+  val name: String,
 
-    val price: Double,
+  val price: Double,
 
-    val total_room: Int,
+  val total_room: Int,
 
-    val available_room: Int,
+  val available_room: Int,
 ) {
   constructor() : this(
-      "",
-      "",
-      0.0,
-      0,
-      0
+    "",
+    "",
+    0.0,
+    0,
+    0
   )
 }

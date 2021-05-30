@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class HospitalRemoteDataSourceImpl(db: FirebaseFirestore) : BaseRemoteDataSource(),
-    HospitalRemoteDataSource {
+  HospitalRemoteDataSource {
 
   private val hospitalCollections = db.collection(CollectionConstants.HOSPITAL_COLLECTION)
 
@@ -27,11 +27,13 @@ class HospitalRemoteDataSourceImpl(db: FirebaseFirestore) : BaseRemoteDataSource
 
   override suspend fun getHospitalRoomTypes(id: String): Flow<List<RoomTypeResponse>> {
     return hospitalCollections.document(id).collection(
-        CollectionConstants.ROOM_COLLECTION).loadData(RoomTypeResponse::class.java)
+      CollectionConstants.ROOM_COLLECTION
+    ).loadData(RoomTypeResponse::class.java)
   }
 
   override suspend fun searchHospitals(query: String): Flow<List<HospitalResponse>> {
     return hospitalCollections.whereGreaterThanOrEqualTo(HospitalMapper.NAME_FIELD, query).loadData(
-            HospitalResponse::class.java)
+      HospitalResponse::class.java
+    )
   }
 }

@@ -10,8 +10,10 @@ import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryViewModel
 import com.bangkit.team18.qhope.utils.Router
 
 class HistoryFragment :
-    BaseFragment<FragmentHistoryBinding, HistoryViewModel>(FragmentHistoryBinding::inflate,
-        HistoryViewModel::class), OnItemClickListener {
+  BaseFragment<FragmentHistoryBinding, HistoryViewModel>(
+    FragmentHistoryBinding::inflate,
+    HistoryViewModel::class
+  ), OnItemClickListener {
 
   companion object {
     fun newInstance() = HistoryFragment()

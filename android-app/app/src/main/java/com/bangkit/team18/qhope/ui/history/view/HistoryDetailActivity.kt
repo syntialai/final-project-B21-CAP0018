@@ -12,17 +12,18 @@ import com.bangkit.team18.qhope.ui.base.view.BaseActivityViewModel
 import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryDetailViewModel
 
 class HistoryDetailActivity :
-    BaseActivityViewModel<ActivityHistoryDetailBinding, HistoryDetailViewModel>(
-        ActivityHistoryDetailBinding::inflate, HistoryDetailViewModel::class) {
+  BaseActivityViewModel<ActivityHistoryDetailBinding, HistoryDetailViewModel>(
+    ActivityHistoryDetailBinding::inflate, HistoryDetailViewModel::class
+  ) {
 
   override fun setupViews(savedInstanceState: Bundle?) {
     binding.apply {
       layoutHistoryDetailBookingData.imageViewBookingDataHospital.setOnClickListener(
-          this@HistoryDetailActivity)
+        this@HistoryDetailActivity)
       layoutHistoryDetailBookingData.textViewBookingDataHospitalName.setOnClickListener(
-          this@HistoryDetailActivity)
+        this@HistoryDetailActivity)
       layoutHistoryDetailUserData.cardBookingUserReferralLetter.setOnClickListener(
-          this@HistoryDetailActivity)
+        this@HistoryDetailActivity)
     }
   }
 

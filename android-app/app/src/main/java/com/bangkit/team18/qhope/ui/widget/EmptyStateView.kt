@@ -10,7 +10,7 @@ import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.LayoutEmptyStateViewBinding
 
 class EmptyStateView constructor(context: Context, attrs: AttributeSet) :
-    LinearLayout(context, attrs) {
+  LinearLayout(context, attrs) {
 
   private lateinit var binding: LayoutEmptyStateViewBinding
 

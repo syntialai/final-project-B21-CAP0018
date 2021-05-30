@@ -23,7 +23,8 @@ import com.google.firebase.storage.FirebaseStorage
 import org.koin.android.ext.android.inject
 
 class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, HospitalDetailViewModel>(
-    FragmentHospitalDetailBinding::inflate, HospitalDetailViewModel::class), OnMapReadyCallback {
+  FragmentHospitalDetailBinding::inflate, HospitalDetailViewModel::class
+), OnMapReadyCallback {
 
   companion object {
     private const val DEFAULT_ZOOM = 16f
@@ -86,8 +87,10 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
   }
 
   private fun getTypeChip(index: Int, text: String): Chip {
-    return (layoutInflater.inflate(R.layout.layout_hospital_detail_chip_type,
-        binding.chipGroupHospitalDetailRoomType, false) as Chip).apply {
+    return (layoutInflater.inflate(
+      R.layout.layout_hospital_detail_chip_type,
+      binding.chipGroupHospitalDetailRoomType, false
+    ) as Chip).apply {
       this.id = index
       this.text = text
       this.isChecked = index == 0
@@ -97,14 +100,17 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
   private fun processBook() {
     if (viewModel.getBookedHospital().isNotNull() && viewModel.getSelectedRoomType().isNotNull()) {
       findNavController().navigate(
-          HospitalDetailFragmentDirections.actionHospitalDetailFragmentToBookingConfirmationFragment(
-              viewModel.getBookedHospital()!!, viewModel.getSelectedRoomType()!!))
+        HospitalDetailFragmentDirections.actionHospitalDetailFragmentToBookingConfirmationFragment(
+          viewModel.getBookedHospital()!!, viewModel.getSelectedRoomType()!!
+        )
+      )
     }
   }
 
   private fun setupGoogleMaps() {
     val mapFragment = childFragmentManager.findFragmentById(
-        R.id.fragment_hospital_detail_location_maps) as SupportMapFragment
+      R.id.fragment_hospital_detail_location_maps
+    ) as SupportMapFragment
     lifecycleScope.launchWhenResumed {
       mapFragment.getMapAsync(this@HospitalDetailFragment)
     }
@@ -128,8 +134,10 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
   }
 
   private fun setHospitalImage(imagePath: String) {
-    binding.imageViewHospitalDetail.loadImageFromStorage(mContext, storage.getReference(imagePath),
-        R.drawable.drawable_hospital_placeholder)
+    binding.imageViewHospitalDetail.loadImageFromStorage(
+      mContext, storage.getReference(imagePath),
+      R.drawable.drawable_hospital_placeholder
+    )
   }
 
   private fun setupPriceByType(roomType: RoomType) {

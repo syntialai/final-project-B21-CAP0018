@@ -9,12 +9,13 @@ import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModel
 import com.bangkit.team18.qhope.utils.SnackbarUtils
-import kotlin.reflect.KClass
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.reflect.KClass
 
 abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
-    private val inflater: (LayoutInflater) -> VB, viewModelClazz: KClass<VM>) : AppCompatActivity(),
-    View.OnClickListener {
+  private val inflater: (LayoutInflater) -> VB, viewModelClazz: KClass<VM>
+) : AppCompatActivity(),
+  View.OnClickListener {
 
   private var _binding: VB? = null
   protected val binding get() = _binding as VB

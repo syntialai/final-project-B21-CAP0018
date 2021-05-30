@@ -11,7 +11,7 @@ import com.bangkit.team18.qhope.ui.base.adapter.BaseAdapter
 import com.bangkit.team18.qhope.ui.base.adapter.BaseDiffCallback
 
 class HomeAdapter(private val hospitalItemCallback: HomeHospitalItemCallback) :
-    BaseAdapter<Hospital, LayoutHospitalItemBinding>(diffCallback) {
+  BaseAdapter<Hospital, LayoutHospitalItemBinding>(diffCallback) {
 
   companion object {
     private val diffCallback = object : BaseDiffCallback<Hospital>() {
@@ -39,8 +39,10 @@ class HomeAdapter(private val hospitalItemCallback: HomeHospitalItemCallback) :
           hospitalItemCallback.onClickListener(data.id)
         }
 
-        imageViewHospitalItem.loadImage(hospitalItemCallback.getStorageRef(data.image),
-            R.drawable.drawable_hospital_placeholder)
+        imageViewHospitalItem.loadImage(
+          hospitalItemCallback.getStorageRef(data.image),
+          R.drawable.drawable_hospital_placeholder
+        )
 
         textViewHospitalItemName.text = data.name
         textViewHospitalItemAddress.text = data.address
@@ -53,13 +55,17 @@ class HomeAdapter(private val hospitalItemCallback: HomeHospitalItemCallback) :
         chipHospitalItemRoomAvailable.showOrRemove(isRoomAvailable)
         chipHospitalItemRoomNotAvailable.showOrRemove(isRoomAvailable.not())
 
-        context.resources.getQuantityString(R.plurals.room_available_label, roomAvailable,
-            roomAvailable).also { roomAvailableLabel ->
-          chipHospitalItemRoomNotAvailable.setChipIconResource(if (isRoomAvailable) {
-            R.drawable.ic_info
-          } else {
-            R.drawable.ic_not_available
-          })
+        context.resources.getQuantityString(
+          R.plurals.room_available_label, roomAvailable,
+          roomAvailable
+        ).also { roomAvailableLabel ->
+          chipHospitalItemRoomNotAvailable.setChipIconResource(
+            if (isRoomAvailable) {
+              R.drawable.ic_info
+            } else {
+              R.drawable.ic_not_available
+            }
+          )
           chipHospitalItemRoomNotAvailable.text = roomAvailableLabel
           chipHospitalItemRoomAvailable.text = roomAvailableLabel
         }

@@ -23,8 +23,10 @@ class SuccessBookBottomSheetDialogFragment : BottomSheetDialogFragment(), View.O
   private val binding: FragmentSuccessBookBottomSheetDialogBinding
     get() = _binding as FragmentSuccessBookBottomSheetDialogBinding
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-      savedInstanceState: Bundle?): View {
+  override fun onCreateView(
+    inflater: LayoutInflater, container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View {
     _binding = FragmentSuccessBookBottomSheetDialogBinding.inflate(inflater, container, false)
     return binding.root
   }
@@ -40,7 +42,7 @@ class SuccessBookBottomSheetDialogFragment : BottomSheetDialogFragment(), View.O
 
   override fun onClick(view: View?) {
     with(binding) {
-      when(view) {
+      when (view) {
         buttonBackToHome -> {
           Router.goToMain(requireContext())
           dismiss()

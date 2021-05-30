@@ -7,4 +7,7 @@ object CollectionConstants {
   const val TRANSACTION_COLLECTION = "transaction"
   const val USER_DATA_PATH = "user_data"
   const val REFERRAL_LETTER_PATH = "referral_letter"
+  const val USERS_COLLECTION = "users"
+  const val IMAGES_USERS_STORAGE_PATH = "images/users"
+  const val PROFILE_STORAGE_PATH = "profile"
 }

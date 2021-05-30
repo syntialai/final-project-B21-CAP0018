@@ -10,7 +10,7 @@ import androidx.viewbinding.ViewBinding
 import com.bangkit.team18.core.utils.view.ViewUtils.loadImageFromStorage
 
 abstract class BaseAdapter<T : Any, VB : ViewBinding>(diffCallback: BaseDiffCallback<T>) :
-    ListAdapter<T, BaseAdapter<T, VB>.BaseViewHolder>(diffCallback) {
+  ListAdapter<T, BaseAdapter<T, VB>.BaseViewHolder>(diffCallback) {
 
   abstract val inflater: (LayoutInflater, ViewGroup?, Boolean) -> VB
 
@@ -25,7 +25,7 @@ abstract class BaseAdapter<T : Any, VB : ViewBinding>(diffCallback: BaseDiffCall
   }
 
   abstract inner class BaseViewHolder(protected val binding: VB) :
-      RecyclerView.ViewHolder(binding.root) {
+    RecyclerView.ViewHolder(binding.root) {
 
     protected val context = binding.root.context
 

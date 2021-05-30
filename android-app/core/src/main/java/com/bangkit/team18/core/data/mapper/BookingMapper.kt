@@ -26,17 +26,17 @@ object BookingMapper {
 
   fun mapToBookingHashmap(bookingDetail: BookingDetail): HashMap<String, Any> {
     return hashMapOf(
-        BOOKED_AT_FIELD to Timestamp.now(),
-        STATUS_FIELD to HistoryStatus.ON_GOING.name,
-        HOSPITAL_ID_FIELD to bookingDetail.hospital.id,
-        HOSPITAL_NAME_FIELD to bookingDetail.hospital.name,
-        HOSPITAL_ADDRESS_FIELD to bookingDetail.hospital.address,
-        HOSPITAL_IMAGE_PATH_FIELD to bookingDetail.hospital.imagePath,
-        HOSPITAL_TYPE_FIELD to bookingDetail.hospital.type,
-        CHECK_IN_AT_FIELD to bookingDetail.selectedDateTime.time,
-        ROOM_TYPE_FIELD to bookingDetail.selectedRoomType.name,
-        ROOM_COST_PER_DAY_FIELD to bookingDetail.selectedRoomType.price,
-        USER_ID_FIELD to bookingDetail.userId
+      BOOKED_AT_FIELD to Timestamp.now(),
+      STATUS_FIELD to HistoryStatus.ON_GOING.name,
+      HOSPITAL_ID_FIELD to bookingDetail.hospital.id,
+      HOSPITAL_NAME_FIELD to bookingDetail.hospital.name,
+      HOSPITAL_ADDRESS_FIELD to bookingDetail.hospital.address,
+      HOSPITAL_IMAGE_PATH_FIELD to bookingDetail.hospital.imagePath,
+      HOSPITAL_TYPE_FIELD to bookingDetail.hospital.type,
+      CHECK_IN_AT_FIELD to bookingDetail.selectedDateTime.time,
+      ROOM_TYPE_FIELD to bookingDetail.selectedRoomType.name,
+      ROOM_COST_PER_DAY_FIELD to bookingDetail.selectedRoomType.price,
+      USER_ID_FIELD to bookingDetail.userId
     )
   }
 
@@ -45,22 +45,22 @@ object BookingMapper {
   }
 
   fun mapToHistoryDetail(response: HistoryDetailResponse) = HistoryDetail(
-      id = response.id,
-      hospitalImagePath = response.hospitalImagePath,
-      hospitalName = response.hospitalName,
-      startDate = response.startDate.toString(),
-      endDate = response.endDate.toString(),
-      nightCount = getNightCount(response.startDate, response.endDate),
-      status = HistoryStatus.valueOf(response.status)
+    id = response.id,
+    hospitalImagePath = response.hospitalImagePath,
+    hospitalName = response.hospitalName,
+    startDate = response.startDate.toString(),
+    endDate = response.endDate.toString(),
+    nightCount = getNightCount(response.startDate, response.endDate),
+    status = HistoryStatus.valueOf(response.status)
   )
 
   private fun mapToHistory(response: HistoryResponse) = History(
-      id = response.id,
-      hospitalImagePath = response.hospitalImagePath,
-      hospitalName = response.hospitalName,
-      createdAt = response.startDate.toString(),
-      nightCount = getNightCount(response.startDate, response.endDate),
-      status = HistoryStatus.valueOf(response.status)
+    id = response.id,
+    hospitalImagePath = response.hospitalImagePath,
+    hospitalName = response.hospitalName,
+    createdAt = response.startDate.toString(),
+    nightCount = getNightCount(response.startDate, response.endDate),
+    status = HistoryStatus.valueOf(response.status)
   )
 
   private fun getNightCount(startDate: Timestamp, endDate: Timestamp?): Int? {

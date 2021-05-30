@@ -23,8 +23,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
       }.attach()
       viewPagerMain.setCurrentItem(
-          intent.getIntExtra(Router.PARAM_MAIN_FIRST_FRAGMENT, MainAdapter.HOME_FRAGMENT_INDEX),
-          true)
+        intent.getIntExtra(Router.PARAM_MAIN_FIRST_FRAGMENT, MainAdapter.HOME_FRAGMENT_INDEX),
+        true
+      )
     }
   }
 

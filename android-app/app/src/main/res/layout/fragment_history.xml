@@ -15,33 +15,33 @@
         android:clipToPadding="false"
         android:paddingBottom="@dimen/dp_16"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
     <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/spin_kit_load_history"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.bangkit.team18.qhope.ui.widget.EmptyStateView
         android:id="@+id/view_history_empty_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:image="@drawable/drawable_booking_history_empty"
-        app:title="@string/history_empty_state_title"
         app:description="@string/history_empty_state_description"
+        app:image="@drawable/drawable_booking_history_empty"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/history_empty_state_title"
         tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

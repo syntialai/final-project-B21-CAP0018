@@ -9,8 +9,10 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 
-class LocationManager(private val context: Context,
-    private val locationCallback: LocationCallback) {
+class LocationManager(
+  private val context: Context,
+  private val locationCallback: LocationCallback
+) {
 
   companion object {
     private const val INTERVAL = 60L
@@ -39,8 +41,10 @@ class LocationManager(private val context: Context,
   fun startUpdateLocation() {
     try {
       _receivingLocationUpdates.value = true
-      locationClient.requestLocationUpdates(locationRequest, locationCallback,
-          Looper.getMainLooper())
+      locationClient.requestLocationUpdates(
+        locationRequest, locationCallback,
+        Looper.getMainLooper()
+      )
     } catch (permissionRevoked: SecurityException) {
       _receivingLocationUpdates.value = false
     }

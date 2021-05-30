@@ -8,7 +8,7 @@ import com.bangkit.team18.qhope.databinding.LayoutReferralLetterCardBinding
 import com.google.android.material.circularreveal.cardview.CircularRevealCardView
 
 class ReferralLetterCard constructor(context: Context, attrs: AttributeSet) :
-    CircularRevealCardView(context, attrs) {
+  CircularRevealCardView(context, attrs) {
 
   companion object {
     const val PDF = 0
@@ -17,8 +17,10 @@ class ReferralLetterCard constructor(context: Context, attrs: AttributeSet) :
 
   private lateinit var binding: LayoutReferralLetterCardBinding
 
-  private val styledAttributes = context.obtainStyledAttributes(attrs,
-      R.styleable.ReferralLetterCard)
+  private val styledAttributes = context.obtainStyledAttributes(
+    attrs,
+    R.styleable.ReferralLetterCard
+  )
 
   private var fileName: String? = null
 
@@ -38,10 +40,12 @@ class ReferralLetterCard constructor(context: Context, attrs: AttributeSet) :
   }
 
   fun setImage(type: Int) {
-    binding.imageViewReferralLetterFile.setImageResource(when (type) {
-      PDF -> R.drawable.drawable_pdf_type
-      else -> R.drawable.drawable_image_type
-    })
+    binding.imageViewReferralLetterFile.setImageResource(
+      when (type) {
+        PDF -> R.drawable.drawable_pdf_type
+        else -> R.drawable.drawable_image_type
+      }
+    )
   }
 
   private fun initBinding() {

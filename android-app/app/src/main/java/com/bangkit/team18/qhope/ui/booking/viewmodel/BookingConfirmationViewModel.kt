@@ -9,10 +9,10 @@ import com.bangkit.team18.core.domain.model.booking.BookingDetail
 import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.domain.usecase.RoomBookingUseCase
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModel
-import java.util.Calendar
+import java.util.*
 
 class BookingConfirmationViewModel(private val roomBookingUseCase: RoomBookingUseCase) :
-    BaseViewModel() {
+  BaseViewModel() {
 
   private var _bookingDetail = MutableLiveData<BookingDetail>()
   val bookingDetail: LiveData<BookingDetail>
@@ -22,8 +22,10 @@ class BookingConfirmationViewModel(private val roomBookingUseCase: RoomBookingUs
   val isBooked: LiveData<Boolean>
     get() = _isBooked
 
-  fun getSelectedTime() = Pair(_bookingDetail.value?.selectedDateTime?.get(Calendar.HOUR),
-      _bookingDetail.value?.selectedDateTime?.get(Calendar.MINUTE))
+  fun getSelectedTime() = Pair(
+    _bookingDetail.value?.selectedDateTime?.get(Calendar.HOUR),
+    _bookingDetail.value?.selectedDateTime?.get(Calendar.MINUTE)
+  )
 
   fun mapToFormattedPrice(price: Double): String = DataMapper.toFormattedPrice(price)
 

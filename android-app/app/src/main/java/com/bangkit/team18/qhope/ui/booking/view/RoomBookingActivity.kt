@@ -11,7 +11,7 @@ import com.bangkit.team18.qhope.ui.base.view.BaseActivity
 import com.bangkit.team18.qhope.utils.Router
 
 class RoomBookingActivity :
-    BaseActivity<ActivityRoomBookingBinding>(ActivityRoomBookingBinding::inflate) {
+  BaseActivity<ActivityRoomBookingBinding>(ActivityRoomBookingBinding::inflate) {
 
   companion object {
     private const val KEY_HIDE_ACTION_BAR = "KEY_HIDE_ACTION_BAR"
@@ -22,12 +22,13 @@ class RoomBookingActivity :
 
   private var hideActionBar = false
 
-  private val destinationChangedListener = NavController.OnDestinationChangedListener { _, destination, _ ->
-    hideActionBar = when (destination.id) {
-      R.id.hospitalDetailFragment -> true
-      else -> false
+  private val destinationChangedListener =
+    NavController.OnDestinationChangedListener { _, destination, _ ->
+      hideActionBar = when (destination.id) {
+        R.id.hospitalDetailFragment -> true
+        else -> false
+      }
     }
-  }
 
   override fun setupViews(savedInstanceState: Bundle?) {
     savedInstanceState?.let {
@@ -64,7 +65,8 @@ class RoomBookingActivity :
 
   private fun setupNavigation() {
     navController = (supportFragmentManager.findFragmentById(
-        R.id.act_room_booking_host_fragment) as NavHostFragment).navController
+      R.id.act_room_booking_host_fragment
+    ) as NavHostFragment).navController
     navController.setGraph(R.navigation.room_booking_nav, getArgsBundle())
     setupActionBarWithNavController(navController)
   }
