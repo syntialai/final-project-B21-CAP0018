@@ -16,8 +16,8 @@ object BookingMapper {
   const val HOSPITAL_ID_FIELD = "hospital_id"
   const val HOSPITAL_NAME_FIELD = "hospital_name"
   const val HOSPITAL_IMAGE_PATH_FIELD = "hospital_image_path"
-  const val HOSPITAL_ADDRESS_FIELD = "hospital_address_field"
-  const val HOSPITAL_TYPE_FIELD = "hospital_type_field"
+  const val HOSPITAL_ADDRESS_FIELD = "hospital_address"
+  const val HOSPITAL_TYPE_FIELD = "hospital_type"
   const val CHECK_IN_AT_FIELD = "check_in_at"
   const val CHECK_OUT_AT_FIELD = "check_out_at"
   const val ROOM_TYPE_FIELD = "room_type"
@@ -44,22 +44,30 @@ object BookingMapper {
     return DataMapper.mapToModels(responses, BookingMapper::mapToHistory)
   }
 
+  // TODO: Add user and PDF data
   fun mapToHistoryDetail(response: HistoryDetailResponse) = HistoryDetail(
     id = response.id,
-    hospitalImagePath = response.hospitalImagePath,
-    hospitalName = response.hospitalName,
-    startDate = response.startDate.toString(),
-    endDate = response.endDate.toString(),
-    nightCount = getNightCount(response.startDate, response.endDate),
-    status = HistoryStatus.valueOf(response.status)
+    hospitalId = response.hospital_id,
+    hospitalImagePath = response.hospital_image_path,
+    hospitalName = response.hospital_name,
+    startDate = response.check_in_at.toString(),
+    endDate = response.check_out_at.toString(),
+    nightCount = getNightCount(response.check_in_at, response.check_out_at),
+    status = HistoryStatus.valueOf(response.status),
+    bookedAt = response.booked_at.toString(),
+    hospitalAddress = response.hospital_address,
+    hospitalType = response.hospital_type,
+    roomCostPerDay = DataMapper.toFormattedPrice(response.room_cost_per_day),
+    referralLetterFileName = "",
+    referralLetterFilePath = ""
   )
 
   private fun mapToHistory(response: HistoryResponse) = History(
     id = response.id,
-    hospitalImagePath = response.hospitalImagePath,
-    hospitalName = response.hospitalName,
-    createdAt = response.startDate.toString(),
-    nightCount = getNightCount(response.startDate, response.endDate),
+    hospitalImagePath = response.hospital_image_path,
+    hospitalName = response.hospital_name,
+    createdAt = response.booked_at.toString(),
+    nightCount = getNightCount(response.check_in_at, response.check_out_at),
     status = HistoryStatus.valueOf(response.status)
   )
 

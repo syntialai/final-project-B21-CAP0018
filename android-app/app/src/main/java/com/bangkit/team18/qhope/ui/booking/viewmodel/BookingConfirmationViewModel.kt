@@ -7,12 +7,15 @@ import com.bangkit.team18.core.data.mapper.DataMapper
 import com.bangkit.team18.core.domain.model.booking.BookedHospital
 import com.bangkit.team18.core.domain.model.booking.BookingDetail
 import com.bangkit.team18.core.domain.model.hospital.RoomType
+import com.bangkit.team18.core.domain.repository.AuthRepository
 import com.bangkit.team18.core.domain.usecase.RoomBookingUseCase
-import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModel
+import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import java.util.*
 
-class BookingConfirmationViewModel(private val roomBookingUseCase: RoomBookingUseCase) :
-  BaseViewModel() {
+class BookingConfirmationViewModel(
+  private val roomBookingUseCase: RoomBookingUseCase,
+  authRepository: AuthRepository
+) : BaseViewModelWithAuth(authRepository) {
 
   private var _bookingDetail = MutableLiveData<BookingDetail>()
   val bookingDetail: LiveData<BookingDetail>
@@ -21,6 +24,10 @@ class BookingConfirmationViewModel(private val roomBookingUseCase: RoomBookingUs
   private var _isBooked = MutableLiveData<Boolean>()
   val isBooked: LiveData<Boolean>
     get() = _isBooked
+
+  init {
+    initAuthStateListener()
+  }
 
   fun getSelectedTime() = Pair(
     _bookingDetail.value?.selectedDateTime?.get(Calendar.HOUR),
@@ -61,13 +68,14 @@ class BookingConfirmationViewModel(private val roomBookingUseCase: RoomBookingUs
     }
   }
 
-  // TODO: Change to user Id
   fun uploadReferralLetter(fileUri: Uri) {
-    launchViewModelScope({
-      roomBookingUseCase.uploadReferralLetter("userId", fileUri).runFlow({
-        _bookingDetail.value?.referralLetterFilePath = it
-        _bookingDetail.publishChanges()
+    getUserId()?.let { id ->
+      launchViewModelScope({
+        roomBookingUseCase.uploadReferralLetter(id, fileUri).runFlow({
+          _bookingDetail.value?.referralLetterFilePath = it
+          _bookingDetail.publishChanges()
+        })
       })
-    })
+    }
   }
 }

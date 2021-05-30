@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel : ViewModel() {
+
   private var _fetchStatus = MutableLiveData<ResponseWrapper<*>>()
   val fetchStatus: LiveData<ResponseWrapper<*>>
     get() = _fetchStatus
