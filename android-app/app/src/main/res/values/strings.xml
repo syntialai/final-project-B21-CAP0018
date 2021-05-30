@@ -79,6 +79,14 @@
     <string name="resend_otp_label">Resend OTP</string>
     <string name="resend_otp_count_down">Resend OTP (%s)</string>
 
+    <!-- Register -->
+    <string name="welcome_label">Welcome!</string>
+    <string name="let_us_know_about_you">Let us know a little bit about you.</string>
+    <string name="name_hint">Name</string>
+    <string name="birth_date_hint">Birth Date</string>
+    <string name="logout_label">Logout</string>
+    <string name="finish_label">Finish</string>
+
     <!-- Other -->
     <string name="empty_state_label">Empty state</string>
     <string name="referral_letter_content_description">Pdf</string>
@@ -87,4 +95,6 @@
     <string name="unknown_error_message">An error occurred when retrieving the data. Please try again later.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="name_field_error">Name cannot be empty.</string>
+    <string name="birth_date_field_error">Birth date cannot be empty.</string>
 </resources>
