@@ -3,7 +3,6 @@ package com.bangkit.team18.qhope.ui.history.view
 import android.os.Bundle
 import android.view.View
 import com.bangkit.team18.core.domain.model.history.HistoryStatus
-import com.bangkit.team18.core.domain.model.home.Hospital
 import com.bangkit.team18.core.utils.view.DataUtils.getText
 import com.bangkit.team18.core.utils.view.ViewUtils.loadImageFromStorage
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
@@ -27,6 +26,23 @@ class HistoryDetailActivity :
     }
   }
 
+  override fun setupObserver() {
+    super.setupObserver()
+
+//    viewModel.initializeHistoryId()
+    viewModel.fetchUserBookingHistory()
+    viewModel.bookingHistory.observe(this, {
+      it?.let { historyDetail ->
+        setBookingDataMainInfo(historyDetail.id, historyDetail.startDate, historyDetail.status)
+        setBookingDataHospitalInfo(historyDetail.hospitalImagePath, historyDetail.hospitalName,
+            historyDetail.hospitalAddress, historyDetail.hospitalType)
+        setBookingOtherInfo(historyDetail.startDate, historyDetail.endDate,
+            historyDetail.roomCostPerDay)
+        setBookingReferralLetterData(historyDetail.referralLetterFileName, historyDetail.referralLetterFilePath)
+      }
+    })
+  }
+
   override fun onClick(view: View?) {
     with(binding) {
       when (view) {
@@ -36,6 +52,14 @@ class HistoryDetailActivity :
           // TODO: Open or Download file
         }
       }
+    }
+  }
+
+  override fun showLoadingState(isLoading: Boolean) {
+    with(binding) {
+      spinKitLoadHistoryDetail.showOrRemove(isLoading)
+      layoutHistoryDetailBookingData.root.showOrRemove(isLoading.not())
+      layoutHistoryDetailUserData.root.showOrRemove(isLoading.not())
     }
   }
 
@@ -56,13 +80,14 @@ class HistoryDetailActivity :
     }
   }
 
-  private fun setBookingDataHospitalInfo(hospital: Hospital) {
+  private fun setBookingDataHospitalInfo(hospitalImage: String, hospitalName: String,
+      hospitalType: String, hospitalAddress: String) {
     binding.layoutHistoryDetailBookingData.apply {
-      imageViewBookingDataHospital.loadImageFromStorage(this@HistoryDetailActivity, hospital.image,
+      imageViewBookingDataHospital.loadImageFromStorage(this@HistoryDetailActivity, hospitalImage,
           R.drawable.drawable_hospital_placeholder)
-      textViewBookingDataHospitalName.text = hospital.name
-      textViewBookingDataHospitalType.text = hospital.type
-      textViewBookingDataHospitalAddress.text = hospital.address
+      textViewBookingDataHospitalName.text = hospitalName
+      textViewBookingDataHospitalType.text = hospitalType
+      textViewBookingDataHospitalAddress.text = hospitalAddress
     }
   }
 
@@ -88,18 +113,7 @@ class HistoryDetailActivity :
     }
   }
 
-  private fun setBookingReferralLetterData(fileType: Int, fileName: String) {
-    binding.layoutHistoryDetailUserData.cardBookingUserReferralLetter.apply {
-      setImage(fileType)
-      setFileName(fileName)
-    }
-  }
-
-  private fun setLoadingState(isLoading: Boolean) {
-    with(binding) {
-      spinKitLoadHistoryDetail.showOrRemove(isLoading)
-      layoutHistoryDetailBookingData.root.showOrRemove(isLoading.not())
-      layoutHistoryDetailUserData.root.showOrRemove(isLoading.not())
-    }
+  private fun setBookingReferralLetterData(fileName: String, filePath: String) {
+    binding.layoutHistoryDetailUserData.cardBookingUserReferralLetter.setFileName(fileName)
   }
 }

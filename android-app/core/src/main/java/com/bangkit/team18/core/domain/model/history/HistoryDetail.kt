@@ -8,6 +8,16 @@ data class HistoryDetail(
 
     val hospitalImagePath: String,
 
+    val hospitalAddress: String,
+
+    val hospitalType: String,
+
+    val roomCostPerDay: String,
+
+    val referralLetterFilePath: String,
+
+    val referralLetterFileName: String,
+
     val startDate: String,
 
     val endDate: String,
