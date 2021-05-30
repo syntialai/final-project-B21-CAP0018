@@ -6,11 +6,11 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class RoomType(
 
-    val id: String,
+  val id: String,
 
-    val name: String,
+  val name: String,
 
-    val price: Double,
+  val price: Double,
 
-    val availableRoomCount: Int
-): Parcelable
+  val availableRoomCount: Int
+) : Parcelable

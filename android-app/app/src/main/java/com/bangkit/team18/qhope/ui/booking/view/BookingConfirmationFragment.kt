@@ -13,12 +13,13 @@ import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentBookingConfirmationBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.booking.viewmodel.BookingConfirmationViewModel
-import java.util.Calendar
+import java.util.*
 
 // TODO: Add checking condition for PDF
 class BookingConfirmationFragment :
-    BaseFragment<FragmentBookingConfirmationBinding, BookingConfirmationViewModel>(
-        FragmentBookingConfirmationBinding::inflate, BookingConfirmationViewModel::class) {
+  BaseFragment<FragmentBookingConfirmationBinding, BookingConfirmationViewModel>(
+    FragmentBookingConfirmationBinding::inflate, BookingConfirmationViewModel::class
+  ) {
 
   companion object {
     private const val GOOGLE_DRIVE_VIEWER = "http://drive.google.com/viewer?url="
@@ -34,7 +35,8 @@ class BookingConfirmationFragment :
       buttonBookingConfirmBook.setOnClickListener(this@BookingConfirmationFragment)
       buttonBookingConfirmUploadLetter.setOnClickListener(this@BookingConfirmationFragment)
       layoutBookingTimeSelected.buttonBookingEditTime.setOnClickListener(
-          this@BookingConfirmationFragment)
+        this@BookingConfirmationFragment
+      )
     }
   }
 
@@ -94,8 +96,10 @@ class BookingConfirmationFragment :
   }
 
   private fun openSuccessBookBottomSheet() {
-    SuccessBookBottomSheetDialogFragment.newInstance().show(parentFragmentManager,
-        SuccessBookBottomSheetDialogFragment.OPEN_SUCCESS_BOOK_BOTTOM_SHEET)
+    SuccessBookBottomSheetDialogFragment.newInstance().show(
+      parentFragmentManager,
+      SuccessBookBottomSheetDialogFragment.OPEN_SUCCESS_BOOK_BOTTOM_SHEET
+    )
   }
 
   private fun setReferralLetterData(fileName: String, fileUrl: String) {
@@ -110,8 +114,10 @@ class BookingConfirmationFragment :
 
   private fun setRoomData(hospitalName: String, roomType: RoomType) {
     binding.layoutBookingSelectedRoomInfo.apply {
-      textViewBookingSelectedRoom.text = getString(R.string.selected_room_type, roomType.name,
-          hospitalName)
+      textViewBookingSelectedRoom.text = getString(
+        R.string.selected_room_type, roomType.name,
+        hospitalName
+      )
       textViewBookingSelectedRoomPrice.text = viewModel.mapToFormattedPrice(roomType.price)
     }
   }
@@ -123,7 +129,8 @@ class BookingConfirmationFragment :
   private fun setSelectedTime(calendar: Calendar) {
     binding.layoutBookingTimeSelected.apply {
       root.show()
-      textViewBookingTime.text = DataUtils.toFormattedTime(calendar.time, DataUtils.HH_MM_A_12H_FORMAT)
+      textViewBookingTime.text =
+        DataUtils.toFormattedTime(calendar.time, DataUtils.HH_MM_A_12H_FORMAT)
     }
   }
 
@@ -141,8 +148,10 @@ class BookingConfirmationFragment :
 
   private fun showTimePicker() {
     val timeSelected = viewModel.getSelectedTime()
-    val timePicker = PickerUtils.getTimePicker(R.string.select_check_in_time_label,
-        timeSelected.first, timeSelected.second)
+    val timePicker = PickerUtils.getTimePicker(
+      R.string.select_check_in_time_label,
+      timeSelected.first, timeSelected.second
+    )
     timePicker.addOnPositiveButtonClickListener {
       viewModel.setSelectedTime(timePicker.hour, timePicker.minute)
     }

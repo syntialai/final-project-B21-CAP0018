@@ -18,16 +18,17 @@ import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModel
 import com.bangkit.team18.qhope.utils.SnackbarUtils
-import kotlin.reflect.KClass
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.reflect.KClass
 
 abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
-    private val viewBindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB,
-    viewModelClazz: KClass<VM>) : Fragment(),
-    View.OnClickListener {
+  private val viewBindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB,
+  viewModelClazz: KClass<VM>
+) : Fragment(),
+  View.OnClickListener {
 
   private var _binding: VB? = null
   protected val binding get() = _binding as VB
@@ -46,13 +47,15 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
     super.onAttach(context)
     mContext = context
     intentLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()) { result ->
+      ActivityResultContracts.StartActivityForResult()
+    ) { result ->
       if (result.resultCode == Activity.RESULT_OK) {
         onIntentResult(result.data)
       }
     }
     requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()) { isGranted ->
+      ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
       onPermissionGrantedChange(isGranted)
     }
   }
@@ -61,8 +64,10 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
 
   open fun onPermissionGrantedChange(isGranted: Boolean) {}
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-      savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+    inflater: LayoutInflater, container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     _binding = viewBindingInflater.invoke(inflater, container, false)
     return binding.root
   }

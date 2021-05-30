@@ -17,8 +17,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 
 class RoomBookingRepositoryImpl(
-    private val roomBookingRemoteDataSource: RoomBookingRemoteDataSource,
-    private val ioDispatcher: CoroutineDispatcher) : RoomBookingRepository {
+  private val roomBookingRemoteDataSource: RoomBookingRemoteDataSource,
+  private val ioDispatcher: CoroutineDispatcher
+) : RoomBookingRepository {
 
   override suspend fun getUserBookings(userId: String): Flow<ResponseWrapper<List<History>>> {
     return object : FetchDataWrapper<List<HistoryResponse>, List<History>>() {
@@ -53,8 +54,10 @@ class RoomBookingRepositoryImpl(
     }.updateData().flowOn(ioDispatcher)
   }
 
-  override suspend fun uploadReferralLetter(userId: String,
-      fileUri: Uri): Flow<ResponseWrapper<String>> {
+  override suspend fun uploadReferralLetter(
+    userId: String,
+    fileUri: Uri
+  ): Flow<ResponseWrapper<String>> {
     return roomBookingRemoteDataSource.uploadReferralLetter(userId, fileUri)
   }
 }

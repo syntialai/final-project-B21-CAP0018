@@ -6,13 +6,13 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class BookedHospital(
 
-    val id: String,
+  val id: String,
 
-    val name: String,
+  val name: String,
 
-    val imagePath: String,
+  val imagePath: String,
 
-    val type: String,
+  val type: String,
 
-    val address: String
-): Parcelable
+  val address: String
+) : Parcelable

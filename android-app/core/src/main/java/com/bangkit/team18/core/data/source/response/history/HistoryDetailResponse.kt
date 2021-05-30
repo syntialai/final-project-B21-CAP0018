@@ -4,15 +4,15 @@ import com.google.firebase.Timestamp
 
 data class HistoryDetailResponse(
 
-    val id: String,
+  val id: String,
 
-    val hospitalName: String,
+  val hospitalName: String,
 
-    val hospitalImagePath: String,
+  val hospitalImagePath: String,
 
-    val startDate: Timestamp,
+  val startDate: Timestamp,
 
-    val endDate: Timestamp,
+  val endDate: Timestamp,
 
-    val status: String
+  val status: String
 )

@@ -9,8 +9,10 @@ import com.bumptech.glide.Glide
 
 object ViewUtils {
 
-  fun <T> ImageView.loadImageFromStorage(context: Context, image: T,
-      @DrawableRes placeholder: Int? = null) {
+  fun <T> ImageView.loadImageFromStorage(
+    context: Context, image: T,
+    @DrawableRes placeholder: Int? = null
+  ) {
     with(context).load(image).apply {
       placeholder?.let {
         this.placeholder(it).error(it)

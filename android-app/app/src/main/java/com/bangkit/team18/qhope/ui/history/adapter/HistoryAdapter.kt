@@ -12,7 +12,7 @@ import com.bangkit.team18.qhope.ui.base.adapter.BaseDiffCallback
 import com.bangkit.team18.qhope.ui.base.adapter.OnItemClickListener
 
 class HistoryAdapter(private val onItemClickListener: OnItemClickListener) :
-    BaseAdapter<History, LayoutBookingHistoryItemBinding>(diffCallback) {
+  BaseAdapter<History, LayoutBookingHistoryItemBinding>(diffCallback) {
 
   companion object {
     private val diffCallback = object : BaseDiffCallback<History>() {
@@ -30,7 +30,7 @@ class HistoryAdapter(private val onItemClickListener: OnItemClickListener) :
   }
 
   inner class HistoryViewHolder(binding: LayoutBookingHistoryItemBinding) :
-      BaseViewHolder(binding) {
+    BaseViewHolder(binding) {
 
     override fun bind(data: History) {
       binding.apply {
@@ -38,13 +38,17 @@ class HistoryAdapter(private val onItemClickListener: OnItemClickListener) :
           onItemClickListener.onClickListener(data.id)
         }
 
-        imageViewHistoryItem.loadImage(data.hospitalImagePath, R.drawable.drawable_hospital_placeholder)
+        imageViewHistoryItem.loadImage(
+          data.hospitalImagePath,
+          R.drawable.drawable_hospital_placeholder
+        )
 
         textViewHistoryItemName.text = data.hospitalName
         textViewHistoryItemDate.text = data.createdAt
         data.nightCount?.let { nightCount ->
           textViewHistoryItemNight.text = context.resources.getQuantityString(
-              R.plurals.history_night_state, nightCount, nightCount)
+            R.plurals.history_night_state, nightCount, nightCount
+          )
         }
 
         with(textViewHistoryItemStatus) {

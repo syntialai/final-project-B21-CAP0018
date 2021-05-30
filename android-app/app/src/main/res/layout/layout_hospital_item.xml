@@ -22,10 +22,10 @@
             android:layout_marginStart="@dimen/dp_8"
             android:paddingStart="@dimen/dp_0"
             android:paddingEnd="@dimen/dp_16"
-            app:shapeAppearance="?attr/shapeAppearanceMediumComponent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearance="?attr/shapeAppearanceMediumComponent" />
 
         <TextView
             android:id="@+id/text_view_hospital_item_name"
@@ -36,9 +36,9 @@
             android:singleLine="true"
             android:textAppearance="?attr/textAppearanceHeadline4"
             android:textColor="?attr/colorOnSurface"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/image_view_hospital_item"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Hospital" />
 
         <TextView
@@ -48,9 +48,9 @@
             android:layout_marginTop="@dimen/dp_4"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?attr/colorTextMedium"
-            app:layout_constraintTop_toBottomOf="@id/text_view_hospital_item_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/image_view_hospital_item"
+            app:layout_constraintTop_toBottomOf="@id/text_view_hospital_item_name"
             tools:text="Hospital" />
 
         <TextView
@@ -62,9 +62,9 @@
             android:singleLine="true"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="?attr/colorTextMedium"
-            app:layout_constraintTop_toBottomOf="@id/text_view_hospital_item_type"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/image_view_hospital_item"
+            app:layout_constraintTop_toBottomOf="@id/text_view_hospital_item_type"
             tools:text="Hospital" />
 
         <com.google.android.material.chip.Chip
@@ -97,8 +97,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/book_a_room_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.circularreveal.cardview.CircularRevealCardView>

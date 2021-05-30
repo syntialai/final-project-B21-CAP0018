@@ -2,9 +2,7 @@ package com.bangkit.team18.core.utils.view
 
 import androidx.lifecycle.LiveData
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 object DataUtils {
 

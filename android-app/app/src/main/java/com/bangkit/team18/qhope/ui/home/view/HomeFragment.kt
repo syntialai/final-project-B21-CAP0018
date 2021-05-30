@@ -21,8 +21,10 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import org.koin.android.ext.android.inject
 
-class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(FragmentHomeBinding::inflate,
-    HomeViewModel::class), HomeHospitalItemCallback {
+class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
+  FragmentHomeBinding::inflate,
+  HomeViewModel::class
+), HomeHospitalItemCallback {
 
   companion object {
     fun newInstance() = HomeFragment()

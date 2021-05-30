@@ -12,20 +12,23 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel : ViewModel() {
-
   private var _fetchStatus = MutableLiveData<ResponseWrapper<*>>()
   val fetchStatus: LiveData<ResponseWrapper<*>>
     get() = _fetchStatus
 
-  protected fun launchViewModelScope(block: suspend () -> Unit,
-      dispatcher: CoroutineDispatcher = Dispatchers.Main) {
+  protected fun launchViewModelScope(
+    block: suspend () -> Unit,
+    dispatcher: CoroutineDispatcher = Dispatchers.Main
+  ) {
     viewModelScope.launch(dispatcher) {
       block.invoke()
     }
   }
 
-  protected suspend fun <T> Flow<ResponseWrapper<T>>.runFlow(onSuccessFetch: (T) -> Unit,
-      onFailFetch: (() -> Unit)? = null) {
+  protected suspend fun <T> Flow<ResponseWrapper<T>>.runFlow(
+    onSuccessFetch: (T) -> Unit,
+    onFailFetch: (() -> Unit)? = null
+  ) {
     collect { data ->
       checkResponse(data, onSuccessFetch, onFailFetch)
     }
@@ -35,8 +38,10 @@ abstract class BaseViewModel : ViewModel() {
     this.value = this.value
   }
 
-  private fun <T> checkResponse(wrapper: ResponseWrapper<T>, onSuccessFetch: (T) -> Unit,
-      onFailFetch: (() -> Unit)?) {
+  private fun <T> checkResponse(
+    wrapper: ResponseWrapper<T>, onSuccessFetch: (T) -> Unit,
+    onFailFetch: (() -> Unit)?
+  ) {
     _fetchStatus.value = wrapper
     when (wrapper) {
       is ResponseWrapper.Success -> onSuccessFetch.invoke(wrapper.data)

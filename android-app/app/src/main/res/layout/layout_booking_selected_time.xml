@@ -17,10 +17,10 @@
             android:text="@string/time_selected_label"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?attr/colorTextMedium"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/barrier_booking_edit_time"
             app:layout_constraintBottom_toTopOf="@+id/text_view_booking_time"
+            app:layout_constraintEnd_toEndOf="@id/barrier_booking_edit_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
@@ -29,10 +29,10 @@
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceHeadline3"
             android:textColor="?attr/colorOnSurface"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_booking_time_label"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/barrier_booking_edit_time"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/barrier_booking_edit_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_booking_time_label"
             tools:text="08:00 AM" />
 
         <androidx.constraintlayout.widget.Barrier
@@ -50,9 +50,9 @@
             android:layout_marginStart="@dimen/dp_12"
             android:contentDescription="@string/time_selected_label"
             android:src="@drawable/ic_edit"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
