@@ -4,6 +4,8 @@ data class HistoryDetail(
 
     val id: String,
 
+    val hospitalId: String,
+
     val hospitalName: String,
 
     val hospitalImagePath: String,
@@ -17,6 +19,8 @@ data class HistoryDetail(
     val referralLetterFilePath: String,
 
     val referralLetterFileName: String,
+
+    val bookedAt: String,
 
     val startDate: String,
 

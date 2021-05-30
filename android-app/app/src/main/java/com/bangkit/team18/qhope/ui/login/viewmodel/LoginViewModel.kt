@@ -42,7 +42,7 @@ class LoginViewModel(private val authRepository: AuthRepository) :
   }
 
   init {
-    authRepository.addAuthStateListener(this)
+    initAuthStateListener()
   }
 
   private fun startCountDown() {

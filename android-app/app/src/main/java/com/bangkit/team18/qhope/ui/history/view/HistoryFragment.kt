@@ -9,11 +9,10 @@ import com.bangkit.team18.qhope.ui.history.adapter.HistoryAdapter
 import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryViewModel
 import com.bangkit.team18.qhope.utils.Router
 
-class HistoryFragment :
-  BaseFragment<FragmentHistoryBinding, HistoryViewModel>(
-    FragmentHistoryBinding::inflate,
-    HistoryViewModel::class
-  ), OnItemClickListener {
+class HistoryFragment : BaseFragment<FragmentHistoryBinding, HistoryViewModel>(
+  FragmentHistoryBinding::inflate,
+  HistoryViewModel::class
+), OnItemClickListener {
 
   companion object {
     fun newInstance() = HistoryFragment()
@@ -33,9 +32,14 @@ class HistoryFragment :
   override fun setupObserver() {
     super.setupObserver()
 
-    viewModel.initializeUserId()
-    viewModel.fetchUserBookingHistories()
-    viewModel.bookingHistories.observe(this, { histories ->
+    viewModel.user.observe(viewLifecycleOwner, {
+      it?.let { user ->
+        viewModel.fetchUserBookingHistories(user.uid)
+      } ?: run {
+        viewModel.logOut()
+      }
+    })
+    viewModel.bookingHistories.observe(viewLifecycleOwner, { histories ->
       showEmptyState(histories.isEmpty())
       historyAdapter.submitList(histories)
     })

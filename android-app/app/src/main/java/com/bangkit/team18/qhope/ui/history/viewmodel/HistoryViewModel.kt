@@ -3,27 +3,27 @@ package com.bangkit.team18.qhope.ui.history.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bangkit.team18.core.domain.model.history.History
+import com.bangkit.team18.core.domain.repository.AuthRepository
 import com.bangkit.team18.core.domain.usecase.RoomBookingUseCase
-import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModel
+import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 
-class HistoryViewModel(private val roomBookingUseCase: RoomBookingUseCase) : BaseViewModel() {
+class HistoryViewModel(
+  private val roomBookingUseCase: RoomBookingUseCase,
+  authRepository: AuthRepository
+) : BaseViewModelWithAuth(authRepository) {
 
   private var _bookingHistories = MutableLiveData<List<History>>()
   val bookingHistories: LiveData<List<History>>
     get() = _bookingHistories
 
-  private var _userId: String? = null
-
-  fun fetchUserBookingHistories() {
-    _userId?.let { id ->
-      launchViewModelScope({
-        roomBookingUseCase.getUserBookings(id).runFlow(::setRoomBookingData)
-      })
-    }
+  init {
+    initAuthStateListener()
   }
 
-  fun initializeUserId() {
-    // TODO: Complete this
+  fun fetchUserBookingHistories(userId: String) {
+    launchViewModelScope({
+      roomBookingUseCase.getUserBookings(userId).runFlow(::setRoomBookingData)
+    })
   }
 
   private fun setRoomBookingData(response: List<History>) {

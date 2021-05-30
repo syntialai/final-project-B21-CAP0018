@@ -22,7 +22,7 @@ class HistoryDetailViewModel(private val roomBookingUseCase: RoomBookingUseCase)
     }
   }
 
-  fun initializeHistoryId(id: String) {
+  fun initializeHistoryId(id: String?) {
     _historyId = id
   }
 

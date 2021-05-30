@@ -10,6 +10,7 @@ import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityHistoryDetailBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseActivityViewModel
 import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryDetailViewModel
+import com.bangkit.team18.qhope.utils.Router
 
 class HistoryDetailActivity :
   BaseActivityViewModel<ActivityHistoryDetailBinding, HistoryDetailViewModel>(
@@ -30,16 +31,23 @@ class HistoryDetailActivity :
   override fun setupObserver() {
     super.setupObserver()
 
-//    viewModel.initializeHistoryId()
+    viewModel.initializeHistoryId(intent?.getStringExtra(Router.PARAM_HISTORY_ID))
     viewModel.fetchUserBookingHistory()
     viewModel.bookingHistory.observe(this, {
       it?.let { historyDetail ->
         setBookingDataMainInfo(historyDetail.id, historyDetail.startDate, historyDetail.status)
-        setBookingDataHospitalInfo(historyDetail.hospitalImagePath, historyDetail.hospitalName,
-            historyDetail.hospitalAddress, historyDetail.hospitalType)
-        setBookingOtherInfo(historyDetail.startDate, historyDetail.endDate,
-            historyDetail.roomCostPerDay)
-        setBookingReferralLetterData(historyDetail.referralLetterFileName, historyDetail.referralLetterFilePath)
+        setBookingDataHospitalInfo(
+          historyDetail.hospitalImagePath, historyDetail.hospitalName,
+          historyDetail.hospitalAddress, historyDetail.hospitalType
+        )
+        setBookingOtherInfo(
+          historyDetail.startDate, historyDetail.endDate,
+          historyDetail.roomCostPerDay
+        )
+        setBookingReferralLetterData(
+          historyDetail.referralLetterFileName,
+          historyDetail.referralLetterFilePath
+        )
       }
     })
   }
