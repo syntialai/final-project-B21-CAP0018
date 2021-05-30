@@ -30,6 +30,10 @@
     <string name="time_selected_label">Check-in Time Selected</string>
     <string name="upload_doctor_referral_letter_label">Upload Doctor\'s Referral Letter</string>
     <string name="upload_your_referral_letter_label">Upload Your Referral Letter</string>
+    <string name="success_book_a_room_label">Success Book a Room!</string>
+    <string name="success_book_a_room_description">We\'ll process your booking and notify you for any changes soon.</string>
+    <string name="go_to_booking_history_label">Go to Booking History</string>
+    <string name="back_to_home_label">Back to Home</string>
 
     <!-- History -->
     <string name="history_label">History</string>

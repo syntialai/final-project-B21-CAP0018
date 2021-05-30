@@ -1,13 +1,14 @@
 package com.bangkit.team18.core.data.mapper
 
 import java.text.NumberFormat
-import java.util.Currency
-import java.util.Locale
+import java.util.*
 
 object DataMapper {
 
-  fun <Response, Model> mapToModels(responses: List<Response>,
-      mapper: (Response) -> Model): List<Model> {
+  fun <Response, Model> mapToModels(
+    responses: List<Response>,
+    mapper: (Response) -> Model
+  ): List<Model> {
     return responses.map {
       mapper.invoke(it)
     }

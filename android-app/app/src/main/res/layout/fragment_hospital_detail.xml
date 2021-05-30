@@ -6,15 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.booking.view.HospitalDetailFragment">
 
-    <ImageButton
-        android:id="@+id/button_hospital_detail_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_12"
-        android:src="@drawable/ic_arrow_back"
-        app:tint="?attr/colorSurface"
-        tools:ignore="ContentDescription" />
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,9 +25,9 @@
                 android:layout_height="@dimen/dp_300"
                 android:contentDescription="@string/hospital_detail_description"
                 android:scaleType="fitCenter"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/drawable_image_type" />
 
             <com.google.android.material.chip.Chip
@@ -48,8 +39,8 @@
                 android:text="@string/available_label"
                 android:visibility="gone"
                 app:chipIcon="@drawable/ic_available"
-                app:layout_constraintTop_toTopOf="@id/image_view_hospital_detail"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/image_view_hospital_detail"
                 tools:visibility="visible" />
 
             <com.google.android.material.chip.Chip
@@ -61,8 +52,8 @@
                 android:text="@string/not_available_label"
                 android:visibility="gone"
                 app:chipIcon="@drawable/ic_not_available"
-                app:layout_constraintTop_toTopOf="@id/image_view_hospital_detail"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/image_view_hospital_detail"
                 tools:visibility="visible" />
 
             <TextView
@@ -73,9 +64,9 @@
                 android:layout_marginTop="@dimen/dp_12"
                 android:textAppearance="?attr/textAppearanceHeadline3"
                 android:textColor="?attr/colorOnSurface"
-                app:layout_constraintTop_toBottomOf="@id/image_view_hospital_detail"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/image_view_hospital_detail"
                 tools:text="Rumah sakit ini" />
 
             <TextView
@@ -86,9 +77,9 @@
                 android:layout_marginTop="@dimen/dp_4"
                 android:textAppearance="?attr/textAppearanceBody1"
                 android:textColor="?attr/colorTextMedium"
-                app:layout_constraintTop_toBottomOf="@id/text_view_hospital_detail_name"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_hospital_detail_name"
                 tools:text="Klinik" />
 
             <TextView
@@ -99,9 +90,9 @@
                 android:layout_marginTop="@dimen/dp_12"
                 android:textAppearance="?attr/textAppearanceBody1"
                 android:textColor="?attr/colorOnSurface"
-                app:layout_constraintTop_toBottomOf="@id/text_view_hospital_detail_type"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_hospital_detail_type"
                 tools:text="Deskripsi" />
 
             <TextView
@@ -113,9 +104,9 @@
                 android:text="@string/room_type_label"
                 android:textAppearance="?attr/textAppearanceHeadline4"
                 android:textColor="?attr/colorOnSurface"
-                app:layout_constraintTop_toBottomOf="@id/text_view_hospital_detail_description"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/text_view_hospital_detail_description" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chip_group_hospital_detail_room_type"
@@ -123,13 +114,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_12"
                 android:paddingHorizontal="@dimen/dp_12"
-                app:singleSelection="true"
+                app:chipSpacingVertical="@dimen/dp_12"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_hospital_detail_room_type_label"
                 app:selectionRequired="true"
                 app:singleLine="true"
-                app:chipSpacingVertical="@dimen/dp_12"
-                app:layout_constraintTop_toBottomOf="@id/text_view_hospital_detail_room_type_label"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:singleSelection="true" />
 
             <TextView
                 android:id="@+id/text_view_hospital_detail_location_label"
@@ -140,9 +131,9 @@
                 android:text="@string/location_label"
                 android:textAppearance="?attr/textAppearanceHeadline4"
                 android:textColor="?attr/colorOnSurface"
-                app:layout_constraintTop_toBottomOf="@id/chip_group_hospital_detail_room_type"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/chip_group_hospital_detail_room_type" />
 
             <fragment
                 android:id="@+id/fragment_hospital_detail_location_maps"
@@ -151,8 +142,8 @@
                 android:layout_height="@dimen/dp_150"
                 android:layout_marginHorizontal="@dimen/dp_16"
                 android:layout_marginTop="@dimen/dp_12"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_view_hospital_detail_location_label"
                 tools:ignore="FragmentTagUsage" />
 
@@ -165,9 +156,9 @@
                 android:textAlignment="center"
                 android:textAppearance="?attr/textAppearanceBody1"
                 android:textColor="?attr/colorOnSurface"
-                app:layout_constraintTop_toBottomOf="@id/fragment_hospital_detail_location_maps"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_hospital_detail_location_maps"
                 tools:text="Jl. Demak" />
 
             <TextView
@@ -179,9 +170,9 @@
                 android:text="@string/telephone_label"
                 android:textAppearance="?attr/textAppearanceHeadline4"
                 android:textColor="?attr/colorOnSurface"
-                app:layout_constraintTop_toBottomOf="@id/text_view_hospital_detail_location"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/text_view_hospital_detail_location" />
 
             <TextView
                 android:id="@+id/text_view_hospital_detail_phone"
@@ -191,9 +182,9 @@
                 android:layout_marginTop="@dimen/dp_8"
                 android:textAppearance="?attr/textAppearanceBody1"
                 android:textColor="?attr/colorOnSurface"
-                app:layout_constraintTop_toBottomOf="@id/text_view_hospital_detail_phone_label"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_hospital_detail_phone_label"
                 tools:text="09181992" />
 
             <androidx.constraintlayout.widget.Group
@@ -204,6 +195,16 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <ImageButton
+        android:id="@+id/button_hospital_detail_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_margin="@dimen/dp_12"
+        android:src="@drawable/ic_arrow_back"
+        app:tint="?attr/colorSurface"
+        tools:ignore="ContentDescription" />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/spin_kit_load_hospital_detail"
@@ -230,9 +231,9 @@
             android:textAppearance="?attr/textAppearanceHeadline3"
             android:textColor="?attr/colorOnSurface"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="Rp1.000.000" />
 
         <TextView
@@ -253,10 +254,10 @@
             android:layout_marginStart="@dimen/dp_20"
             android:enabled="false"
             android:text="@string/book_a_room_label"
-            app:layout_constraintStart_toEndOf="@id/text_view_hospital_detail_price_label"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintStart_toEndOf="@id/text_view_hospital_detail_price_label"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -2,18 +2,15 @@ package com.bangkit.team18.core.domain.model.history
 
 data class History(
 
-    val id: String,
+  val id: String,
 
-    val hospitalName: String,
+  val hospitalName: String,
 
-    val hospitalImage: String,
+  val hospitalImagePath: String,
 
-    val startDate: String,
+  val createdAt: String,
 
-    val endDate: String,
+  val nightCount: Int?,
 
-    // TODO: Get by -> val nightCount = TimeUnit.MILLISECONDS.toDays(endDate.time - data.startDate.time.orZero()).toInt()
-    val nightCount: Int?,
-
-    val status: HistoryStatus
+  val status: HistoryStatus
 )

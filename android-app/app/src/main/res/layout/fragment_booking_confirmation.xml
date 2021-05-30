@@ -23,9 +23,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/dp_16"
             android:clipToPadding="false"
-            android:paddingBottom="@dimen/dp_100"
-            android:visibility="gone"
-            tools:visibility="visible">
+            android:paddingBottom="@dimen/dp_100">
 
             <TextView
                 android:id="@+id/text_view_booking_confirm_selected_room_label"
@@ -35,20 +33,20 @@
                 android:text="@string/selected_room_type_label"
                 android:textAppearance="?attr/textAppearanceHeadline4"
                 android:textColor="?attr/colorOnSurface"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <include
                 android:id="@+id/layout_booking_selected_room_info"
+                layout="@layout/layout_booking_selected_room_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/dp_12"
                 android:layout_marginTop="@dimen/dp_12"
-                layout="@layout/layout_booking_selected_room_info"
-                app:layout_constraintTop_toBottomOf="@id/text_view_booking_confirm_selected_room_label"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/text_view_booking_confirm_selected_room_label" />
 
             <TextView
                 android:id="@+id/text_view_booking_confirm_select_date_label"
@@ -59,9 +57,9 @@
                 android:text="@string/select_date_label"
                 android:textAppearance="?attr/textAppearanceHeadline4"
                 android:textColor="?attr/colorOnSurface"
-                app:layout_constraintTop_toBottomOf="@id/layout_booking_selected_room_info"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_booking_selected_room_info" />
 
             <CalendarView
                 android:id="@+id/calendar_booking_confirm_select_date"
@@ -70,20 +68,20 @@
                 android:background="?attr/colorSurface"
                 android:dateTextAppearance="?attr/textAppearanceBody2"
                 android:weekDayTextAppearance="?attr/textAppearanceSubtitle1"
-                app:layout_constraintTop_toBottomOf="@id/text_view_booking_confirm_select_date_label"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/text_view_booking_confirm_select_date_label" />
 
             <include
                 android:id="@+id/layout_booking_time_selected"
+                layout="@layout/layout_booking_selected_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/dp_12"
                 android:visibility="gone"
-                layout="@layout/layout_booking_selected_time"
-                app:layout_constraintTop_toBottomOf="@id/calendar_booking_confirm_select_date"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/calendar_booking_confirm_select_date"
                 tools:visibility="visible" />
 
             <TextView
@@ -95,9 +93,9 @@
                 android:text="@string/upload_doctor_referral_letter_label"
                 android:textAppearance="?attr/textAppearanceHeadline4"
                 android:textColor="?attr/colorOnSurface"
-                app:layout_constraintTop_toBottomOf="@id/layout_booking_time_selected"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_booking_time_selected" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_booking_confirm_upload_letter"
@@ -107,9 +105,9 @@
                 android:layout_marginTop="@dimen/dp_12"
                 android:text="@string/upload_your_referral_letter_label"
                 app:icon="@drawable/ic_upload_file"
-                app:layout_constraintTop_toBottomOf="@id/text_view_booking_confirm_upload_letter_label"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/text_view_booking_confirm_upload_letter_label" />
 
             <com.bangkit.team18.qhope.ui.widget.ReferralLetterCard
                 android:id="@+id/card_booking_confirm_referral_letter"
@@ -118,9 +116,11 @@
                 android:layout_marginHorizontal="@dimen/dp_12"
                 android:layout_marginTop="@dimen/dp_12"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/button_booking_confirm_upload_letter"
-                app:layout_constraintStart_toStartOf="parent"
+                app:file_name="Your Referral Letter Card"
+                app:image_type="PDF"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/button_booking_confirm_upload_letter"
                 tools:visibility="visible" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -142,7 +142,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:enabled="false"
             android:text="@string/confirm_booking_label" />
     </LinearLayout>
 

@@ -4,17 +4,17 @@ import com.firebase.geofire.GeoLocation
 
 data class Hospital(
 
-    val id: String,
+  val id: String,
 
-    val name: String,
+  val name: String,
 
-    val image: String,
+  val image: String,
 
-    val type: String,
+  val type: String,
 
-    val address: String,
+  val address: String,
 
-    val location: GeoLocation,
+  val location: GeoLocation,
 
-    val availableRoomCount: Int
+  val availableRoomCount: Int
 )

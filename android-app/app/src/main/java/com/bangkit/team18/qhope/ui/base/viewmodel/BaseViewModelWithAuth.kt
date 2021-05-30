@@ -7,15 +7,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
 abstract class BaseViewModelWithAuth(private val authRepository: AuthRepository) : BaseViewModel(),
-    FirebaseAuth.AuthStateListener {
-    private var _user = MutableLiveData<FirebaseUser?>()
-    val user: LiveData<FirebaseUser?> get() = _user
+  FirebaseAuth.AuthStateListener {
+  private var _user = MutableLiveData<FirebaseUser?>()
+  val user: LiveData<FirebaseUser?> get() = _user
 
-    override fun onCleared() {
-        authRepository.removeAuthStateListener(this)
-    }
+  override fun onCleared() {
+    authRepository.removeAuthStateListener(this)
+  }
 
-    override fun onAuthStateChanged(auth: FirebaseAuth) {
-        _user.value = auth.currentUser
-    }
+  override fun onAuthStateChanged(auth: FirebaseAuth) {
+    _user.value = auth.currentUser
+  }
 }

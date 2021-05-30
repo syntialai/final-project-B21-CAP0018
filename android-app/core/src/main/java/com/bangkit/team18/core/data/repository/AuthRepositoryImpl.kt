@@ -19,57 +19,57 @@ import java.util.concurrent.TimeUnit
 
 @ExperimentalCoroutinesApi
 class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepository {
-    override fun signInWithCredential(credential: PhoneAuthCredential) = callbackFlow {
-        val signIn = firebaseAuth.signInWithCredential(credential)
-        signIn.addOnCompleteListener { task ->
-            GlobalScope.launch {
-                when {
-                    task.isSuccessful -> {
-                        offer(ResponseWrapper.Success(true))
-                    }
-                    task.exception is IOException -> {
-                        offer(ResponseWrapper.NetworkError<Boolean>())
-                    }
-                    else -> {
-                        offer(ResponseWrapper.Error<Boolean>(task.exception?.message))
-                    }
-                }
-            }
+  override fun signInWithCredential(credential: PhoneAuthCredential) = callbackFlow {
+    val signIn = firebaseAuth.signInWithCredential(credential)
+    signIn.addOnCompleteListener { task ->
+      GlobalScope.launch {
+        when {
+          task.isSuccessful -> {
+            trySend(ResponseWrapper.Success(true))
+          }
+          task.exception is IOException -> {
+            trySend(ResponseWrapper.NetworkError<Boolean>())
+          }
+          else -> {
+            trySend(ResponseWrapper.Error<Boolean>(task.exception?.message))
+          }
         }
-        awaitClose { }
+      }
     }
+    awaitClose { }
+  }
 
-    override fun requestToken(
-        activity: Activity,
-        phoneNumber: String,
-        resendToken: PhoneAuthProvider.ForceResendingToken?,
-        callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
-    ) {
-        val options = PhoneAuthOptions.newBuilder(Firebase.auth)
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(30L, TimeUnit.SECONDS)
-            .setActivity(activity)
-            .setCallbacks(callbacks)
+  override fun requestToken(
+    activity: Activity,
+    phoneNumber: String,
+    resendToken: PhoneAuthProvider.ForceResendingToken?,
+    callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
+  ) {
+    val options = PhoneAuthOptions.newBuilder(Firebase.auth)
+      .setPhoneNumber(phoneNumber)
+      .setTimeout(30L, TimeUnit.SECONDS)
+      .setActivity(activity)
+      .setCallbacks(callbacks)
 
-        resendToken?.let {
-            options.setForceResendingToken(it)
-        }
-        PhoneAuthProvider.verifyPhoneNumber(options.build())
+    resendToken?.let {
+      options.setForceResendingToken(it)
     }
+    PhoneAuthProvider.verifyPhoneNumber(options.build())
+  }
 
-    override fun getCredential(verificationId: String, token: String): PhoneAuthCredential {
-        return PhoneAuthProvider.getCredential(verificationId, token)
-    }
+  override fun getCredential(verificationId: String, token: String): PhoneAuthCredential {
+    return PhoneAuthProvider.getCredential(verificationId, token)
+  }
 
-    override fun logout() {
-        firebaseAuth.signOut()
-    }
+  override fun logout() {
+    firebaseAuth.signOut()
+  }
 
-    override fun addAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener) {
-        firebaseAuth.addAuthStateListener(authStateListener)
-    }
+  override fun addAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener) {
+    firebaseAuth.addAuthStateListener(authStateListener)
+  }
 
-    override fun removeAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener) {
-        firebaseAuth.removeAuthStateListener(authStateListener)
-    }
+  override fun removeAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener) {
+    firebaseAuth.removeAuthStateListener(authStateListener)
+  }
 }

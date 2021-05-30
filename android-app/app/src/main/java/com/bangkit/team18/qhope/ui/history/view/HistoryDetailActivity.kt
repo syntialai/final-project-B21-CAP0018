@@ -5,7 +5,7 @@ import android.view.View
 import com.bangkit.team18.core.domain.model.history.HistoryStatus
 import com.bangkit.team18.core.domain.model.home.Hospital
 import com.bangkit.team18.core.utils.view.DataUtils.getText
-import com.bangkit.team18.core.utils.view.ViewUtils.loadImage
+import com.bangkit.team18.core.utils.view.ViewUtils.loadImageFromStorage
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityHistoryDetailBinding
@@ -13,17 +13,21 @@ import com.bangkit.team18.qhope.ui.base.view.BaseActivityViewModel
 import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryDetailViewModel
 
 class HistoryDetailActivity :
-    BaseActivityViewModel<ActivityHistoryDetailBinding, HistoryDetailViewModel>(
-        ActivityHistoryDetailBinding::inflate, HistoryDetailViewModel::class) {
+  BaseActivityViewModel<ActivityHistoryDetailBinding, HistoryDetailViewModel>(
+    ActivityHistoryDetailBinding::inflate, HistoryDetailViewModel::class
+  ) {
 
   override fun setupViews(savedInstanceState: Bundle?) {
     binding.apply {
       layoutHistoryDetailBookingData.imageViewBookingDataHospital.setOnClickListener(
-          this@HistoryDetailActivity)
+        this@HistoryDetailActivity
+      )
       layoutHistoryDetailBookingData.textViewBookingDataHospitalName.setOnClickListener(
-          this@HistoryDetailActivity)
+        this@HistoryDetailActivity
+      )
       layoutHistoryDetailUserData.cardBookingUserReferralLetter.setOnClickListener(
-          this@HistoryDetailActivity)
+        this@HistoryDetailActivity
+      )
     }
   }
 
@@ -58,8 +62,10 @@ class HistoryDetailActivity :
 
   private fun setBookingDataHospitalInfo(hospital: Hospital) {
     binding.layoutHistoryDetailBookingData.apply {
-      imageViewBookingDataHospital.loadImage(this@HistoryDetailActivity, hospital.image,
-          R.drawable.drawable_hospital_placeholder)
+      imageViewBookingDataHospital.loadImageFromStorage(
+        this@HistoryDetailActivity, hospital.image,
+        R.drawable.drawable_hospital_placeholder
+      )
       textViewBookingDataHospitalName.text = hospital.name
       textViewBookingDataHospitalType.text = hospital.type
       textViewBookingDataHospitalAddress.text = hospital.address

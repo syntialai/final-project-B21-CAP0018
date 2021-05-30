@@ -8,6 +8,8 @@ plugins {
   id 'com.google.secrets_gradle_plugin' version '0.6'
 }
 
+apply from: '../shared_dependencies.gradle'
+
 android {
   compileSdkVersion 30
   buildToolsVersion "30.0.3"
@@ -18,6 +20,7 @@ android {
     targetSdkVersion 30
     versionCode 1
     versionName "1.0"
+    multiDexEnabled true
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -44,13 +47,7 @@ android {
 }
 
 dependencies {
-
   implementation project(":core")
-
-  // Tests
-  testImplementation 'junit:junit:4.13.2'
-  androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-  androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
   // Lifecycle
   implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
@@ -65,28 +62,11 @@ dependencies {
   // Preference
   implementation "androidx.preference:preference-ktx:1.1.1"
 
-  // Glide
-  kapt 'com.github.bumptech.glide:compiler:4.12.0'
-
   // Circle Image
   implementation 'de.hdodenhof:circleimageview:3.1.0'
 
   // Spin Kit
   implementation 'com.github.ybq:Android-SpinKit:1.4.0'
-
-  // Coroutines
-  testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3'
-  androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3'
-
-  // Koin DI
-  testImplementation "org.koin:koin-test:2.0.1"
-  androidTestImplementation ("org.koin:koin-test:2.0.1") { exclude group: 'org.mockito' }
-
-  // Room DB
-  kapt "androidx.room:room-compiler:2.3.0"
-
-  // Paging
-  testImplementation "androidx.paging:paging-common-ktx:3.0.0"
 }
 
 secrets {

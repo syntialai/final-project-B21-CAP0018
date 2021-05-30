@@ -9,10 +9,9 @@ import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.LayoutHospitalItemBinding
 import com.bangkit.team18.qhope.ui.base.adapter.BaseAdapter
 import com.bangkit.team18.qhope.ui.base.adapter.BaseDiffCallback
-import com.bangkit.team18.qhope.ui.base.adapter.OnItemClickListener
 
-class HomeAdapter(private val onItemClickCallback: OnItemClickListener) :
-    BaseAdapter<Hospital, LayoutHospitalItemBinding>(diffCallback) {
+class HomeAdapter(private val hospitalItemCallback: HomeHospitalItemCallback) :
+  BaseAdapter<Hospital, LayoutHospitalItemBinding>(diffCallback) {
 
   companion object {
     private val diffCallback = object : BaseDiffCallback<Hospital>() {
@@ -34,13 +33,16 @@ class HomeAdapter(private val onItemClickCallback: OnItemClickListener) :
     override fun bind(data: Hospital) {
       binding.apply {
         root.setOnClickListener {
-          onItemClickCallback.onClickListener(data.id)
+          hospitalItemCallback.onClickListener(data.id)
         }
         buttonHospitalItemBookRoom.setOnClickListener {
-          onItemClickCallback.onClickListener(data.id)
+          hospitalItemCallback.onClickListener(data.id)
         }
 
-        imageViewHospitalItem.loadImage(data.image, R.drawable.drawable_hospital_placeholder)
+        imageViewHospitalItem.loadImage(
+          hospitalItemCallback.getStorageRef(data.image),
+          R.drawable.drawable_hospital_placeholder
+        )
 
         textViewHospitalItemName.text = data.name
         textViewHospitalItemAddress.text = data.address
@@ -53,13 +55,17 @@ class HomeAdapter(private val onItemClickCallback: OnItemClickListener) :
         chipHospitalItemRoomAvailable.showOrRemove(isRoomAvailable)
         chipHospitalItemRoomNotAvailable.showOrRemove(isRoomAvailable.not())
 
-        context.resources.getQuantityString(R.plurals.room_available_label, roomAvailable,
-            roomAvailable).also { roomAvailableLabel ->
-          chipHospitalItemRoomNotAvailable.setChipIconResource(if (isRoomAvailable) {
-            R.drawable.ic_info
-          } else {
-            R.drawable.ic_not_available
-          })
+        context.resources.getQuantityString(
+          R.plurals.room_available_label, roomAvailable,
+          roomAvailable
+        ).also { roomAvailableLabel ->
+          chipHospitalItemRoomNotAvailable.setChipIconResource(
+            if (isRoomAvailable) {
+              R.drawable.ic_info
+            } else {
+              R.drawable.ic_not_available
+            }
+          )
           chipHospitalItemRoomNotAvailable.text = roomAvailableLabel
           chipHospitalItemRoomAvailable.text = roomAvailableLabel
         }

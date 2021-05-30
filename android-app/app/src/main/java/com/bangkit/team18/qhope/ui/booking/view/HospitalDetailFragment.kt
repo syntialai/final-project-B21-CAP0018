@@ -3,9 +3,10 @@ package com.bangkit.team18.qhope.ui.booking.view
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.bangkit.team18.core.domain.model.booking.HospitalDetail
-import com.bangkit.team18.core.domain.model.booking.RoomType
-import com.bangkit.team18.core.utils.view.ViewUtils.loadImage
+import com.bangkit.team18.core.domain.model.hospital.HospitalDetail
+import com.bangkit.team18.core.domain.model.hospital.RoomType
+import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
+import com.bangkit.team18.core.utils.view.ViewUtils.loadImageFromStorage
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentHospitalDetailBinding
@@ -18,17 +19,26 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.chip.Chip
+import com.google.firebase.storage.FirebaseStorage
+import org.koin.android.ext.android.inject
 
 class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, HospitalDetailViewModel>(
-    FragmentHospitalDetailBinding::inflate, HospitalDetailViewModel::class), OnMapReadyCallback {
+  FragmentHospitalDetailBinding::inflate, HospitalDetailViewModel::class
+), OnMapReadyCallback {
 
   companion object {
-    private const val DEFAULT_ZOOM = 15f
+    private const val DEFAULT_ZOOM = 16f
   }
+
+  private val storage: FirebaseStorage by inject()
 
   private var googleMap: GoogleMap? = null
 
   override fun setupViews() {
+    binding.apply {
+      buttonHospitalDetailBack.setOnClickListener(this@HospitalDetailFragment)
+      buttonHospitalDetailBook.setOnClickListener(this@HospitalDetailFragment)
+    }
     setupGoogleMaps()
   }
 
@@ -69,15 +79,18 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
   override fun onClick(view: View?) {
     with(binding) {
       when (view) {
-        buttonHospitalDetailBack -> { /* TODO: Call onBackPressed */ }
+        buttonHospitalDetailBack -> activity?.finish()
         buttonHospitalDetailBook -> processBook()
+        else -> Unit
       }
     }
   }
 
   private fun getTypeChip(index: Int, text: String): Chip {
-    return (layoutInflater.inflate(R.layout.layout_hospital_detail_chip_type,
-        binding.chipGroupHospitalDetailRoomType, false) as Chip).apply {
+    return (layoutInflater.inflate(
+      R.layout.layout_hospital_detail_chip_type,
+      binding.chipGroupHospitalDetailRoomType, false
+    ) as Chip).apply {
       this.id = index
       this.text = text
       this.isChecked = index == 0
@@ -85,14 +98,19 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
   }
 
   private fun processBook() {
-    // TODO: Get data and go to booking confirmation
-    findNavController().navigate(
-        HospitalDetailFragmentDirections.actionHospitalDetailFragmentToBookingConfirmationFragment())
+    if (viewModel.getBookedHospital().isNotNull() && viewModel.getSelectedRoomType().isNotNull()) {
+      findNavController().navigate(
+        HospitalDetailFragmentDirections.actionHospitalDetailFragmentToBookingConfirmationFragment(
+          viewModel.getBookedHospital()!!, viewModel.getSelectedRoomType()!!
+        )
+      )
+    }
   }
 
   private fun setupGoogleMaps() {
     val mapFragment = childFragmentManager.findFragmentById(
-        R.id.fragment_hospital_detail_location_maps) as SupportMapFragment
+      R.id.fragment_hospital_detail_location_maps
+    ) as SupportMapFragment
     lifecycleScope.launchWhenResumed {
       mapFragment.getMapAsync(this@HospitalDetailFragment)
     }
@@ -101,9 +119,6 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
   private fun setHospitalData(hospital: HospitalDetail) {
     binding.apply {
       buttonHospitalDetailBook.isEnabled = hospital.availableRoomCount > 0
-
-      imageViewHospitalDetail.loadImage(mContext, hospital.image,
-          R.drawable.drawable_hospital_placeholder)
 
       textViewHospitalDetailName.text = hospital.name
       textViewHospitalDetailType.text = hospital.type
@@ -114,12 +129,20 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
       textViewHospitalDetailDescription.showOrRemove(hospital.description.isNullOrBlank().not())
       groupHospitalDetailPhone.showOrRemove(hospital.telephone.isNotBlank())
     }
+    setHospitalImage(hospital.imagePath)
     updateLocation(hospital.location, hospital.name)
   }
 
+  private fun setHospitalImage(imagePath: String) {
+    binding.imageViewHospitalDetail.loadImageFromStorage(
+      mContext, storage.getReference(imagePath),
+      R.drawable.drawable_hospital_placeholder
+    )
+  }
+
   private fun setupPriceByType(roomType: RoomType) {
-    // TODO: call viewmodel to update checked roomtype
-    binding.textViewHospitalDetailPrice.text = roomType.price
+    viewModel.selectRoomType(roomType)
+    binding.textViewHospitalDetailPrice.text = viewModel.mapToFormattedPrice(roomType.price)
   }
 
   private fun setupRoomAvailability(availableRoomCount: Int) {
@@ -134,12 +157,12 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
   private fun setupTypeData(roomTypes: List<RoomType>) {
     binding.chipGroupHospitalDetailRoomType.apply {
       removeAllViews()
-      roomTypes.forEachIndexed { index, roomType ->
-        addView(getTypeChip(index, roomType.name))
-      }
       setOnCheckedChangeListener { _, checkedId ->
         setupPriceByType(roomTypes[checkedId])
         setupRoomAvailability(roomTypes[checkedId].availableRoomCount)
+      }
+      roomTypes.forEachIndexed { index, roomType ->
+        addView(getTypeChip(index, roomType.name))
       }
     }
   }
