@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "q-hope",
+  "private_key_id": "3b34d8a7bf6094003e17747fbd5bf74990c5b43e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC+5+vuZBl7Dac/\nPXFTBPdpUH4CanVVAWeGtXFIT/RTmBgq+rcTgzBP4MDbm2Szy40/u8FRD9NxucgI\n8lXdWugqAtXtT3lTXoAUdKhvEJeqx8wv6iYg2ELJ+TfUdmhMHAtg8z7XiVsr2cjc\n2YjSqGAKYmhsfHxqq0mo9JAM9qJO9d1zWjG0hBEyXL8yujJrnZH0e6uvmuX+kCMm\n9X6WA77Eca7w8ywXyKM6XhKUJ3mTnGGZ/H/y4/Z9DweRtrnOWmKiM560ptEm5MAn\nyZuQxTUDOvgQOsjQaHQYe9G/29WYmZpiflbAPqXcjk6hYJewnPC3X58+qovVsPdK\nAfvh9HanAgMBAAECggEAIDr2laZXuPM6p84fSlVd0e1xgMXpbkMQ7+jFKeC5zr0w\nY101uHkfGHVJCiqHi2VTwQ1ZW26xE5O6hmwne/ojlSgqZujSgnVDaXCymSGzgXU+\n7134NvZb/E5zkw60mBjqAOHAW9JITrRzmXmuhGZB5K7tk1dHCBlIE9rKUS34hBzq\no7PlZHWHN5PXp5oIS+0GCw3OPN5U09lQS2084pb+1KYJKglHrckrQZHFHlcXee8Q\nE9FCRoxs7i8dOMkZ6Tx4gJJVU18V7HJ0zdY/LznfIfH9e0B32s0DS5fjLZUg/qM2\n5gM0RS5pouq+GqNHsqz2EnNiqDDlYpEpAxlCBofBIQKBgQDmKkwGsbRX9QZ+Tsh3\nB0LOxCj0krxuKuE/n0M4VxxeAJou0m9I2jdshsyF2XX3zgeHQ26H1LXn+JsSlbQI\nYF5ZGtoQOkHE5fuFOOEElYhnlqLTo39KJIIg6172ka6Vv8sAmaSE6CMnhUad0Z2k\nESHFLeiL9n4+uA/AHGdCp2iWYQKBgQDUVYaAbL8MnI5d9qJ6dXT9MQs6AbRapZo5\nXO1BT1hwZv7xIWiapX2pcbVTq7UQDXSxLhd1g34QrZzdj3qJ24Gr3nEIDwGQMR9v\nPUXJDPWOHSZ+p1b5MAPwKKGoGC2JbZuyx2cExYA/gS8eXknbKBQij9QtJbt4ut4/\n0Fge4uKaBwKBgAc8+0kWm5JMjVi5h4peuxYfix4t4ykfxhenHYkPDEBUioTAb2l+\nG1IZZyMqdJBHdWsmjrpM0S+rXM0X0iKVTUJGGud5vYnApclJwaHQRgrj7Nj1AlLF\nlSYN4N2mNTRWZL7vFgJr/ncGtPLPncKEG2jFCdQk+1FjnnMvMXwiIaLhAoGBAINJ\npnJ9yts3aee7edcSDRYIXxKsvyFVR7i0NpatQtetN3FM4OrN7Jb6kc18W+XjDAYJ\no8OrXCVf06BC+NeIe/MTBPygmqzXUsJrNl0LwEDw0T56pZJKGAVEej//Qxi4Rw8R\nsCcJHzUk4Ud7sVrquxhrqhuIOxR5JrZ6UiI20zm9AoGBAKn2KN3Ox92x0wphIPnx\na1lFE/U2165Ex9afqbPStULoQ1biAG1oDwd1KUZqeSbnuOChO8Mc95NXkD+JS1iZ\n9bY1ngK+yY3xV9kAuvMOHMdc0gFZf0ZoSNHZgvf1V3N0oBftlP2AIjiimr3GMEHm\nQcWJMOMAfoytVgjlCWDZs609\n-----END PRIVATE KEY-----\n",
+  "client_email": "firestore@q-hope.iam.gserviceaccount.com",
+  "client_id": "109889768965759676983",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firestore%40q-hope.iam.gserviceaccount.com"
+}
