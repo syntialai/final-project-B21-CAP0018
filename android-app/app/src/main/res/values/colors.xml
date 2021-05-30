@@ -2,6 +2,8 @@
 <resources>
 
     <!-- Primary colors -->
+    <color name="blue_100">#b8e8f3</color>
+    <color name="blue_200">#8cd8ed</color>
     <color name="blue_400">#4dbde3</color>
     <color name="blue_700">#2b90bf</color>
     <color name="blue_900">#1d5f8a</color>
@@ -17,6 +19,8 @@
     <color name="black_blue_900">#0f1116</color>
     <color name="black_blue_900_60">#990F1116</color>
     <color name="black_blue_800_50">#802F3136</color>
+    <color name="black_blue_300">#2E383E</color>
+    <color name="black_blue_200">#4C5F66</color>
 
     <!-- White -->
     <color name="white">#FFFFFFFF</color>

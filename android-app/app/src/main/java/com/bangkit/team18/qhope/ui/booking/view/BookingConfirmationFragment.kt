@@ -8,17 +8,20 @@ import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.utils.view.DataUtils
 import com.bangkit.team18.core.utils.view.PickerUtils
 import com.bangkit.team18.core.utils.view.ViewUtils.show
+import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentBookingConfirmationBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.booking.viewmodel.BookingConfirmationViewModel
+import com.bangkit.team18.qhope.ui.widget.OnBannerActionButtonClickListener
+import com.bangkit.team18.qhope.utils.Router
 import java.util.*
 
 // TODO: Add checking condition for PDF
 class BookingConfirmationFragment :
   BaseFragment<FragmentBookingConfirmationBinding, BookingConfirmationViewModel>(
     FragmentBookingConfirmationBinding::inflate, BookingConfirmationViewModel::class
-  ) {
+  ), OnBannerActionButtonClickListener {
 
   companion object {
     private const val GOOGLE_DRIVE_VIEWER = "http://drive.google.com/viewer?url="
@@ -36,6 +39,7 @@ class BookingConfirmationFragment :
       layoutBookingTimeSelected.buttonBookingEditTime.setOnClickListener(
         this@BookingConfirmationFragment
       )
+      bannerInfoUpdateProfile.setActionButtonOnClickListener(this@BookingConfirmationFragment)
     }
   }
 
@@ -57,7 +61,8 @@ class BookingConfirmationFragment :
         }
       }
     })
-
+    // TODO: Add observer for user verification check
+    // enableProcessBooking()
   }
 
   override fun onResume() {
@@ -78,6 +83,17 @@ class BookingConfirmationFragment :
         buttonBookingConfirmUploadLetter -> uploadPdf()
         layoutBookingTimeSelected.buttonBookingEditTime -> showTimePicker()
       }
+    }
+  }
+
+  override fun onBannerButtonClicked() {
+    Router.goToEditProfile(mContext)
+  }
+
+  private fun enableProcessBooking(isEnable: Boolean) {
+    binding.apply {
+      bannerInfoUpdateProfile.showOrRemove(isEnable.not())
+      buttonBookingConfirmBook.isEnabled = isEnable
     }
   }
 

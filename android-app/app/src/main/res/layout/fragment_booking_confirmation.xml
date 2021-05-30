@@ -15,21 +15,34 @@
             android:id="@+id/layout_booking_confirm"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp_16"
             android:clipToPadding="false"
             android:paddingBottom="@dimen/dp_100">
+
+            <com.bangkit.team18.qhope.ui.widget.BannerInfo
+                android:id="@+id/banner_info_update_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/dp_16"
+                app:button_label="@string/update_profile_banner_button"
+                app:description="@string/update_profile_banner"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/text_view_booking_confirm_selected_room_label"
                 android:layout_width="@dimen/dp_0"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/dp_12"
+                android:layout_marginTop="@dimen/dp_16"
                 android:text="@string/selected_room_type_label"
                 android:textAppearance="?attr/textAppearanceHeadline4"
                 android:textColor="?attr/colorOnSurface"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/banner_info_update_profile" />
 
             <include
                 android:id="@+id/layout_booking_selected_room_info"
@@ -72,6 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/dp_12"
+                android:layout_marginTop="@dimen/dp_12"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -136,6 +150,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:enabled="false"
             android:text="@string/confirm_booking_label" />
     </LinearLayout>
 

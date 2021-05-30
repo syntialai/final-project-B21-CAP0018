@@ -34,6 +34,8 @@
     <string name="success_book_a_room_description">We\'ll process your booking and notify you for any changes soon.</string>
     <string name="go_to_booking_history_label">Go to Booking History</string>
     <string name="back_to_home_label">Back to Home</string>
+    <string name="update_profile_banner">Update your profile to continue your booking process.</string>
+    <string name="update_profile_banner_button">Go to Profile</string>
 
     <!-- History -->
     <string name="history_label">History</string>

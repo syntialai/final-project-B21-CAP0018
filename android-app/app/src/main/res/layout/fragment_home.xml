@@ -120,10 +120,10 @@
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/spin_kit_load_home"
-            style="@style/SpinKitView.Large.FoldingCube"
+            style="@style/SpinKitView.Large.DoubleBounce"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_24"
+            android:layout_marginTop="@dimen/dp_48"
             app:SpinKit_Color="?attr/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

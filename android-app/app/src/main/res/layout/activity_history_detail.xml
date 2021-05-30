@@ -34,7 +34,7 @@
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/spin_kit_load_history_detail"
-            style="@style/SpinKitView.Large.FoldingCube"
+            style="@style/SpinKitView.Large.DoubleBounce"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:SpinKit_Color="?attr/colorPrimary"

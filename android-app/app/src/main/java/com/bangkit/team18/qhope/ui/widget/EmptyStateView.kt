@@ -7,12 +7,12 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.bangkit.team18.core.utils.view.ViewUtils.remove
 import com.bangkit.team18.qhope.R
-import com.bangkit.team18.qhope.databinding.LayoutEmptyStateViewBinding
+import com.bangkit.team18.qhope.databinding.WidgetLayoutEmptyStateViewBinding
 
 class EmptyStateView constructor(context: Context, attrs: AttributeSet) :
   LinearLayout(context, attrs) {
 
-  private lateinit var binding: LayoutEmptyStateViewBinding
+  private lateinit var binding: WidgetLayoutEmptyStateViewBinding
 
   private val styledAttributes = context.obtainStyledAttributes(attrs, R.styleable.EmptyStateView)
 
@@ -46,6 +46,6 @@ class EmptyStateView constructor(context: Context, attrs: AttributeSet) :
 
   private fun initBinding() {
     val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    binding = LayoutEmptyStateViewBinding.inflate(layoutInflater, this, true)
+    binding = WidgetLayoutEmptyStateViewBinding.inflate(layoutInflater, this, true)
   }
 }
