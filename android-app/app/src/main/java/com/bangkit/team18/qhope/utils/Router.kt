@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.bangkit.team18.qhope.ui.booking.view.RoomBookingActivity
 import com.bangkit.team18.qhope.ui.history.view.HistoryDetailActivity
+import com.bangkit.team18.qhope.ui.login.view.LoginActivity
 import com.bangkit.team18.qhope.ui.main.adapter.MainAdapter
 import com.bangkit.team18.qhope.ui.main.view.MainActivity
 
@@ -24,6 +25,11 @@ object Router {
     val intent = Intent(context, HistoryDetailActivity::class.java).apply {
       putExtra(PARAM_HISTORY_ID, id)
     }
+    context.startActivity(intent)
+  }
+
+  fun goToLogin(context: Context) {
+    val intent = Intent(context, LoginActivity::class.java)
     context.startActivity(intent)
   }
 
