@@ -3,13 +3,12 @@ package com.bangkit.team18.qhope.ui.widget
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import androidx.core.content.withStyledAttributes
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.LayoutReferralLetterCardBinding
 import com.google.android.material.circularreveal.cardview.CircularRevealCardView
 
 class ReferralLetterCard constructor(context: Context, attrs: AttributeSet) :
-    CircularRevealCardView(context, attrs) {
+  CircularRevealCardView(context, attrs) {
 
   companion object {
     const val PDF = 0
@@ -18,15 +17,21 @@ class ReferralLetterCard constructor(context: Context, attrs: AttributeSet) :
 
   private lateinit var binding: LayoutReferralLetterCardBinding
 
+  private val styledAttributes = context.obtainStyledAttributes(
+    attrs,
+    R.styleable.ReferralLetterCard
+  )
+
   private var fileName: String? = null
 
   init {
     initBinding()
-    context.withStyledAttributes(attrs, R.styleable.ReferralLetterCard) {
-      setImage(getInt(R.styleable.ReferralLetterCard_image_type, PDF))
-      setFileName(getString(R.styleable.ReferralLetterCard_file_name))
-      recycle()
+
+    setImage(styledAttributes.getInt(R.styleable.ReferralLetterCard_image_type, PDF))
+    styledAttributes.getString(R.styleable.ReferralLetterCard_file_name)?.let { name ->
+      setFileName(name)
     }
+    styledAttributes.recycle()
   }
 
   fun setFileName(value: String?) {
@@ -35,10 +40,12 @@ class ReferralLetterCard constructor(context: Context, attrs: AttributeSet) :
   }
 
   fun setImage(type: Int) {
-    binding.imageViewReferralLetterFile.setImageResource(when (type) {
-      PDF -> R.drawable.drawable_pdf_type
-      else -> R.drawable.drawable_image_type
-    })
+    binding.imageViewReferralLetterFile.setImageResource(
+      when (type) {
+        PDF -> R.drawable.drawable_pdf_type
+        else -> R.drawable.drawable_image_type
+      }
+    )
   }
 
   private fun initBinding() {

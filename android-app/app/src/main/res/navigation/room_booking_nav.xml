@@ -9,7 +9,7 @@
         android:id="@+id/hospitalDetailFragment"
         android:name="com.bangkit.team18.qhope.ui.booking.view.HospitalDetailFragment"
         android:label="fragment_hospital_detail"
-        tools:layout="@layout/fragment_hospital_detail" >
+        tools:layout="@layout/fragment_hospital_detail">
         <action
             android:id="@+id/action_hospitalDetailFragment_to_bookingConfirmationFragment"
             app:destination="@id/bookingConfirmationFragment" />
@@ -21,15 +21,21 @@
         android:id="@+id/bookingConfirmationFragment"
         android:name="com.bangkit.team18.qhope.ui.booking.view.BookingConfirmationFragment"
         android:label="fragment_booking_confirmation"
-        tools:layout="@layout/fragment_booking_confirmation" >
+        tools:layout="@layout/fragment_booking_confirmation">
         <action
             android:id="@+id/action_bookingConfirmationFragment_to_hospitalDetailFragment"
             app:destination="@id/hospitalDetailFragment" />
+        <argument
+            android:name="bookedHospital"
+            app:argType="com.bangkit.team18.core.domain.model.booking.BookedHospital" />
+        <argument
+            android:name="roomType"
+            app:argType="com.bangkit.team18.core.domain.model.hospital.RoomType" />
     </fragment>
     <action
         android:id="@+id/action_global_hospitalDetailFragment"
         app:destination="@id/hospitalDetailFragment"
-        app:popUpToInclusive="true"
         app:launchSingleTop="true"
-        app:popUpTo="@id/hospitalDetailFragment" />
+        app:popUpTo="@id/hospitalDetailFragment"
+        app:popUpToInclusive="true" />
 </navigation>

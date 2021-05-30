@@ -1,17 +1,16 @@
 package com.bangkit.team18.core.data.source.base
 
-import android.util.Log
+import android.net.Uri
 import com.bangkit.team18.core.utils.view.DataUtils.isNull
 import com.bangkit.team18.core.utils.view.DataUtils.orZero
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.*
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
+import com.google.firebase.storage.ktx.storageMetadata
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
@@ -19,6 +18,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 @ExperimentalCoroutinesApi
 abstract class BaseRemoteDataSource {
@@ -31,14 +33,14 @@ abstract class BaseRemoteDataSource {
   }
 
   protected fun <T : Any> CollectionReference.loadData(
-      clazz: Class<T>): Flow<List<T>> = channelFlow {
+    clazz: Class<T>
+  ): Flow<List<T>> = channelFlow {
     val subscription = addSnapshotListener { snapshot, error ->
       error?.let { err ->
         close(err)
         return@addSnapshotListener
       } ?: run {
         launch {
-          Log.d("SNAPSHOT: ", "isNull: ${snapshot.isNull()}, isEmpty: ${snapshot?.isEmpty ?: true}")
           if (snapshot.isNull() || snapshot!!.isEmpty) {
             send(emptyList<T>())
           } else {
@@ -76,12 +78,14 @@ abstract class BaseRemoteDataSource {
     }
   }
 
-  protected fun <T : Any> CollectionReference.loadNearby(clazz: Class<T>, location: GeoLocation,
-      radiusInMeter: Int = DEFAULT_RADIUS): Flow<List<T>> = callbackFlow {
+  protected fun <T : Any> CollectionReference.loadNearby(
+    clazz: Class<T>, location: GeoLocation,
+    radiusInMeter: Int = DEFAULT_RADIUS
+  ): Flow<List<T>> = callbackFlow {
     val nearbyTasks = getQueryBounds(this@loadNearby, location, radiusInMeter)
     Tasks.whenAllComplete(nearbyTasks).addOnCompleteListener {
       val validDocuments = getFilteredData(nearbyTasks, location, radiusInMeter)
-      offer(validDocuments.mapNotNull { snapshot ->
+      trySend(validDocuments.mapNotNull { snapshot ->
         snapshot.toObject(clazz)
       })
     }.addOnFailureListener {
@@ -120,8 +124,43 @@ abstract class BaseRemoteDataSource {
     }
   }
 
-  private fun getQueryBounds(reference: CollectionReference, location: GeoLocation,
-      radiusInMeter: Int): ArrayList<Task<QuerySnapshot>> {
+  protected suspend fun CollectionReference.addData(data: HashMap<String, Any>) {
+    return suspendCoroutine { continuation ->
+      add(data).addOnSuccessListener {
+        continuation.resume(Unit)
+      }.addOnFailureListener { exception ->
+        continuation.resumeWithException(exception)
+      }
+    }
+  }
+
+  protected suspend fun StorageReference.addFile(fileUri: Uri, contentType: String): Flow<Boolean> {
+    val metadata = storageMetadata {
+      this.contentType = contentType
+    }
+    return channelFlow {
+      val storageTask = putFile(fileUri, metadata).addOnSuccessListener {
+        launch {
+          send(true)
+        }
+      }.addOnFailureListener { exception ->
+        close(exception)
+      }
+
+      awaitClose {
+        storageTask.cancel()
+      }
+    }
+  }
+
+  private fun getPercentage(task: UploadTask.TaskSnapshot): Int {
+    return (task.bytesTransferred.toFloat() / task.totalByteCount.toFloat()).toInt() * 100
+  }
+
+  private fun getQueryBounds(
+    reference: CollectionReference, location: GeoLocation,
+    radiusInMeter: Int
+  ): ArrayList<Task<QuerySnapshot>> {
     val bounds = GeoFireUtils.getGeoHashQueryBounds(location, radiusInMeter.toDouble())
     val tasks = arrayListOf<Task<QuerySnapshot>>()
     bounds.forEach { bound ->
@@ -130,8 +169,10 @@ abstract class BaseRemoteDataSource {
     return tasks
   }
 
-  private fun getFilteredData(tasks: ArrayList<Task<QuerySnapshot>>, location: GeoLocation,
-      radiusInMeter: Int): ArrayList<DocumentSnapshot> {
+  private fun getFilteredData(
+    tasks: ArrayList<Task<QuerySnapshot>>, location: GeoLocation,
+    radiusInMeter: Int
+  ): ArrayList<DocumentSnapshot> {
     val filteredDocuments = arrayListOf<DocumentSnapshot>()
     tasks.forEach { task ->
       filteredDocuments.addAll(task.result.documents.filter { document ->

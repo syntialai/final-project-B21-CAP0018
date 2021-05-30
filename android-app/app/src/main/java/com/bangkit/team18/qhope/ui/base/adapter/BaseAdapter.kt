@@ -7,10 +7,10 @@ import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.bangkit.team18.core.utils.view.ViewUtils.loadImage
+import com.bangkit.team18.core.utils.view.ViewUtils.loadImageFromStorage
 
 abstract class BaseAdapter<T : Any, VB : ViewBinding>(diffCallback: BaseDiffCallback<T>) :
-    ListAdapter<T, BaseAdapter<T, VB>.BaseViewHolder>(diffCallback) {
+  ListAdapter<T, BaseAdapter<T, VB>.BaseViewHolder>(diffCallback) {
 
   abstract val inflater: (LayoutInflater, ViewGroup?, Boolean) -> VB
 
@@ -25,14 +25,14 @@ abstract class BaseAdapter<T : Any, VB : ViewBinding>(diffCallback: BaseDiffCall
   }
 
   abstract inner class BaseViewHolder(protected val binding: VB) :
-      RecyclerView.ViewHolder(binding.root) {
+    RecyclerView.ViewHolder(binding.root) {
 
     protected val context = binding.root.context
 
     abstract fun bind(data: T)
 
-    protected fun ImageView.loadImage(image: String?, @DrawableRes placeholder: Int? = null) {
-      loadImage(binding.root.context, image.orEmpty(), placeholder)
+    protected fun <IV> ImageView.loadImage(image: IV, @DrawableRes placeholder: Int? = null) {
+      loadImageFromStorage(binding.root.context, image, placeholder)
     }
   }
 }

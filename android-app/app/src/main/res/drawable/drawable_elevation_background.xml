@@ -5,8 +5,8 @@
     <solid android:color="?attr/colorSurface" />
     <gradient
         android:angle="270"
-        android:centerX="0.05"
         android:centerColor="?attr/colorSurface"
+        android:centerX="0.05"
         android:endColor="?attr/colorSurface"
         android:startColor="#ddd" />
 </shape>

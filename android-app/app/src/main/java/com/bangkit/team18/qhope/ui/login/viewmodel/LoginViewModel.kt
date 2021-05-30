@@ -12,75 +12,75 @@ import com.google.firebase.auth.PhoneAuthProvider
 import timber.log.Timber
 
 class LoginViewModel(private val authRepository: AuthRepository) :
-    BaseViewModelWithAuth(authRepository) {
-    private val _countDown = MutableLiveData<Int>()
-    val countDown: LiveData<Int> get() = _countDown
-    private val _detectedToken = MutableLiveData<String>()
-    val detectedToken: LiveData<String> get() = _detectedToken
-    private var timer: CountDownTimer? = null
-    private var resendToken: PhoneAuthProvider.ForceResendingToken? = null
-    private var storedVerificationId = ""
-    private var authCallbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-        override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-            credential.smsCode?.let {
-                _detectedToken.value = it
-            }
-            authRepository.signInWithCredential(credential)
+  BaseViewModelWithAuth(authRepository) {
+  private val _countDown = MutableLiveData<Int>()
+  val countDown: LiveData<Int> get() = _countDown
+  private val _detectedToken = MutableLiveData<String>()
+  val detectedToken: LiveData<String> get() = _detectedToken
+  private var timer: CountDownTimer? = null
+  private var resendToken: PhoneAuthProvider.ForceResendingToken? = null
+  private var storedVerificationId = ""
+  private var authCallbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+    override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+      credential.smsCode?.let {
+        _detectedToken.value = it
+      }
+      authRepository.signInWithCredential(credential)
+    }
+
+    override fun onVerificationFailed(e: FirebaseException) {
+      Timber.d(e.message.toString())
+    }
+
+    override fun onCodeSent(
+      verificationId: String,
+      token: PhoneAuthProvider.ForceResendingToken
+    ) {
+      storedVerificationId = verificationId
+      resendToken = token
+    }
+  }
+
+  init {
+    authRepository.addAuthStateListener(this)
+  }
+
+  private fun startCountDown() {
+    if (timer == null) {
+      timer = object : CountDownTimer(30000, 1000) {
+        override fun onTick(millisUntilFinished: Long) {
+          _countDown.value = (millisUntilFinished / 1000).toInt()
         }
 
-        override fun onVerificationFailed(e: FirebaseException) {
-            Timber.d(e.message.toString())
+        override fun onFinish() {
+          timer = null
         }
-
-        override fun onCodeSent(
-            verificationId: String,
-            token: PhoneAuthProvider.ForceResendingToken
-        ) {
-            storedVerificationId = verificationId
-            resendToken = token
-        }
+      }
+      timer?.start()
     }
+  }
 
-    init {
-        authRepository.addAuthStateListener(this)
+  fun clearCountDown() {
+    timer?.cancel()
+    timer = null
+  }
+
+  fun resendOtp(activity: Activity, phoneNumber: String) {
+    authRepository.requestToken(activity, phoneNumber, resendToken, authCallbacks)
+    startCountDown()
+  }
+
+  fun requestOtp(activity: Activity, phoneNumber: String) {
+    authRepository.requestToken(activity, phoneNumber, null, authCallbacks)
+    startCountDown()
+  }
+
+  fun verifyCode(code: String) {
+    if (detectedToken.value.isNullOrEmpty()) {
+      launchViewModelScope({
+        val credential = authRepository.getCredential(storedVerificationId, code)
+        authRepository.signInWithCredential(credential).runFlow({}, {})
+      })
     }
-
-    private fun startCountDown() {
-        if (timer == null) {
-            timer = object : CountDownTimer(30000, 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    _countDown.value = (millisUntilFinished / 1000).toInt()
-                }
-
-                override fun onFinish() {
-                    timer = null
-                }
-            }
-            timer?.start()
-        }
-    }
-
-    fun clearCountDown() {
-        timer?.cancel()
-        timer = null
-    }
-
-    fun resendOtp(activity: Activity, phoneNumber: String) {
-        authRepository.requestToken(activity, phoneNumber, resendToken, authCallbacks)
-        startCountDown()
-    }
-
-    fun requestOtp(activity: Activity, phoneNumber: String) {
-        authRepository.requestToken(activity, phoneNumber, null, authCallbacks)
-        startCountDown()
-    }
-
-    fun verifyCode(code: String) {
-        if (detectedToken.value.isNullOrEmpty()) {
-            launchViewModelScope({
-                val credential = authRepository.getCredential(storedVerificationId, code)
-                authRepository.signInWithCredential(credential).runFlow({}, {})
-            })
-        }
-    }
+  }
 }

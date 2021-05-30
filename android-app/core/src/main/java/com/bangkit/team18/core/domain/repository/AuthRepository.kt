@@ -8,16 +8,16 @@ import com.google.firebase.auth.PhoneAuthProvider
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
-    fun signInWithCredential(credential: PhoneAuthCredential): Flow<ResponseWrapper<Boolean>>
-    fun requestToken(
-        activity: Activity,
-        phoneNumber: String,
-        resendToken: PhoneAuthProvider.ForceResendingToken?,
-        callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
-    )
+  fun signInWithCredential(credential: PhoneAuthCredential): Flow<ResponseWrapper<Boolean>>
+  fun requestToken(
+    activity: Activity,
+    phoneNumber: String,
+    resendToken: PhoneAuthProvider.ForceResendingToken?,
+    callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
+  )
 
-    fun getCredential(storedVerificationId: String, token: String): PhoneAuthCredential
-    fun logout()
-    fun addAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener)
-    fun removeAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener)
+  fun getCredential(storedVerificationId: String, token: String): PhoneAuthCredential
+  fun logout()
+  fun addAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener)
+  fun removeAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener)
 }

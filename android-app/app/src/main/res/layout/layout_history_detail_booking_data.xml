@@ -17,9 +17,9 @@
             android:text="@string/booking_id_label"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?attr/colorTextMedium"
-            app:layout_constraintTop_toTopOf="@id/text_view_booking_data_id"
             app:layout_constraintBottom_toBottomOf="@id/text_view_booking_data_id"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_view_booking_data_id" />
 
         <TextView
             android:id="@+id/text_view_booking_data_id"
@@ -29,9 +29,9 @@
             android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="?attr/colorOnSurface"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_booking_data_id_label"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="BOOKING_ID" />
 
         <TextView
@@ -41,9 +41,9 @@
             android:text="@string/booking_date_label"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?attr/colorTextMedium"
-            app:layout_constraintTop_toTopOf="@id/text_view_booking_data_date"
             app:layout_constraintBottom_toBottomOf="@id/text_view_booking_data_date"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_view_booking_data_date" />
 
         <TextView
             android:id="@+id/text_view_booking_data_date"
@@ -53,9 +53,9 @@
             android:textAlignment="textEnd"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="?attr/colorOnSurface"
-            app:layout_constraintTop_toBottomOf="@id/text_view_booking_data_id"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_booking_data_date_label"
+            app:layout_constraintTop_toBottomOf="@id/text_view_booking_data_id"
             tools:text="Wed, 12 Apr 2021, 19:38" />
 
         <TextView
@@ -65,9 +65,9 @@
             android:text="@string/booking_status_label"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?attr/colorTextMedium"
-            app:layout_constraintTop_toTopOf="@id/text_view_booking_data_status"
             app:layout_constraintBottom_toBottomOf="@id/text_view_booking_data_status"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_view_booking_data_status" />
 
         <TextView
             android:id="@+id/text_view_booking_data_status"
@@ -77,9 +77,9 @@
             android:textAlignment="textEnd"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="?attr/colorOnSurface"
-            app:layout_constraintTop_toBottomOf="@id/text_view_booking_data_date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_booking_data_status_label"
+            app:layout_constraintTop_toBottomOf="@id/text_view_booking_data_date"
             tools:text="On going" />
 
         <View
@@ -87,10 +87,10 @@
             style="@style/View.QHope.Separator"
             android:layout_width="match_parent"
             android:layout_marginTop="@dimen/dp_16"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/text_view_booking_data_hospital_label"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_view_booking_data_status"
-            app:layout_constraintBottom_toTopOf="@id/text_view_booking_data_hospital_label" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_view_booking_data_status" />
 
         <TextView
             android:id="@+id/text_view_booking_data_hospital_label"
@@ -100,9 +100,9 @@
             android:text="@string/booked_hospital_label"
             android:textAppearance="?attr/textAppearanceHeadline4"
             android:textColor="?attr/colorOnSurface"
-            app:layout_constraintTop_toBottomOf="@id/view_booking_data_separator"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/view_booking_data_separator" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/image_view_booking_data_hospital"
@@ -111,10 +111,10 @@
             android:layout_marginTop="@dimen/dp_12"
             android:clickable="true"
             android:focusable="true"
-            app:shapeAppearance="?attr/shapeAppearanceMediumComponent"
-            app:layout_constraintTop_toBottomOf="@id/text_view_booking_data_hospital_label"
             app:layout_constraintBottom_toTopOf="@id/view_booking_data_separator_2"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_view_booking_data_hospital_label"
+            app:shapeAppearance="?attr/shapeAppearanceMediumComponent" />
 
         <TextView
             android:id="@+id/text_view_booking_data_hospital_name"
@@ -127,11 +127,11 @@
             android:singleLine="true"
             android:textAppearance="?attr/textAppearanceHeadline5"
             android:textColor="?attr/colorOnSurface"
+            app:layout_constraintBottom_toTopOf="@+id/text_view_booking_data_hospital_type"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/image_view_booking_data_hospital"
-            tools:text="Hospital"
             app:layout_constraintTop_toTopOf="@id/image_view_booking_data_hospital"
-            app:layout_constraintBottom_toTopOf="@+id/text_view_booking_data_hospital_type" />
+            tools:text="Hospital" />
 
         <TextView
             android:id="@+id/text_view_booking_data_hospital_type"
@@ -141,10 +141,10 @@
             android:layout_marginTop="@dimen/dp_4"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?attr/colorTextMedium"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_booking_data_hospital_name"
+            app:layout_constraintBottom_toTopOf="@+id/text_view_booking_data_hospital_address"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/image_view_booking_data_hospital"
-            app:layout_constraintBottom_toTopOf="@+id/text_view_booking_data_hospital_address"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_booking_data_hospital_name"
             tools:text="Rumah sakit umum" />
 
         <TextView
@@ -157,10 +157,10 @@
             android:singleLine="true"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="?attr/colorTextMedium"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_booking_data_hospital_type"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_booking_data_hospital"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/image_view_booking_data_hospital"
-            app:layout_constraintBottom_toBottomOf="@id/image_view_booking_data_hospital"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_booking_data_hospital_type"
             tools:text="Alamat hospital" />
 
         <View
@@ -168,10 +168,10 @@
             style="@style/View.QHope.Separator"
             android:layout_width="match_parent"
             android:layout_marginTop="@dimen/dp_16"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/text_view_booking_data_hospital_info_label"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_view_booking_data_hospital"
-            app:layout_constraintBottom_toTopOf="@id/text_view_booking_data_hospital_info_label" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_view_booking_data_hospital" />
 
         <TextView
             android:id="@+id/text_view_booking_data_hospital_info_label"
@@ -181,9 +181,9 @@
             android:text="@string/booking_info_label"
             android:textAppearance="?attr/textAppearanceHeadline4"
             android:textColor="?attr/colorOnSurface"
-            app:layout_constraintTop_toBottomOf="@id/view_booking_data_separator_2"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/view_booking_data_separator_2" />
 
         <TextView
             android:id="@+id/text_view_booking_data_check_in_label"
@@ -192,9 +192,9 @@
             android:text="@string/check_in_at_label"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?attr/colorTextMedium"
-            app:layout_constraintTop_toTopOf="@id/text_view_booking_data_check_in"
             app:layout_constraintBottom_toBottomOf="@id/text_view_booking_data_check_in"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_view_booking_data_check_in" />
 
         <TextView
             android:id="@+id/text_view_booking_data_check_in"
@@ -204,9 +204,9 @@
             android:textAlignment="textEnd"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="?attr/colorOnSurface"
-            app:layout_constraintTop_toBottomOf="@id/text_view_booking_data_hospital_info_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_booking_data_check_in_label"
+            app:layout_constraintTop_toBottomOf="@id/text_view_booking_data_hospital_info_label"
             tools:text="Wed, 12 Apr 2021, 19:38" />
 
         <TextView
@@ -216,9 +216,9 @@
             android:text="@string/check_out_at_label"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?attr/colorTextMedium"
-            app:layout_constraintTop_toTopOf="@id/text_view_booking_data_check_out"
             app:layout_constraintBottom_toBottomOf="@id/text_view_booking_data_check_out"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_view_booking_data_check_out" />
 
         <TextView
             android:id="@+id/text_view_booking_data_check_out"
@@ -228,9 +228,9 @@
             android:textAlignment="textEnd"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="?attr/colorOnSurface"
-            app:layout_constraintTop_toBottomOf="@id/text_view_booking_data_check_in"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_booking_data_check_out_label"
+            app:layout_constraintTop_toBottomOf="@id/text_view_booking_data_check_in"
             tools:text="Wed, 12 Apr 2021, 19:38" />
 
         <androidx.constraintlayout.widget.Group
@@ -248,9 +248,9 @@
             android:text="@string/room_cost_per_day_label"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?attr/colorTextMedium"
-            app:layout_constraintTop_toTopOf="@id/text_view_booking_data_room_cost"
             app:layout_constraintBottom_toBottomOf="@id/text_view_booking_data_room_cost"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_view_booking_data_room_cost" />
 
         <TextView
             android:id="@+id/text_view_booking_data_room_cost"
@@ -261,9 +261,9 @@
             android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="?attr/colorSecondaryVariant"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/text_view_booking_data_check_out"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_booking_data_room_cost_label"
+            app:layout_constraintTop_toBottomOf="@id/text_view_booking_data_check_out"
             tools:text="Rp380.000,00" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
