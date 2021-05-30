@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/room_booking_nav"
+    app:startDestination="@id/hospitalDetailFragment">
+
+    <fragment
+        android:id="@+id/hospitalDetailFragment"
+        android:name="com.bangkit.team18.qhope.ui.booking.view.HospitalDetailFragment"
+        android:label="fragment_hospital_detail"
+        tools:layout="@layout/fragment_hospital_detail">
+        <action
+            android:id="@+id/action_hospitalDetailFragment_to_bookingConfirmationFragment"
+            app:destination="@id/bookingConfirmationFragment" />
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookingConfirmationFragment"
+        android:name="com.bangkit.team18.qhope.ui.booking.view.BookingConfirmationFragment"
+        android:label="fragment_booking_confirmation"
+        tools:layout="@layout/fragment_booking_confirmation">
+        <action
+            android:id="@+id/action_bookingConfirmationFragment_to_hospitalDetailFragment"
+            app:destination="@id/hospitalDetailFragment" />
+        <argument
+            android:name="bookedHospital"
+            app:argType="com.bangkit.team18.core.domain.model.booking.BookedHospital" />
+        <argument
+            android:name="roomType"
+            app:argType="com.bangkit.team18.core.domain.model.hospital.RoomType" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_hospitalDetailFragment"
+        app:destination="@id/hospitalDetailFragment"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/hospitalDetailFragment"
+        app:popUpToInclusive="true" />
+</navigation>

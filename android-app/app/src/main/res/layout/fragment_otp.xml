@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/dp_32"
+    android:paddingVertical="@dimen/dp_20"
+    tools:context=".ui.login.view.OtpFragment">
+
+    <TextView
+        android:id="@+id/otp_information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/otp_information"
+        android:textAppearance="?attr/textAppearanceHeadline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/otp_detail_information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_16"
+        android:textAppearance="?attr/textAppearanceBody1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/otp_information"
+        tools:text="@string/otp_sent_information" />
+
+    <EditText
+        android:id="@+id/otp_code_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_24"
+        android:ems="2"
+        android:gravity="center"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:maxLength="1"
+        app:layout_constraintEnd_toStartOf="@+id/otp_code_2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/otp_detail_information"
+        tools:ignore="LabelFor"
+        tools:text="0" />
+
+    <EditText
+        android:id="@+id/otp_code_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="2"
+        android:gravity="center"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:maxLength="1"
+        app:layout_constraintBottom_toBottomOf="@id/otp_code_1"
+        app:layout_constraintEnd_toStartOf="@+id/otp_code_3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/otp_code_1"
+        tools:ignore="LabelFor"
+        tools:text="0" />
+
+    <EditText
+        android:id="@+id/otp_code_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="2"
+        android:gravity="center"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:maxLength="1"
+        app:layout_constraintBottom_toBottomOf="@id/otp_code_1"
+        app:layout_constraintEnd_toStartOf="@+id/otp_code_4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/otp_code_2"
+        tools:ignore="LabelFor"
+        tools:text="0" />
+
+    <EditText
+        android:id="@+id/otp_code_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="2"
+        android:gravity="center"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:maxLength="1"
+        app:layout_constraintBottom_toBottomOf="@id/otp_code_1"
+        app:layout_constraintEnd_toStartOf="@+id/otp_code_5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/otp_code_3"
+        tools:ignore="LabelFor"
+        tools:text="0" />
+
+    <EditText
+        android:id="@+id/otp_code_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="2"
+        android:gravity="center"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:maxLength="1"
+        app:layout_constraintBottom_toBottomOf="@id/otp_code_1"
+        app:layout_constraintEnd_toStartOf="@+id/otp_code_6"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/otp_code_4"
+        tools:ignore="LabelFor"
+        tools:text="0" />
+
+    <EditText
+        android:id="@+id/otp_code_6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="2"
+        android:gravity="center"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:maxLength="1"
+        app:layout_constraintBottom_toBottomOf="@id/otp_code_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/otp_code_5"
+        tools:ignore="LabelFor"
+        tools:text="0" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/otp_resend"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_32"
+        android:enabled="false"
+        android:paddingHorizontal="@dimen/dp_16"
+        android:text="@string/resend_otp_label"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/otp_code_1" />
+</androidx.constraintlayout.widget.ConstraintLayout>

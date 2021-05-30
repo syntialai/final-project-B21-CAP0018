@@ -1,0 +1,3 @@
+rootProject.name = "Q-Hope"
+include ':app'
+include ':core'
