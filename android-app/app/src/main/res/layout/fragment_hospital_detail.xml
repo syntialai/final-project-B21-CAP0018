@@ -206,12 +206,13 @@
         app:tint="?attr/colorSurface"
         tools:ignore="ContentDescription" />
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
+    <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/spin_kit_load_hospital_detail"
+        style="@style/SpinKitView.Large.FoldingCube"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:indeterminate="true" />
+        app:SpinKit_Color="?attr/colorPrimary" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_checkout_hospital"

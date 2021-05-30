@@ -28,6 +28,10 @@ object ViewUtils {
     }.into(this)
   }
 
+  fun View.hide() {
+    this.visibility = View.INVISIBLE
+  }
+
   fun View.remove() {
     this.visibility = View.GONE
   }

@@ -34,9 +34,10 @@
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/spin_kit_load_history_detail"
-            style="@style/SpinKitView.Large.CubeGrid"
+            style="@style/SpinKitView.Large.FoldingCube"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:SpinKit_Color="?attr/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

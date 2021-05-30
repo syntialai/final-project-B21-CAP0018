@@ -8,7 +8,6 @@ import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.utils.view.DataUtils
 import com.bangkit.team18.core.utils.view.PickerUtils
 import com.bangkit.team18.core.utils.view.ViewUtils.show
-import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentBookingConfirmationBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
@@ -69,13 +68,6 @@ class BookingConfirmationFragment :
   override fun onIntentResult(data: Intent?) {
     data?.data?.let { fileUri ->
       viewModel.uploadReferralLetter(fileUri)
-    }
-  }
-
-  override fun showLoadingState(isLoading: Boolean) {
-    binding.apply {
-      spinKitLoadBookingConfirm.showOrRemove(isLoading)
-      layoutBookingConfirm.showOrRemove(isLoading.not())
     }
   }
 

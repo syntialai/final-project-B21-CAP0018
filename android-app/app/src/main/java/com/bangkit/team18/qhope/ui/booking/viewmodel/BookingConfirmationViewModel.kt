@@ -8,13 +8,15 @@ import com.bangkit.team18.core.domain.model.booking.BookedHospital
 import com.bangkit.team18.core.domain.model.booking.BookingDetail
 import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.domain.repository.AuthRepository
+import com.bangkit.team18.core.domain.repository.UserRepository
 import com.bangkit.team18.core.domain.usecase.RoomBookingUseCase
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import java.util.*
 
 class BookingConfirmationViewModel(
   private val roomBookingUseCase: RoomBookingUseCase,
-  authRepository: AuthRepository
+  authRepository: AuthRepository,
+  private val userRepository: UserRepository,
 ) : BaseViewModelWithAuth(authRepository) {
 
   private var _bookingDetail = MutableLiveData<BookingDetail>()
@@ -57,14 +59,17 @@ class BookingConfirmationViewModel(
 
   fun processBook() {
     // TODO: Add flow to check whether user is verified
-    _bookingDetail.value?.let { booking ->
-      launchViewModelScope({
-        roomBookingUseCase.createBooking(booking).runFlow({
-          _isBooked.value = it
-        }, {
-          _isBooked.value = false
+    getUserId()?.let { userId ->
+      //    userRepository.getUserById(userId)
+      _bookingDetail.value?.let { booking ->
+        launchViewModelScope({
+          roomBookingUseCase.createBooking(booking).runFlow({
+            _isBooked.value = it
+          }, {
+            _isBooked.value = false
+          })
         })
-      })
+      }
     }
   }
 

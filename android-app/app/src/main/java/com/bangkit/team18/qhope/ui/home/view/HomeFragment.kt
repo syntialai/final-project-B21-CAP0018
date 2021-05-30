@@ -2,11 +2,14 @@ package com.bangkit.team18.qhope.ui.home.view
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.location.Geocoder
 import android.location.Location
 import android.view.View
 import android.widget.SearchView
 import com.bangkit.team18.core.utils.location.LocationManager
 import com.bangkit.team18.core.utils.view.DataUtils.orFalse
+import com.bangkit.team18.core.utils.view.ViewUtils.hide
+import com.bangkit.team18.core.utils.view.ViewUtils.show
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentHomeBinding
@@ -20,6 +23,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import org.koin.android.ext.android.inject
+import java.util.*
 
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   FragmentHomeBinding::inflate,
@@ -48,6 +52,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   override fun setupViews() {
     setupRecyclerView()
     setupSearchView()
+    showLoadingState(true)
+    showLocationLoadingState(true)
     getLocation()
   }
 
@@ -111,10 +117,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
 
   private fun setLocation(location: Location) {
     viewModel.fetchNearbyHospitals(location.latitude, location.longitude)
-    // TODO: Uncomment this when use real device
-//    val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(location.latitude,
-//        location.longitude, 1)
-//    binding.textViewYourLocation.text = addresses[0].getAddressLine(0)
+//     TODO: Uncomment this when use real device
+    val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(location.latitude,
+        location.longitude, 1)
+    binding.textViewYourLocation.text = addresses[0].getAddressLine(0)
+    showLocationLoadingState(false)
   }
 
   private fun setupRecyclerView() {
@@ -155,6 +162,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
         showSearchResults(false)
         clearFocus()
         true
+      }
+    }
+  }
+
+  private fun showLocationLoadingState(isLoading: Boolean) {
+    binding.apply {
+      spinKitLoadYourLocation.showOrRemove(isLoading)
+      if (isLoading) {
+        textViewYourLocation.hide()
+      } else {
+        textViewYourLocation.show()
       }
     }
   }
