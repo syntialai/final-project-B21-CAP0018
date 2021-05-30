@@ -9,7 +9,6 @@ import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
-import timber.log.Timber
 
 class LoginViewModel(private val authRepository: AuthRepository) :
   BaseViewModelWithAuth(authRepository) {
@@ -23,13 +22,15 @@ class LoginViewModel(private val authRepository: AuthRepository) :
   private var authCallbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
     override fun onVerificationCompleted(credential: PhoneAuthCredential) {
       credential.smsCode?.let {
-        _detectedToken.value = it
+        _detectedToken.postValue(it)
       }
-      authRepository.signInWithCredential(credential)
+      launchViewModelScope({
+        authRepository.signInWithCredential(credential).runFlow({})
+      })
     }
 
     override fun onVerificationFailed(e: FirebaseException) {
-      Timber.d(e.message.toString())
+      showErrorResponse("An internal error has occurred. Please try again later.")
     }
 
     override fun onCodeSent(
@@ -77,9 +78,14 @@ class LoginViewModel(private val authRepository: AuthRepository) :
 
   fun verifyCode(code: String) {
     if (detectedToken.value.isNullOrEmpty()) {
+      if (storedVerificationId.isEmpty()) {
+        clearCountDown()
+        showErrorResponse("Session is not valid, Try resend OTP again.")
+        return
+      }
       launchViewModelScope({
         val credential = authRepository.getCredential(storedVerificationId, code)
-        authRepository.signInWithCredential(credential).runFlow({}, {})
+        authRepository.signInWithCredential(credential).runFlow({})
       })
     }
   }
