@@ -2,17 +2,31 @@ package com.bangkit.team18.core.domain.model.history
 
 data class HistoryDetail(
 
-  val id: String,
+    val id: String,
 
-  val hospitalName: String,
+    val hospitalId: String,
 
-  val hospitalImagePath: String,
+    val hospitalName: String,
 
-  val startDate: String,
+    val hospitalImagePath: String,
 
-  val endDate: String,
+    val hospitalAddress: String,
 
-  val nightCount: Int?,
+    val hospitalType: String,
 
-  val status: HistoryStatus
+    val roomCostPerDay: String,
+
+    val referralLetterFilePath: String,
+
+    val referralLetterFileName: String,
+
+    val bookedAt: String,
+
+    val startDate: String,
+
+    val endDate: String,
+
+    val nightCount: Int?,
+
+    val status: HistoryStatus
 )

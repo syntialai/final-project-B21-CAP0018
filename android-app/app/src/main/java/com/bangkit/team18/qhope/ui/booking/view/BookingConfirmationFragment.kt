@@ -58,6 +58,7 @@ class BookingConfirmationFragment :
         }
       }
     })
+
   }
 
   override fun onResume() {
