@@ -1,6 +1,5 @@
 package com.bangkit.team18.qhope.ui.login.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
@@ -10,7 +9,7 @@ import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityLoginBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseActivityViewModel
 import com.bangkit.team18.qhope.ui.login.viewmodel.LoginViewModel
-import com.bangkit.team18.qhope.ui.registration.view.RegistrationActivity
+import com.bangkit.team18.qhope.utils.Router
 
 class LoginActivity : BaseActivityViewModel<ActivityLoginBinding, LoginViewModel>(
   ActivityLoginBinding::inflate,
@@ -22,6 +21,7 @@ class LoginActivity : BaseActivityViewModel<ActivityLoginBinding, LoginViewModel
 
   private var otpBottomSheet: OtpFragment? = null
   override fun setupViews(savedInstanceState: Bundle?) {
+    supportActionBar?.hide()
     binding.apply {
       loginPhoneNumber.doAfterTextChanged { text ->
         loginContinue.isEnabled = text?.length ?: 0 > 0
@@ -30,9 +30,16 @@ class LoginActivity : BaseActivityViewModel<ActivityLoginBinding, LoginViewModel
       loginContinue.setOnClickListener(this@LoginActivity)
     }
     viewModel.user.observe(this, {
-      if (it.isNotNull()) {
-        otpBottomSheet?.dismiss()
-        navigateToRegistration()
+      if (it != null) {
+        viewModel.getUser(it.uid)
+      }
+    })
+    viewModel.userDoc.observe(this, {
+      otpBottomSheet?.dismiss()
+      if (it == null) {
+        Router.goToRegistration(this)
+      } else {
+        Router.goToMain(this)
       }
     })
   }
@@ -75,12 +82,6 @@ class LoginActivity : BaseActivityViewModel<ActivityLoginBinding, LoginViewModel
       otpCode5.setText(it[4].toString())
       otpCode6.setText(it[5].toString())
     })
-  }
-
-  private fun navigateToRegistration() {
-    val intent = Intent(this, RegistrationActivity::class.java)
-    startActivity(intent)
-    finish()
   }
 
   private fun verifyOtp(code: String) {

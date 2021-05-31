@@ -7,15 +7,15 @@ import com.bangkit.team18.core.data.mapper.DataMapper
 import com.bangkit.team18.core.domain.model.booking.BookedHospital
 import com.bangkit.team18.core.domain.model.booking.BookingDetail
 import com.bangkit.team18.core.domain.model.hospital.RoomType
-import com.bangkit.team18.core.domain.repository.AuthRepository
+import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.RoomBookingUseCase
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import java.util.*
 
 class BookingConfirmationViewModel(
   private val roomBookingUseCase: RoomBookingUseCase,
-  authRepository: AuthRepository
-) : BaseViewModelWithAuth(authRepository) {
+  authUseCase: AuthUseCase
+) : BaseViewModelWithAuth(authUseCase) {
 
   private var _bookingDetail = MutableLiveData<BookingDetail>()
   val bookingDetail: LiveData<BookingDetail>

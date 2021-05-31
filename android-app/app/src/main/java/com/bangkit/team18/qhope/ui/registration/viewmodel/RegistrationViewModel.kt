@@ -4,8 +4,10 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bangkit.team18.core.domain.model.user.User
+import com.bangkit.team18.core.domain.model.user.VerificationStatus
 import com.bangkit.team18.core.domain.repository.AuthRepository
 import com.bangkit.team18.core.domain.repository.UserRepository
+import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import com.google.firebase.Timestamp
@@ -13,9 +15,9 @@ import kotlinx.coroutines.Dispatchers
 import java.io.File
 
 class RegistrationViewModel(
-    private val authRepository: AuthRepository,
+    authUseCase: AuthUseCase,
     private val userRepository: UserRepository
-) : BaseViewModelWithAuth(authRepository) {
+) : BaseViewModelWithAuth(authUseCase) {
     private var _profilePicture = MutableLiveData<File>()
     val profilePicture: LiveData<File> get() = _profilePicture
     private var _isSubmitted = MutableLiveData<Boolean>()
@@ -24,7 +26,7 @@ class RegistrationViewModel(
     val birthDate: LiveData<Long> get() = _birthDate
 
     init {
-        authRepository.addAuthStateListener(this)
+        authUseCase.addAuthStateListener(this)
     }
 
     fun setProfilePicture(filePath: String) {
@@ -42,7 +44,8 @@ class RegistrationViewModel(
                             name,
                             it.phoneNumber.toString(),
                             uri.toString(),
-                            Timestamp(birthDate.value as Long, 0)
+                            Timestamp(birthDate.value as Long, 0),
+                            VerificationStatus.NOT_UPLOADED
                         )
                         submitUser(user)
                     }, {})

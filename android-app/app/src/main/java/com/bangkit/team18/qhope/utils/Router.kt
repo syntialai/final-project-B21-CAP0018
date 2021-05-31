@@ -7,6 +7,7 @@ import com.bangkit.team18.qhope.ui.history.view.HistoryDetailActivity
 import com.bangkit.team18.qhope.ui.login.view.LoginActivity
 import com.bangkit.team18.qhope.ui.main.adapter.MainAdapter
 import com.bangkit.team18.qhope.ui.main.view.MainActivity
+import com.bangkit.team18.qhope.ui.registration.view.RegistrationActivity
 
 object Router {
 
@@ -39,6 +40,11 @@ object Router {
       addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
       addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     }
+    context.startActivity(intent)
+  }
+
+  fun goToRegistration(context: Context) {
+    val intent = Intent(context, RegistrationActivity::class.java)
     context.startActivity(intent)
   }
 }

@@ -161,10 +161,6 @@ class OtpFragment : BottomSheetDialogFragment(), View.OnClickListener {
     private val nextEditText: EditText? = null,
     private val onChangeListener: () -> Unit
   ) : TextWatcher {
-    init {
-      currentEditText.setOnKeyListener(currentKeyListener)
-    }
-
     private val currentKeyListener = View.OnKeyListener { _, keyCode, event ->
       if (event.action == KeyEvent.ACTION_DOWN && currentEditText.isFocused && keyCode == KeyEvent.KEYCODE_DEL) {
         if (currentEditText.length() == 0) {
@@ -176,6 +172,10 @@ class OtpFragment : BottomSheetDialogFragment(), View.OnClickListener {
         }
       }
       false
+    }
+
+    init {
+      currentEditText.setOnKeyListener(currentKeyListener)
     }
 
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
