@@ -62,6 +62,7 @@ object BookingMapper {
     bookedAt = response.booked_at.toString(),
     hospitalAddress = response.hospital_address,
     hospitalType = response.hospital_type,
+    roomType = response.room_type,
     roomCostPerDay = DataMapper.toFormattedPrice(response.room_cost_per_day),
     referralLetterFileName = response.referral_letter_name,
     referralLetterFileUrl = response.referral_letter_url,
