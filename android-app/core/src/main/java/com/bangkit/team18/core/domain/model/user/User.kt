@@ -8,7 +8,7 @@ data class User(
   val phoneNumber: String,
   val imageUrl: String,
   val birthDate: Timestamp?,
-  val verificationStatus: VerificationStatus
+  val verificationStatus: VerificationStatus?
 ) {
   constructor() : this(
     "",
@@ -16,6 +16,6 @@ data class User(
     "",
     "",
     null,
-    VerificationStatus.NOT_UPLOAD
+    null
   )
 }

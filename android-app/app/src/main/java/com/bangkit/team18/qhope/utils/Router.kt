@@ -7,6 +7,7 @@ import com.bangkit.team18.qhope.ui.history.view.HistoryDetailActivity
 import com.bangkit.team18.qhope.ui.login.view.LoginActivity
 import com.bangkit.team18.qhope.ui.main.adapter.MainAdapter
 import com.bangkit.team18.qhope.ui.main.view.MainActivity
+import com.bangkit.team18.qhope.ui.registration.view.RegistrationActivity
 
 object Router {
 
@@ -29,7 +30,10 @@ object Router {
   }
 
   fun goToLogin(context: Context) {
-    val intent = Intent(context, LoginActivity::class.java)
+    val intent = Intent(context, LoginActivity::class.java).apply {
+      addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+      addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
     context.startActivity(intent)
   }
 
@@ -42,7 +46,11 @@ object Router {
     context.startActivity(intent)
   }
 
-  // TODO: Add editprofile activity
+  fun goToRegistration(context: Context) {
+    val intent = Intent(context, RegistrationActivity::class.java)
+    context.startActivity(intent)
+  }
+
   fun goToEditProfile(context: Context) {
     val intent = Intent()
     context.startActivity(intent)

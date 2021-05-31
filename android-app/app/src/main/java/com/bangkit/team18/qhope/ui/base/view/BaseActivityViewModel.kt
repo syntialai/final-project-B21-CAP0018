@@ -1,17 +1,20 @@
 package com.bangkit.team18.qhope.ui.base.view
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
+import com.bangkit.team18.core.utils.view.DialogUtils
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModel
 import com.bangkit.team18.qhope.utils.SnackbarUtils
@@ -31,11 +34,14 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
   protected lateinit var intentLauncher: ActivityResultLauncher<Intent>
   private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
+  private var loadingDialog: Dialog? = null
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     _binding = inflater.invoke(layoutInflater)
     setContentView(binding.root)
     setupViews(savedInstanceState)
+    setupLoadingDialog()
     setupObserver()
     setupActivityResultLauncher()
   }
@@ -57,11 +63,6 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
       }
   }
 
-  private fun requestPermission() {
-
-
-  }
-
   abstract fun setupViews(savedInstanceState: Bundle?)
 
   open fun setupObserver() {
@@ -75,10 +76,21 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
 
   open fun showEmptyState(isEmpty: Boolean) {}
 
-  open fun showLoadingState(isLoading: Boolean) {}
+  private fun setupLoadingDialog() {
+    loadingDialog = DialogUtils.createDialog(this, R.layout.layout_loading_dialog)
+  }
+
+  open fun showLoadingState(isLoading: Boolean) {
+    if (isLoading) {
+      DialogUtils.showDialog(loadingDialog)
+    } else {
+      DialogUtils.dismissDialog(loadingDialog)
+    }
+  }
 
   protected fun showErrorToast(message: String?, defaultMessageId: Int) {
-    SnackbarUtils.showErrorSnackbar(binding.root, message ?: getString(defaultMessageId))
+    Toast.makeText(binding.root.context, message ?: getString(defaultMessageId), Toast.LENGTH_SHORT)
+      .show()
   }
 
   protected fun showToast(messageId: Int) {

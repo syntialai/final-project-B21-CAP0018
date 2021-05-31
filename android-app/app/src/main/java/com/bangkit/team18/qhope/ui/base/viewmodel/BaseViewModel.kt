@@ -51,4 +51,8 @@ abstract class BaseViewModel : ViewModel() {
       else -> onFailFetch?.invoke()
     }
   }
+
+  protected fun showErrorResponse(message: String) {
+    _fetchStatus.value = ResponseWrapper.Error<Any>(message)
+  }
 }

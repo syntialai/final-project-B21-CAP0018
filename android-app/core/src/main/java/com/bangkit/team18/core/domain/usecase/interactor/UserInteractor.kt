@@ -8,13 +8,12 @@ import com.bangkit.team18.core.domain.usecase.UserUseCase
 import kotlinx.coroutines.flow.Flow
 
 class UserInteractor(private val userRepository: UserRepository) : UserUseCase {
-
-  override fun addUser(userId: String, user: User) = userRepository.addUser(userId, user)
-
-  override fun getUserData(userId: String): Flow<ResponseWrapper<User>> {
-    TODO("Not yet implemented")
-  }
-
-  override fun uploadUserImage(userId: String, imageUri: Uri) =
+  override suspend fun uploadUserImage(userId: String, imageUri: Uri): Flow<ResponseWrapper<Uri>> =
     userRepository.uploadUserImage(userId, imageUri)
+
+  override suspend fun addUser(userId: String, user: User): Flow<ResponseWrapper<Boolean>> =
+    userRepository.addUser(userId, user)
+
+  override suspend fun getUser(userId: String): Flow<ResponseWrapper<User?>> =
+    userRepository.getUser(userId)
 }

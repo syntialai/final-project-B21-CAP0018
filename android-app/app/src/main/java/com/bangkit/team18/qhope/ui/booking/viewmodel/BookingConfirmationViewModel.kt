@@ -8,9 +8,9 @@ import com.bangkit.team18.core.data.mapper.DataMapper
 import com.bangkit.team18.core.domain.model.booking.BookedHospital
 import com.bangkit.team18.core.domain.model.booking.BookingDetail
 import com.bangkit.team18.core.domain.model.hospital.RoomType
+import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.model.user.VerificationStatus
-import com.bangkit.team18.core.domain.repository.AuthRepository
 import com.bangkit.team18.core.domain.usecase.RoomBookingUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.core.utils.view.DataUtils.areNotEmpty
@@ -21,9 +21,9 @@ import java.util.*
 
 class BookingConfirmationViewModel(
   private val roomBookingUseCase: RoomBookingUseCase,
-  authRepository: AuthRepository,
   private val userUseCase: UserUseCase,
-) : BaseViewModelWithAuth(authRepository) {
+  authUseCase: AuthUseCase
+) : BaseViewModelWithAuth(authUseCase) {
 
   private var _bookingDetail = MutableLiveData<BookingDetail>()
   val bookingDetail: LiveData<BookingDetail>
@@ -52,9 +52,11 @@ class BookingConfirmationViewModel(
 
   fun fetchUserDetails(userId: String) {
     launchViewModelScope({
-      userUseCase.getUserData(userId).runFlow({ userData ->
-        _userDetails.value = userData
-        addUserData(userData)
+      userUseCase.getUser(userId).runFlow({ userData ->
+        userData?.let {
+          _userDetails.value = userData
+          addUserData(userData)
+        }
       }, ::logOut)
     })
   }
@@ -114,7 +116,7 @@ class BookingConfirmationViewModel(
     _bookingDetail.value?.user = userDetails
   }
 
-  private fun getIsVerified(status: VerificationStatus) = status == VerificationStatus.VERIFIED
+  private fun getIsVerified(status: VerificationStatus?) = status == VerificationStatus.VERIFIED
 
   private fun setupIsEnableBookingMediator() {
     _isEnableBooking.addSource(_userDetails) {

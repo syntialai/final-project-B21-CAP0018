@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "613609637569-dq4i3v7s6s8at4f69iu4qeasjr5i5jaf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bangkit.team18.qhope",
+            "certificate_hash": "62b05f0814b121726918334e895bed5d561d34d4"
+          }
+        },
+        {
           "client_id": "613609637569-9bnh19egbvo68jmshjrdgjghnqalqmnj.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -4,15 +4,16 @@ import android.app.Activity
 import android.os.CountDownTimer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.bangkit.team18.core.domain.repository.AuthRepository
+import com.bangkit.team18.core.domain.model.user.User
+import com.bangkit.team18.core.domain.usecase.AuthUseCase
+import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
-import timber.log.Timber
 
-class LoginViewModel(private val authRepository: AuthRepository) :
-  BaseViewModelWithAuth(authRepository) {
+class LoginViewModel(private val authUseCase: AuthUseCase, private val userUseCase: UserUseCase) :
+  BaseViewModelWithAuth(authUseCase) {
   private val _countDown = MutableLiveData<Int>()
   val countDown: LiveData<Int> get() = _countDown
   private val _detectedToken = MutableLiveData<String>()
@@ -20,16 +21,20 @@ class LoginViewModel(private val authRepository: AuthRepository) :
   private var timer: CountDownTimer? = null
   private var resendToken: PhoneAuthProvider.ForceResendingToken? = null
   private var storedVerificationId = ""
+  private val _userDoc = MutableLiveData<User>()
+  val userDoc: LiveData<User> get() = _userDoc
   private var authCallbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
     override fun onVerificationCompleted(credential: PhoneAuthCredential) {
       credential.smsCode?.let {
-        _detectedToken.value = it
+        _detectedToken.postValue(it)
       }
-      authRepository.signInWithCredential(credential)
+      launchViewModelScope({
+        authUseCase.signInWithCredential(credential).runFlow({})
+      })
     }
 
     override fun onVerificationFailed(e: FirebaseException) {
-      Timber.d(e.message.toString())
+      showErrorResponse("An internal error has occurred. Please try again later.")
     }
 
     override fun onCodeSent(
@@ -66,21 +71,34 @@ class LoginViewModel(private val authRepository: AuthRepository) :
   }
 
   fun resendOtp(activity: Activity, phoneNumber: String) {
-    authRepository.requestToken(activity, phoneNumber, resendToken, authCallbacks)
+    authUseCase.requestToken(activity, phoneNumber, resendToken, authCallbacks)
     startCountDown()
   }
 
   fun requestOtp(activity: Activity, phoneNumber: String) {
-    authRepository.requestToken(activity, phoneNumber, null, authCallbacks)
+    authUseCase.requestToken(activity, phoneNumber, null, authCallbacks)
     startCountDown()
   }
 
   fun verifyCode(code: String) {
     if (detectedToken.value.isNullOrEmpty()) {
+      if (storedVerificationId.isEmpty()) {
+        clearCountDown()
+        showErrorResponse("Session is not valid, Try resend OTP again.")
+        return
+      }
       launchViewModelScope({
-        val credential = authRepository.getCredential(storedVerificationId, code)
-        authRepository.signInWithCredential(credential).runFlow({}, {})
+        val credential = authUseCase.getCredential(storedVerificationId, code)
+        authUseCase.signInWithCredential(credential).runFlow({})
       })
     }
+  }
+
+  fun getUser(userId: String) {
+    launchViewModelScope({
+      userUseCase.getUser(userId).runFlow({
+        _userDoc.postValue(it)
+      })
+    })
   }
 }
