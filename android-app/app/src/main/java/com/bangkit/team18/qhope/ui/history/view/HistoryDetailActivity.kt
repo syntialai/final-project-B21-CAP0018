@@ -46,7 +46,7 @@ class HistoryDetailActivity :
         )
         setBookingReferralLetterData(
           historyDetail.referralLetterFileName,
-          historyDetail.referralLetterFilePath
+          historyDetail.referralLetterFileUrl
         )
       }
     })
@@ -73,7 +73,9 @@ class HistoryDetailActivity :
   }
 
   private fun goToHospitalDetail() {
-    // TODO
+    viewModel.bookingHistory.value?.hospitalId?.let { id ->
+      Router.goToHospitalDetails(this, id)
+    }
   }
 
   private fun setBookingDataMainInfo(id: String, createdAt: String, status: HistoryStatus?) {

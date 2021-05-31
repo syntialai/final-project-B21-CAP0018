@@ -168,21 +168,30 @@ abstract class BaseRemoteDataSource {
     }
   }
 
-  protected suspend fun StorageReference.addFile(fileUri: Uri, contentType: String): Flow<Boolean> {
+  protected suspend fun StorageReference.addAndGetFileUrl(
+    fileUri: Uri,
+    contentType: String
+  ): Flow<ResponseWrapper<Uri>> {
     val metadata = storageMetadata {
       this.contentType = contentType
     }
     return channelFlow {
-      val storageTask = putFile(fileUri, metadata).addOnSuccessListener {
+      send(ResponseWrapper.Loading())
+      putFile(fileUri, metadata).continueWithTask { task ->
+        task.exception?.let {
+          close(it)
+        }
+        this@addAndGetFileUrl.downloadUrl
+      }.addOnSuccessListener { uri ->
         launch {
-          send(true)
+          send(ResponseWrapper.Success(uri))
         }
       }.addOnFailureListener { exception ->
         close(exception)
       }
 
       awaitClose {
-        storageTask.cancel()
+        // No implementation needed
       }
     }
   }

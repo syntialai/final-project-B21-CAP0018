@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import com.bangkit.team18.qhope.R
-import com.bangkit.team18.qhope.databinding.LayoutReferralLetterCardBinding
+import com.bangkit.team18.qhope.databinding.WidgetLayoutReferralLetterCardBinding
 import com.google.android.material.circularreveal.cardview.CircularRevealCardView
 
 class ReferralLetterCard constructor(context: Context, attrs: AttributeSet) :
@@ -15,7 +15,7 @@ class ReferralLetterCard constructor(context: Context, attrs: AttributeSet) :
     const val IMAGE = 1
   }
 
-  private lateinit var binding: LayoutReferralLetterCardBinding
+  private lateinit var binding: WidgetLayoutReferralLetterCardBinding
 
   private val styledAttributes = context.obtainStyledAttributes(
     attrs,
@@ -50,6 +50,6 @@ class ReferralLetterCard constructor(context: Context, attrs: AttributeSet) :
 
   private fun initBinding() {
     val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    binding = LayoutReferralLetterCardBinding.inflate(layoutInflater, this, true)
+    binding = WidgetLayoutReferralLetterCardBinding.inflate(layoutInflater, this, true)
   }
 }

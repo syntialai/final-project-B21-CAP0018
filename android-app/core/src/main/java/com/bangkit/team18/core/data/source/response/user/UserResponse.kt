@@ -1,8 +1,8 @@
 package com.bangkit.team18.core.data.source.response.user
 
 import com.bangkit.team18.core.domain.model.user.VerificationStatus
-import com.google.firebase.firestore.DocumentId
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentId
 
 data class UserResponse(
   @DocumentId

@@ -2,7 +2,6 @@ package com.bangkit.team18.core.domain.model.user
 
 import com.google.firebase.Timestamp
 
-
 data class User(
   val id: String,
   val name: String,

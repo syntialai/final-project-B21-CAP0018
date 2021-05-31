@@ -15,5 +15,9 @@ interface RoomBookingUseCase {
 
   suspend fun createBooking(bookingDetail: BookingDetail): Flow<ResponseWrapper<Boolean>>
 
-  suspend fun uploadReferralLetter(userId: String, fileUri: Uri): Flow<ResponseWrapper<String>>
+  suspend fun uploadReferralLetter(
+    userId: String,
+    fileUri: Uri,
+    fileName: String
+  ): Flow<ResponseWrapper<Uri>>
 }

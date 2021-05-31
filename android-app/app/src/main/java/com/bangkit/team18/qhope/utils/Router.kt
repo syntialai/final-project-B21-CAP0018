@@ -47,4 +47,9 @@ object Router {
     val intent = Intent(context, RegistrationActivity::class.java)
     context.startActivity(intent)
   }
+
+  fun goToEditProfile(context: Context) {
+    val intent = Intent()
+    context.startActivity(intent)
+  }
 }
