@@ -30,7 +30,10 @@ object Router {
   }
 
   fun goToLogin(context: Context) {
-    val intent = Intent(context, LoginActivity::class.java)
+    val intent = Intent(context, LoginActivity::class.java).apply {
+      addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+      addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
     context.startActivity(intent)
   }
 
