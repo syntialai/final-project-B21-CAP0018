@@ -3,7 +3,7 @@ package com.bangkit.team18.core.data.source.response.user
 import com.google.firebase.firestore.DocumentId
 import java.sql.Timestamp
 
-data class User(
+data class UserResponse(
   @DocumentId
   val id: String,
   val name: String,

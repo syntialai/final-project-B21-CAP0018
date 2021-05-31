@@ -117,7 +117,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
 
   private fun setLocation(location: Location) {
     viewModel.fetchNearbyHospitals(location.latitude, location.longitude)
-//     TODO: Uncomment this when use real device
     val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(location.latitude,
         location.longitude, 1)
     binding.textViewYourLocation.text = addresses[0].getAddressLine(0)

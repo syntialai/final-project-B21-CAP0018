@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.WidgetLayoutBannerInfoBinding
+import com.bangkit.team18.qhope.ui.widget.callback.OnBannerActionButtonClickListener
 
 class BannerInfo constructor(context: Context, attrs: AttributeSet) :
   ConstraintLayout(context, attrs) {

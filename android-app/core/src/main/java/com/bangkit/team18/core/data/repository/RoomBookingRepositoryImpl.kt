@@ -56,8 +56,9 @@ class RoomBookingRepositoryImpl(
 
   override suspend fun uploadReferralLetter(
     userId: String,
-    fileUri: Uri
-  ): Flow<ResponseWrapper<String>> {
-    return roomBookingRemoteDataSource.uploadReferralLetter(userId, fileUri)
+    fileUri: Uri,
+    fileName: String
+  ): Flow<ResponseWrapper<Uri>> {
+    return roomBookingRemoteDataSource.uploadReferralLetter(userId, fileUri, fileName)
   }
 }

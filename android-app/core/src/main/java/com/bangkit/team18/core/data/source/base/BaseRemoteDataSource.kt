@@ -1,6 +1,7 @@
 package com.bangkit.team18.core.data.source.base
 
 import android.net.Uri
+import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.utils.view.DataUtils.isNull
 import com.bangkit.team18.core.utils.view.DataUtils.orZero
 import com.firebase.geofire.GeoFireUtils
@@ -134,21 +135,30 @@ abstract class BaseRemoteDataSource {
     }
   }
 
-  protected suspend fun StorageReference.addFile(fileUri: Uri, contentType: String): Flow<Boolean> {
+  protected suspend fun StorageReference.addAndGetFileUrl(
+    fileUri: Uri,
+    contentType: String
+  ): Flow<ResponseWrapper<Uri>> {
     val metadata = storageMetadata {
       this.contentType = contentType
     }
     return channelFlow {
-      val storageTask = putFile(fileUri, metadata).addOnSuccessListener {
+      send(ResponseWrapper.Loading())
+      putFile(fileUri, metadata).continueWithTask { task ->
+        task.exception?.let {
+          close(it)
+        }
+        this@addAndGetFileUrl.downloadUrl
+      }.addOnSuccessListener { uri ->
         launch {
-          send(true)
+          send(ResponseWrapper.Success(uri))
         }
       }.addOnFailureListener { exception ->
         close(exception)
       }
 
       awaitClose {
-        storageTask.cancel()
+        // No implementation needed
       }
     }
   }

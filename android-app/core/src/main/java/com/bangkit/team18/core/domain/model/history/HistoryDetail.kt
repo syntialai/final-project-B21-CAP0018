@@ -16,9 +16,9 @@ data class HistoryDetail(
 
     val roomCostPerDay: String,
 
-    val referralLetterFilePath: String,
-
     val referralLetterFileName: String,
+
+    val referralLetterFileUrl: String,
 
     val bookedAt: String,
 
@@ -28,5 +28,7 @@ data class HistoryDetail(
 
     val nightCount: Int?,
 
-    val status: HistoryStatus
+    val status: HistoryStatus,
+
+    val user: UserHistory
 )
