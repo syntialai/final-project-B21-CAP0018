@@ -2,12 +2,13 @@
 <resources>
     <!-- Additional color for text. -->
     <attr name="colorTextMedium" format="color" />
+    <attr name="description" format="string" />
 
     <!-- Styleable -->
     <declare-styleable name="EmptyStateView">
         <attr name="image" format="reference" />
         <attr name="title" format="string" />
-        <attr name="description" format="string" />
+        <attr name="description" />
     </declare-styleable>
 
     <declare-styleable name="ReferralLetterCard">
@@ -16,5 +17,10 @@
             <enum name="IMAGE" value="1" />
         </attr>
         <attr name="file_name" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="BannerInfo">
+        <attr name="description" />
+        <attr name="button_label" format="string" />
     </declare-styleable>
 </resources>

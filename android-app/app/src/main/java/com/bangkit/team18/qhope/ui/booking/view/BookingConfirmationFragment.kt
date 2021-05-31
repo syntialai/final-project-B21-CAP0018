@@ -13,13 +13,14 @@ import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentBookingConfirmationBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.booking.viewmodel.BookingConfirmationViewModel
+import com.bangkit.team18.qhope.ui.widget.callback.OnBannerActionButtonClickListener
+import com.bangkit.team18.qhope.utils.Router
 import java.util.*
 
-// TODO: Add checking condition for PDF
 class BookingConfirmationFragment :
   BaseFragment<FragmentBookingConfirmationBinding, BookingConfirmationViewModel>(
     FragmentBookingConfirmationBinding::inflate, BookingConfirmationViewModel::class
-  ) {
+  ), OnBannerActionButtonClickListener {
 
   companion object {
     private const val GOOGLE_DRIVE_VIEWER = "http://drive.google.com/viewer?url="
@@ -37,6 +38,7 @@ class BookingConfirmationFragment :
       layoutBookingTimeSelected.buttonBookingEditTime.setOnClickListener(
         this@BookingConfirmationFragment
       )
+      bannerInfoUpdateProfile.setActionButtonOnClickListener(this@BookingConfirmationFragment)
     }
   }
 
@@ -44,11 +46,17 @@ class BookingConfirmationFragment :
     super.setupObserver()
 
     viewModel.setBookingDetail(args.bookedHospital, args.roomType)
+    viewModel.user.observe(viewLifecycleOwner, {
+      it?.let { user ->
+        viewModel.fetchUserDetails(user.uid)
+      }
+    })
     viewModel.bookingDetail.observe(viewLifecycleOwner, {
       it?.let { bookingDetail ->
         setRoomData(bookingDetail.hospital.name, bookingDetail.selectedRoomType)
         setSelectedDate(bookingDetail.selectedDateTime)
         setSelectedTime(bookingDetail.selectedDateTime)
+        setReferralLetterData(bookingDetail.referralLetterName, bookingDetail.referralLetterUri)
       }
     })
     viewModel.isBooked.observe(viewLifecycleOwner, {
@@ -58,7 +66,9 @@ class BookingConfirmationFragment :
         }
       }
     })
-
+    viewModel.isEnableBooking.observe(viewLifecycleOwner, { isEnableBooking ->
+      enableProcessBooking(isEnableBooking.first, isEnableBooking.second)
+    })
   }
 
   override fun onResume() {
@@ -72,13 +82,6 @@ class BookingConfirmationFragment :
     }
   }
 
-  override fun showLoadingState(isLoading: Boolean) {
-    binding.apply {
-      spinKitLoadBookingConfirm.showOrRemove(isLoading)
-      layoutBookingConfirm.showOrRemove(isLoading.not())
-    }
-  }
-
   override fun onClick(view: View?) {
     binding.apply {
       when (view) {
@@ -86,6 +89,17 @@ class BookingConfirmationFragment :
         buttonBookingConfirmUploadLetter -> uploadPdf()
         layoutBookingTimeSelected.buttonBookingEditTime -> showTimePicker()
       }
+    }
+  }
+
+  override fun onBannerButtonClicked() {
+    Router.goToEditProfile(mContext)
+  }
+
+  private fun enableProcessBooking(isVerified: Boolean, hasUploadedLetter: Boolean) {
+    binding.apply {
+      bannerInfoUpdateProfile.showOrRemove(isVerified.not())
+      buttonBookingConfirmBook.isEnabled = isVerified.and(hasUploadedLetter)
     }
   }
 
@@ -104,11 +118,13 @@ class BookingConfirmationFragment :
   }
 
   private fun setReferralLetterData(fileName: String, fileUrl: String) {
-    binding.cardBookingConfirmReferralLetter.apply {
-      show()
-      setFileName(fileName)
-      setOnClickListener {
-        openPdf(fileUrl)
+    if (listOf(fileName, fileUrl).all { it.isNotBlank() }) {
+      binding.cardBookingConfirmReferralLetter.apply {
+        show()
+        setFileName(fileName)
+        setOnClickListener {
+          openPdf(fileUrl)
+        }
       }
     }
   }
@@ -131,7 +147,7 @@ class BookingConfirmationFragment :
     binding.layoutBookingTimeSelected.apply {
       root.show()
       textViewBookingTime.text =
-        DataUtils.toFormattedTime(calendar.time, DataUtils.HH_MM_A_12H_FORMAT)
+        DataUtils.toFormattedDateTime(calendar.time, DataUtils.HH_MM_A_12H_FORMAT)
     }
   }
 

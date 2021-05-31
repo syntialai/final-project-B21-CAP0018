@@ -41,4 +41,10 @@ object Router {
     }
     context.startActivity(intent)
   }
+
+  // TODO: Add editprofile activity
+  fun goToEditProfile(context: Context) {
+    val intent = Intent()
+    context.startActivity(intent)
+  }
 }

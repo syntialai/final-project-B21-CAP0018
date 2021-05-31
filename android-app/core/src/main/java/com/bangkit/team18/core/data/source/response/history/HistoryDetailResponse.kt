@@ -3,7 +3,6 @@ package com.bangkit.team18.core.data.source.response.history
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentId
 
-// TODO: Add user and letter data
 data class HistoryDetailResponse(
 
   @DocumentId
@@ -31,7 +30,13 @@ data class HistoryDetailResponse(
 
   val status: String,
 
-  val user_id: String
+  val referral_letter_name: String,
+
+  val referral_letter_url: String,
+
+  val user_id: String,
+
+  val user_data: UserHistoryResponse
 ) {
   constructor() : this(
     "",
@@ -46,6 +51,9 @@ data class HistoryDetailResponse(
     "",
     0.0,
     "",
-    ""
+    "",
+    "",
+    "",
+    UserHistoryResponse()
   )
 }

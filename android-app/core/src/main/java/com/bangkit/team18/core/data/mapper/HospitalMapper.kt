@@ -64,6 +64,7 @@ object HospitalMapper {
     response.kelurahan,
     response.kecamatan,
     response.kota_administrasi,
+    response.provinsi,
     response.kode_pos
   ).joinToString()
 

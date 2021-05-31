@@ -14,8 +14,6 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.transform
 import java.io.IOException
 
 @ExperimentalCoroutinesApi
@@ -42,21 +40,16 @@ class RoomBookingRemoteDataSourceImpl(
 
   override suspend fun uploadReferralLetter(
     userId: String,
-    fileUri: Uri
-  ): Flow<ResponseWrapper<String>> {
-    val nowTimestamp = Timestamp.now().toString()
-    val childReference =
-      "${CollectionConstants.USER_DATA_PATH}/${userId}/${CollectionConstants.REFERRAL_LETTER_PATH}/$nowTimestamp"
-    return storage.reference.child(childReference).addFile(
-      fileUri,
-      "application/pdf"
-    ).transform { value ->
-      if (value) {
-        emit(ResponseWrapper.Success(childReference) as ResponseWrapper<String>)
-      }
-    }.onStart {
-      emit(ResponseWrapper.Loading())
-    }.catch { exception ->
+    fileUri: Uri,
+    fileName: String?
+  ): Flow<ResponseWrapper<Uri>> {
+    return storage.reference.child(
+      "${CollectionConstants.USER_DATA_PATH}/${userId}/${CollectionConstants.REFERRAL_LETTER_PATH}/${
+        fileName ?: Timestamp.now()
+      }"
+    ).addAndGetFileUrl(
+      fileUri, "application/pdf"
+    ).catch { exception ->
       emit(
         (if (exception is IOException) {
           ResponseWrapper.NetworkError()

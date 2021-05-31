@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bangkit.team18.core.domain.model.user.User
+import com.bangkit.team18.core.domain.model.user.VerificationStatus
 import com.bangkit.team18.core.domain.repository.AuthRepository
 import com.bangkit.team18.core.domain.repository.UserRepository
 import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
@@ -42,7 +43,8 @@ class RegistrationViewModel(
                             name,
                             it.phoneNumber.toString(),
                             uri.toString(),
-                            Timestamp(birthDate.value as Long, 0)
+                            Timestamp(birthDate.value as Long, 0),
+                            VerificationStatus.NOT_UPLOAD
                         )
                         submitUser(user)
                     }, {})
