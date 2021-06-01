@@ -19,6 +19,7 @@ class LoginActivity : BaseActivityViewModel<ActivityLoginBinding, LoginViewModel
   }
 
   private var otpBottomSheet: OtpFragment? = null
+
   override fun setupViews(savedInstanceState: Bundle?) {
     supportActionBar?.hide()
     binding.apply {
@@ -41,6 +42,10 @@ class LoginActivity : BaseActivityViewModel<ActivityLoginBinding, LoginViewModel
         Router.goToMain(this)
       }
     })
+  }
+
+  override fun onBackPressed() {
+    finishAffinity()
   }
 
   override fun onClick(v: View?) {
