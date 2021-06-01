@@ -39,6 +39,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   private val homeAdapter by lazy {
     HomeAdapter(this)
   }
+  private val searchResultAdapter by lazy {
+    HomeAdapter(this)
+  }
 
   private val locationManager by lazy {
     LocationManager(mContext, object : LocationCallback() {
@@ -66,7 +69,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
     })
     viewModel.searchHospitalResults.observe(viewLifecycleOwner, { searchResults ->
       showSearchResults(true)
-      homeAdapter.submitList(searchResults)
+      searchResultAdapter.submitList(searchResults)
     })
   }
 
@@ -130,7 +133,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
         setHasFixedSize(false)
       }
       with(recyclerViewHospitalSearchResults) {
-        adapter = homeAdapter
+        adapter = searchResultAdapter
         setHasFixedSize(false)
       }
     }

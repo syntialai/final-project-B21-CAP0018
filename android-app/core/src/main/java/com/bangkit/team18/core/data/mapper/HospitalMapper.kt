@@ -49,7 +49,7 @@ object HospitalMapper {
     type = response.jenis_rumah_sakit,
     location = getGeoLocation(response.alamat_rumah_sakit),
     address = getAddress(response),
-    availableRoomCount = 0
+    availableRoomCount = response.total_kamar_kosong
   )
 
   private fun mapToRoomType(response: RoomTypeResponse) = RoomType(
