@@ -40,6 +40,7 @@
 
     <!-- History -->
     <string name="history_label">History</string>
+    <string name="history_detail_label">History Details</string>
     <string name="history_empty_state_title">Your history is empty.</string>
     <string name="history_empty_state_description">Let\'s start booking a hospital room.</string>
     <plurals name="history_night_state">
