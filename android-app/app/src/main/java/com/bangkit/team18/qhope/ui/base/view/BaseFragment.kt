@@ -28,8 +28,7 @@ import kotlin.reflect.KClass
 abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
   private val viewBindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB,
   viewModelClazz: KClass<VM>
-) : Fragment(),
-  View.OnClickListener {
+) : Fragment(), View.OnClickListener {
 
   private var _binding: VB? = null
   protected val binding get() = _binding as VB

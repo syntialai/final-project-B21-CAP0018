@@ -1,13 +1,13 @@
 package com.bangkit.team18.qhope.ui.history.view
 
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.databinding.FragmentHistoryBinding
 import com.bangkit.team18.qhope.ui.base.adapter.OnItemClickListener
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.history.adapter.HistoryAdapter
 import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryViewModel
-import com.bangkit.team18.qhope.utils.Router
 
 class HistoryFragment : BaseFragment<FragmentHistoryBinding, HistoryViewModel>(
   FragmentHistoryBinding::inflate,
@@ -61,6 +61,10 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding, HistoryViewModel>(
   }
 
   override fun onClickListener(id: String) {
-    Router.goToHistoryDetail(mContext, id)
+    findNavController().navigate(
+      HistoryFragmentDirections.actionHistoryFragmentToHistoryDetailFragment(
+        id
+      )
+    )
   }
 }

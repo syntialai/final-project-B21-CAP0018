@@ -36,6 +36,7 @@
     <string name="back_to_home_label">Back to Home</string>
     <string name="update_profile_banner">Update your profile to continue your booking process.</string>
     <string name="update_profile_banner_button">Go to Profile</string>
+    <string name="booking_confirmation_title">Book a Room</string>
 
     <!-- History -->
     <string name="history_label">History</string>

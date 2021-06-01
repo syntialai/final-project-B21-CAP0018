@@ -16,7 +16,7 @@ data class HistoryDetail(
 
     val roomCostPerDay: String,
 
-    val roomType: String,
+    val roomType: RoomTypeHistory,
 
     val referralLetterFileName: String,
 

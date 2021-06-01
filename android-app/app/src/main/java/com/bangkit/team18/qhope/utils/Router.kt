@@ -3,7 +3,7 @@ package com.bangkit.team18.qhope.utils
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import com.bangkit.team18.qhope.ui.history.view.HistoryDetailActivity
+import com.bangkit.team18.qhope.ui.history.view.HistoryDetailFragment
 import com.bangkit.team18.qhope.ui.login.view.LoginActivity
 import com.bangkit.team18.qhope.ui.main.adapter.MainAdapter
 import com.bangkit.team18.qhope.ui.main.view.MainActivity
@@ -18,7 +18,7 @@ object Router {
   private const val HTML_TYPE = "text/html"
 
   fun goToHistoryDetail(context: Context, id: String) {
-    val intent = Intent(context, HistoryDetailActivity::class.java).apply {
+    val intent = Intent(context, HistoryDetailFragment::class.java).apply {
       putExtra(PARAM_HISTORY_ID, id)
     }
     context.startActivity(intent)

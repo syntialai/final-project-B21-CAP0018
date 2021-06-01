@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.bangkit.team18.core.utils.view.DataUtils.isNull
+import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityMainBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseActivityViewModel
@@ -23,6 +24,7 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
     NavController.OnDestinationChangedListener { _, destination, _ ->
       changeElevation(destination.id)
       showActionBar(destination.id)
+      showBottomNav(destination.id)
     }
 
   override fun setupViews(savedInstanceState: Bundle?) {
@@ -75,13 +77,24 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
   }
 
   private fun showActionBar(id: Int) {
-    // TODO: Add cases when fragment is hospitalDetail
-    val show = true
+    val show = when (id) {
+      R.id.hospitalDetailFragment -> false
+      else -> true
+    }
     if (show) {
       supportActionBar?.show()
     } else {
       supportActionBar?.hide()
     }
+  }
+
+  private fun showBottomNav(id: Int) {
+    binding.mainBottomNavBnv.showOrRemove(when(id) {
+      R.id.homeFragment -> true
+      R.id.historyFragment -> true
+      R.id.profileFragment -> true
+      else -> false
+    })
   }
 
   override fun onSupportNavigateUp(): Boolean {

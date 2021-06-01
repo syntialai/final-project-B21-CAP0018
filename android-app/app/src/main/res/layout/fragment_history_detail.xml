@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:padding="@dimen/dp_16"
-        tools:context=".ui.history.view.HistoryDetailActivity">
+        tools:context=".ui.history.view.HistoryDetailFragment">
 
         <include
             android:id="@+id/layout_history_detail_booking_data"

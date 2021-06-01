@@ -24,7 +24,7 @@ data class HistoryDetailResponse(
 
   val check_out_at: Timestamp,
 
-  val room_type: String,
+  val room_type: RoomTypeHistoryResponse,
 
   val room_cost_per_day: Double,
 
@@ -48,7 +48,7 @@ data class HistoryDetailResponse(
     Timestamp.now(),
     Timestamp.now(),
     Timestamp.now(),
-    "",
+    RoomTypeHistoryResponse(),
     0.0,
     "",
     "",

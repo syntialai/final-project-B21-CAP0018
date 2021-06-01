@@ -1,39 +1,42 @@
 package com.bangkit.team18.qhope.ui.history.view
 
-import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat.getColor
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bangkit.team18.core.domain.model.history.HistoryStatus
 import com.bangkit.team18.core.domain.model.history.UserHistory
 import com.bangkit.team18.core.utils.view.DataUtils.getText
 import com.bangkit.team18.core.utils.view.ViewUtils.loadImageFromStorage
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
-import com.bangkit.team18.qhope.databinding.ActivityHistoryDetailBinding
-import com.bangkit.team18.qhope.ui.base.view.BaseActivityViewModel
+import com.bangkit.team18.qhope.databinding.FragmentHistoryDetailBinding
+import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryDetailViewModel
 import com.bangkit.team18.qhope.utils.Router
 
-class HistoryDetailActivity :
-  BaseActivityViewModel<ActivityHistoryDetailBinding, HistoryDetailViewModel>(
-    ActivityHistoryDetailBinding::inflate, HistoryDetailViewModel::class
+class HistoryDetailFragment :
+  BaseFragment<FragmentHistoryDetailBinding, HistoryDetailViewModel>(
+    FragmentHistoryDetailBinding::inflate, HistoryDetailViewModel::class
   ) {
 
-  override fun setupViews(savedInstanceState: Bundle?) {
+  private val args: HistoryDetailFragmentArgs by navArgs()
+
+  override fun setupViews() {
     binding.apply {
       layoutHistoryDetailBookingData.imageViewBookingDataHospital.setOnClickListener(
-        this@HistoryDetailActivity
+        this@HistoryDetailFragment
       )
       layoutHistoryDetailBookingData.textViewBookingDataHospitalName.setOnClickListener(
-        this@HistoryDetailActivity
+        this@HistoryDetailFragment
       )
-      actionBar?.title = intent?.getStringExtra(Router.PARAM_HISTORY_ID)
     }
   }
 
   override fun setupObserver() {
     super.setupObserver()
 
-    viewModel.initializeHistoryId(intent?.getStringExtra(Router.PARAM_HISTORY_ID))
+    viewModel.initializeHistoryId(args.id)
     viewModel.fetchUserBookingHistory()
     viewModel.bookingHistory.observe(this, {
       it?.let { historyDetail ->
@@ -44,7 +47,7 @@ class HistoryDetailActivity :
         )
         setBookingOtherInfo(
           historyDetail.startDate, historyDetail.endDate,
-          historyDetail.roomType, historyDetail.roomCostPerDay
+          historyDetail.roomType.name, historyDetail.roomCostPerDay
         )
         setBookingReferralLetterData(
           historyDetail.referralLetterFileName,
@@ -74,7 +77,11 @@ class HistoryDetailActivity :
 
   private fun goToHospitalDetail() {
     viewModel.bookingHistory.value?.hospitalId?.let { id ->
-      // TODO: Change this
+      findNavController().navigate(
+        HistoryDetailFragmentDirections.actionHistoryDetailFragmentToHospitalDetailFragment(
+          id
+        )
+      )
     }
   }
 
@@ -85,9 +92,9 @@ class HistoryDetailActivity :
       textViewBookingDataStatus.text = status.getText()
 
       if (status == HistoryStatus.COMPLETED) {
-        textViewBookingDataStatus.setTextColor(getColor(R.color.green_700))
+        textViewBookingDataStatus.setTextColor(getColor(mContext, R.color.green_700))
       } else if (status == HistoryStatus.CANCELLED) {
-        textViewBookingDataStatus.setTextColor(getColor(R.color.red_700))
+        textViewBookingDataStatus.setTextColor(getColor(mContext, R.color.red_700))
       }
     }
   }
@@ -98,7 +105,8 @@ class HistoryDetailActivity :
   ) {
     binding.layoutHistoryDetailBookingData.apply {
       imageViewBookingDataHospital.loadImageFromStorage(
-        this@HistoryDetailActivity, hospitalImage,
+        mContext,
+        hospitalImage,
         R.drawable.drawable_hospital_placeholder
       )
       textViewBookingDataHospitalName.text = hospitalName
@@ -136,7 +144,7 @@ class HistoryDetailActivity :
     binding.layoutHistoryDetailUserData.cardBookingUserReferralLetter.apply {
       setFileName(fileName)
       setOnClickListener {
-        Router.openPdfFile(this@HistoryDetailActivity, fileUrl)
+        Router.openPdfFile(mContext, fileUrl)
       }
     }
   }

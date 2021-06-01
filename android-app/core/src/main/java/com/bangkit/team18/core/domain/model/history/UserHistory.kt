@@ -11,12 +11,4 @@ data class UserHistory(
   val gender: String,
 
   val phoneNumber: String
-) {
-  constructor() : this(
-    "",
-    "",
-    "",
-    "",
-    ""
-  )
-}
+)
