@@ -22,6 +22,7 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
   private val destinationChangedListener =
     NavController.OnDestinationChangedListener { _, destination, _ ->
       changeElevation(destination.id)
+      showActionBar(destination.id)
     }
 
   override fun setupViews(savedInstanceState: Bundle?) {
@@ -71,6 +72,16 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
       else -> resources.getDimension(R.dimen.dp_4)
     }
     supportActionBar?.elevation = elevation
+  }
+
+  private fun showActionBar(id: Int) {
+    // TODO: Add cases when fragment is hospitalDetail
+    val show = true
+    if (show) {
+      supportActionBar?.show()
+    } else {
+      supportActionBar?.hide()
+    }
   }
 
   override fun onSupportNavigateUp(): Boolean {

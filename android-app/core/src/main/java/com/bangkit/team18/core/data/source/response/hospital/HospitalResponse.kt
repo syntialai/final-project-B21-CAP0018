@@ -36,6 +36,8 @@ data class HospitalResponse(
 
   val telepon_humas: String,
 
+  val total_kamar_kosong: Int,
+
   val website: String
 ) {
   constructor() : this(
@@ -54,6 +56,7 @@ data class HospitalResponse(
     "",
     "",
     "",
+    0,
     "",
   )
 }
