@@ -8,6 +8,8 @@ import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
@@ -86,7 +88,7 @@ abstract class BaseRemoteDataSource {
     val nearbyTasks = getQueryBounds(this@loadNearby, location, radiusInMeter)
     Tasks.whenAllComplete(nearbyTasks).addOnCompleteListener {
       val validDocuments = getFilteredData(nearbyTasks, location, radiusInMeter)
-      trySend(validDocuments.mapNotNull { snapshot ->
+      offer(validDocuments.mapNotNull { snapshot ->
         snapshot.toObject(clazz)
       })
     }.addOnFailureListener {
@@ -132,6 +134,37 @@ abstract class BaseRemoteDataSource {
       }.addOnFailureListener { exception ->
         continuation.resumeWithException(exception)
       }
+    }
+  }
+
+  protected suspend fun CollectionReference.updateData(
+    documentId: String,
+    data: HashMap<String, Any?>
+  ) {
+    return suspendCoroutine { continuation ->
+      document(documentId).set(data).addOnSuccessListener {
+        continuation.resume(Unit)
+      }.addOnFailureListener { exception ->
+        continuation.resumeWithException(exception)
+      }
+    }
+  }
+
+  protected suspend fun StorageReference.addFile(fileUri: Uri): Flow<Uri> {
+    return callbackFlow {
+      putFile(fileUri).continueWithTask { task ->
+        if (task.isSuccessful.not()) {
+          close(task.exception)
+        }
+        this@addFile.downloadUrl
+      }.addOnCompleteListener {
+        if (it.result.isNull()) close(it.exception)
+        offer(it.result)
+      }.addOnFailureListener {
+        close(it)
+      }
+
+      awaitClose {}
     }
   }
 
@@ -193,5 +226,17 @@ abstract class BaseRemoteDataSource {
       })
     }
     return filteredDocuments
+  }
+
+  protected fun Task<AuthResult>.loadData(): Flow<ResponseWrapper<FirebaseUser>> = callbackFlow {
+    offer(ResponseWrapper.Loading())
+    addOnCompleteListener { task ->
+      if (!task.isSuccessful) {
+        close(task.exception)
+      } else {
+        offer(ResponseWrapper.Success(task.result.user as FirebaseUser))
+      }
+    }
+    awaitClose { }
   }
 }

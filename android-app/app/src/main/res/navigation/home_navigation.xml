@@ -2,14 +2,23 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/room_booking_nav"
-    app:startDestination="@id/hospitalDetailFragment">
+    android:id="@+id/home_navigation"
+    app:startDestination="@id/homeFragment">
 
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.bangkit.team18.qhope.ui.home.view.HomeFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_hospitalDetailFragment"
+            app:destination="@id/hospitalDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/hospitalDetailFragment"
         android:name="com.bangkit.team18.qhope.ui.booking.view.HospitalDetailFragment"
         android:label="fragment_hospital_detail"
-        tools:layout="@layout/fragment_hospital_detail">
+        tools:layout="@layout/fragment_hospital_detail" >
         <action
             android:id="@+id/action_hospitalDetailFragment_to_bookingConfirmationFragment"
             app:destination="@id/bookingConfirmationFragment" />
@@ -21,10 +30,7 @@
         android:id="@+id/bookingConfirmationFragment"
         android:name="com.bangkit.team18.qhope.ui.booking.view.BookingConfirmationFragment"
         android:label="fragment_booking_confirmation"
-        tools:layout="@layout/fragment_booking_confirmation">
-        <action
-            android:id="@+id/action_bookingConfirmationFragment_to_hospitalDetailFragment"
-            app:destination="@id/hospitalDetailFragment" />
+        tools:layout="@layout/fragment_booking_confirmation" >
         <argument
             android:name="bookedHospital"
             app:argType="com.bangkit.team18.core.domain.model.booking.BookedHospital" />
@@ -32,10 +38,4 @@
             android:name="roomType"
             app:argType="com.bangkit.team18.core.domain.model.hospital.RoomType" />
     </fragment>
-    <action
-        android:id="@+id/action_global_hospitalDetailFragment"
-        app:destination="@id/hospitalDetailFragment"
-        app:launchSingleTop="true"
-        app:popUpTo="@id/hospitalDetailFragment"
-        app:popUpToInclusive="true" />
 </navigation>

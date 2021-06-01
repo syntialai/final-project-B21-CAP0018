@@ -74,7 +74,7 @@ class HistoryDetailActivity :
 
   private fun goToHospitalDetail() {
     viewModel.bookingHistory.value?.hospitalId?.let { id ->
-      Router.goToHospitalDetails(this, id)
+      // TODO: Change this
     }
   }
 

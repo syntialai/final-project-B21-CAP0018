@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_100"
+    tools:context=".ui.profile.view.ProfileFragment">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/primary_gradient_overlay"
+        android:paddingHorizontal="@dimen/dp_16"
+        android:paddingTop="@dimen/dp_16"
+        app:layout_constraintBottom_toTopOf="@id/profile_guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profile_picture_image"
+        android:layout_width="@dimen/dp_64"
+        android:layout_height="@dimen/dp_64"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_16"
+        android:background="?attr/colorOnPrimary"
+        android:padding="@dimen/dp_2"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_person"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/ShapeAppearance.QHope.MediumComponent"
+        app:strokeColor="?attr/colorOnPrimary"
+        app:strokeWidth="@dimen/dp_2" />
+
+    <TextView
+        android:id="@+id/profile_name"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
+        android:textAppearance="?attr/textAppearanceHeadline3"
+        android:textColor="?attr/colorOnPrimary"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/profile_picture_image"
+        app:layout_constraintTop_toTopOf="@id/profile_picture_image"
+        tools:text="Steven" />
+
+    <TextView
+        android:id="@+id/profile_verification_status"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_8"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textColor="?attr/colorOnSurface"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/profile_picture_image"
+        app:layout_constraintTop_toBottomOf="@id/profile_name"
+        tools:text="Verified" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/profile_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="profile_picture_image, profile_verification_status" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/profile_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="204dp" />
+
+    <LinearLayout
+        android:id="@+id/personal_information_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_32"
+        android:background="@drawable/rounded_shape"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_barrier">
+
+        <TextView
+            android:id="@+id/profile_personal_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/rounded_layout_radius"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:drawablePadding="@dimen/dp_16"
+            android:focusable="true"
+            android:paddingHorizontal="@dimen/dp_16"
+            android:paddingVertical="@dimen/dp_12"
+            android:text="@string/personal_data"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/colorOnSurface"
+            app:drawableEndCompat="@drawable/ic_navigate_next"
+            app:drawableStartCompat="@drawable/ic_person_outline" />
+
+        <TextView
+            android:id="@+id/profile_id_verification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/rounded_layout_radius"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:drawablePadding="@dimen/dp_16"
+            android:focusable="true"
+            android:paddingHorizontal="@dimen/dp_16"
+            android:paddingVertical="@dimen/dp_12"
+            android:text="@string/id_verification_label"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/colorOnSurface"
+            app:drawableEndCompat="@drawable/ic_navigate_next"
+            app:drawableStartCompat="@drawable/ic_logout" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_12"
+        android:background="@drawable/rounded_shape"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/personal_information_container">
+
+        <TextView
+            android:id="@+id/profile_log_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/rounded_layout_radius"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:drawablePadding="@dimen/dp_16"
+            android:focusable="true"
+            android:paddingHorizontal="@dimen/dp_16"
+            android:paddingVertical="@dimen/dp_12"
+            android:text="@string/logout_label"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/colorOnSurface"
+            app:drawableEndCompat="@drawable/ic_navigate_next"
+            app:drawableStartCompat="@drawable/ic_logout" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
@@ -107,7 +108,8 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
   }
 
   protected fun showErrorToast(message: String? = null, defaultMessageId: Int) {
-    SnackbarUtils.showErrorSnackbar(binding.root, message ?: getString(defaultMessageId))
+    Toast.makeText(binding.root.context, message ?: getString(defaultMessageId), Toast.LENGTH_SHORT)
+      .show()
   }
 
   protected fun showToast(messageId: Int) {

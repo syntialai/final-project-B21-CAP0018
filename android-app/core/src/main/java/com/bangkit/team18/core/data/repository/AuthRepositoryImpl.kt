@@ -1,43 +1,20 @@
 package com.bangkit.team18.core.data.repository
 
 import android.app.Activity
+import com.bangkit.team18.core.data.source.AuthRemoteDataSource
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.domain.repository.AuthRepository
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.launch
-import java.io.IOException
+import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.TimeUnit
 
 @ExperimentalCoroutinesApi
-class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepository {
-  override fun signInWithCredential(credential: PhoneAuthCredential) = callbackFlow {
-    val signIn = firebaseAuth.signInWithCredential(credential)
-    signIn.addOnCompleteListener { task ->
-      GlobalScope.launch {
-        when {
-          task.isSuccessful -> {
-            trySend(ResponseWrapper.Success(true))
-          }
-          task.exception is IOException -> {
-            trySend(ResponseWrapper.NetworkError<Boolean>())
-          }
-          else -> {
-            trySend(ResponseWrapper.Error<Boolean>(task.exception?.message))
-          }
-        }
-      }
-    }
-    awaitClose { }
-  }
+class AuthRepositoryImpl(private val authRemoteDataSource: AuthRemoteDataSource) : AuthRepository {
+  override fun signInWithCredential(credential: PhoneAuthCredential): Flow<ResponseWrapper<FirebaseUser>> =
+    authRemoteDataSource.signInWithCredential(credential)
 
   override fun requestToken(
     activity: Activity,
@@ -61,15 +38,11 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
     return PhoneAuthProvider.getCredential(verificationId, token)
   }
 
-  override fun logout() {
-    firebaseAuth.signOut()
-  }
+  override fun logout() = authRemoteDataSource.logout()
 
-  override fun addAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener) {
-    firebaseAuth.addAuthStateListener(authStateListener)
-  }
+  override fun addAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener) =
+    authRemoteDataSource.addAuthStateListener(authStateListener)
 
-  override fun removeAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener) {
-    firebaseAuth.removeAuthStateListener(authStateListener)
-  }
+  override fun removeAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener) =
+    authRemoteDataSource.removeAuthStateListener(authStateListener)
 }

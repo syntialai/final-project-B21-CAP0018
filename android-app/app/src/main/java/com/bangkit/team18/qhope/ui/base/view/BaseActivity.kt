@@ -3,6 +3,7 @@ package com.bangkit.team18.qhope.ui.base.view
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.bangkit.team18.qhope.utils.SnackbarUtils
@@ -23,7 +24,8 @@ abstract class BaseActivity<VB : ViewBinding>(private val inflater: (LayoutInfla
   abstract fun setupViews(savedInstanceState: Bundle?)
 
   protected fun showErrorToast(message: String?, defaultMessageId: Int) {
-    SnackbarUtils.showErrorSnackbar(binding.root, message ?: getString(defaultMessageId))
+    Toast.makeText(binding.root.context, message ?: getString(defaultMessageId), Toast.LENGTH_SHORT)
+      .show()
   }
 
   protected fun showToast(messageId: Int) {

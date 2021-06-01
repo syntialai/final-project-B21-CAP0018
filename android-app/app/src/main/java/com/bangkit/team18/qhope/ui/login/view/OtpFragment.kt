@@ -183,6 +183,7 @@ class OtpFragment : BottomSheetDialogFragment(), View.OnClickListener {
         nextEditText?.let {
           currentEditText.clearFocus()
           it.requestFocus()
+          it.setSelection(it.length())
           it.isCursorVisible = true
         }
       }
