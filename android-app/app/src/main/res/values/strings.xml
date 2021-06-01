@@ -82,7 +82,7 @@
     <string name="resend_otp_count_down">Resend OTP (%s)</string>
 
     <!-- Register -->
-    <string name="welcome_label">Welcome!</string>
+    <string name="hi_label">Hi!</string>
     <string name="let_us_know_about_you">Let us know a little bit about you.</string>
     <string name="name_hint">Name</string>
     <string name="birth_date_hint">Birth Date</string>

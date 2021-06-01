@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/dp_24"
         android:layout_marginTop="@dimen/dp_76"
-        android:text="@string/welcome_label"
+        android:text="@string/hi_label"
         android:textAppearance="?textAppearanceHeadline1"
         android:textColor="?colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
