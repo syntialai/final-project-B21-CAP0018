@@ -35,9 +35,6 @@ class HomeAdapter(private val hospitalItemCallback: HomeHospitalItemCallback) :
         root.setOnClickListener {
           hospitalItemCallback.onClickListener(data.id)
         }
-        buttonHospitalItemBookRoom.setOnClickListener {
-          hospitalItemCallback.onClickListener(data.id)
-        }
 
         imageViewHospitalItem.loadImage(
           hospitalItemCallback.getStorageRef(data.image),
@@ -51,7 +48,6 @@ class HomeAdapter(private val hospitalItemCallback: HomeHospitalItemCallback) :
         val roomAvailable = data.availableRoomCount.orZero()
         val isRoomAvailable = isRoomAvailable(roomAvailable)
 
-        buttonHospitalItemBookRoom.isEnabled = isRoomAvailable
         chipHospitalItemRoomAvailable.showOrRemove(isRoomAvailable)
         chipHospitalItemRoomNotAvailable.showOrRemove(isRoomAvailable.not())
 
