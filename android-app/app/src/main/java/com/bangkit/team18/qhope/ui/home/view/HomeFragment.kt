@@ -6,6 +6,7 @@ import android.location.Geocoder
 import android.location.Location
 import android.view.View
 import android.widget.SearchView
+import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.utils.location.LocationManager
 import com.bangkit.team18.core.utils.view.DataUtils.orFalse
 import com.bangkit.team18.core.utils.view.ViewUtils.hide
@@ -17,7 +18,6 @@ import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.home.adapter.HomeAdapter
 import com.bangkit.team18.qhope.ui.home.adapter.HomeHospitalItemCallback
 import com.bangkit.team18.qhope.ui.home.viewmodel.HomeViewModel
-import com.bangkit.team18.qhope.utils.Router
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.firebase.storage.FirebaseStorage
@@ -64,7 +64,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
     super.setupObserver()
 
     viewModel.nearbyHospitals.observe(viewLifecycleOwner, { nearbyHospitals ->
-      showSearchResults(false)
       homeAdapter.submitList(nearbyHospitals)
     })
     viewModel.searchHospitalResults.observe(viewLifecycleOwner, { searchResults ->
@@ -94,7 +93,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   }
 
   override fun onClickListener(id: String) {
-    Router.goToHospitalDetails(mContext, id)
+    findNavController().navigate(
+      HomeFragmentDirections.actionHomeFragmentToHospitalDetailFragment(
+        id
+      )
+    )
   }
 
   override fun getStorageRef(imagePath: String): StorageReference {
@@ -120,8 +123,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
 
   private fun setLocation(location: Location) {
     viewModel.fetchNearbyHospitals(location.latitude, location.longitude)
-    val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(location.latitude,
-        location.longitude, 1)
+    val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(
+      location.latitude,
+      location.longitude, 1
+    )
     binding.textViewYourLocation.text = addresses[0].getAddressLine(0)
     showLocationLoadingState(false)
   }
@@ -152,10 +157,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
         override fun onQueryTextChange(newText: String?): Boolean {
           newText?.let {
             launchJob {
-              viewModel.searchHospital(it)
+              if (it.isEmpty()) {
+                showSearchResults(false)
+              } else {
+                viewModel.searchHospital(it)
+              }
             }
-          } ?: run {
-            showSearchResults(false)
           }
           return false
         }
