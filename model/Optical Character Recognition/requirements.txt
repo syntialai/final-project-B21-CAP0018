@@ -1,0 +1,10 @@
+virtualenv
+pytesseract    
+numpy
+pandas
+requests
+google-cloud-firestore
+opencv-contrib-python
+pytesseract
+matplotlib
+Pillow==7.1.2
