@@ -36,9 +36,11 @@
     <string name="back_to_home_label">Back to Home</string>
     <string name="update_profile_banner">Update your profile to continue your booking process.</string>
     <string name="update_profile_banner_button">Go to Profile</string>
+    <string name="booking_confirmation_title">Book a Room</string>
 
     <!-- History -->
     <string name="history_label">History</string>
+    <string name="history_detail_label">History Details</string>
     <string name="history_empty_state_title">Your history is empty.</string>
     <string name="history_empty_state_description">Let\'s start booking a hospital room.</string>
     <plurals name="history_night_state">

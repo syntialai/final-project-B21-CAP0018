@@ -3,6 +3,7 @@ package com.bangkit.team18.qhope.ui.booking.view
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bangkit.team18.core.domain.model.hospital.HospitalDetail
 import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
@@ -32,6 +33,8 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
 
   private val storage: FirebaseStorage by inject()
 
+  private val args: HospitalDetailFragmentArgs by navArgs()
+
   private var googleMap: GoogleMap? = null
 
   override fun setupViews() {
@@ -45,7 +48,7 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
   override fun setupObserver() {
     super.setupObserver()
 
-    viewModel.initializeId(arguments?.getString(RoomBookingActivity.ID).orEmpty())
+    viewModel.initializeId(args.id)
     viewModel.fetchHospitalDetails()
 
     viewModel.hospital.observe(viewLifecycleOwner, {
@@ -79,7 +82,7 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
   override fun onClick(view: View?) {
     with(binding) {
       when (view) {
-        buttonHospitalDetailBack -> activity?.finish()
+        buttonHospitalDetailBack -> findNavController().navigateUp()
         buttonHospitalDetailBook -> processBook()
         else -> Unit
       }
