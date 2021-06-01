@@ -3,6 +3,7 @@
     <!-- Additional color for text. -->
     <attr name="colorTextMedium" format="color" />
     <attr name="description" format="string" />
+    <attr name="colorSurfaceDarker" format="color" />
 
     <!-- Styleable -->
     <declare-styleable name="EmptyStateView">

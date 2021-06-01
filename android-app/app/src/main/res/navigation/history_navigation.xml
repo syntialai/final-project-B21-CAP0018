@@ -9,7 +9,7 @@
         android:id="@+id/historyFragment"
         android:name="com.bangkit.team18.qhope.ui.history.view.HistoryFragment"
         android:label="@string/history_label"
-        tools:layout="@layout/fragment_history" >
+        tools:layout="@layout/fragment_history">
         <action
             android:id="@+id/action_historyFragment_to_historyDetailFragment"
             app:destination="@id/historyDetailFragment" />
@@ -24,10 +24,11 @@
             android:name="id"
             app:argType="string" />
     </fragment>
+
     <fragment
         android:id="@+id/historyDetailFragment"
         android:name="com.bangkit.team18.qhope.ui.history.view.HistoryDetailFragment"
-        android:label="HistoryDetailFragment" >
+        android:label="@string/history_detail_label">
         <argument
             android:name="id"
             app:argType="string" />
@@ -35,4 +36,11 @@
             android:id="@+id/action_historyDetailFragment_to_hospitalDetailFragment"
             app:destination="@id/hospitalDetailFragment" />
     </fragment>
+
+    <action
+        android:id="@+id/action_global_historyFragment"
+        app:destination="@id/historyFragment"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/historyFragment"
+        app:popUpToInclusive="true" />
 </navigation>

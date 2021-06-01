@@ -2,6 +2,7 @@ package com.bangkit.team18.qhope.ui.booking.view
 
 import android.content.Intent
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.utils.view.DataUtils
@@ -11,7 +12,10 @@ import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentBookingConfirmationBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
+import com.bangkit.team18.qhope.ui.booking.callback.RouteToCallback
 import com.bangkit.team18.qhope.ui.booking.viewmodel.BookingConfirmationViewModel
+import com.bangkit.team18.qhope.ui.history.view.HistoryFragmentDirections
+import com.bangkit.team18.qhope.ui.home.view.HomeFragmentDirections
 import com.bangkit.team18.qhope.ui.widget.callback.OnBannerActionButtonClickListener
 import com.bangkit.team18.qhope.utils.Router
 import java.util.*
@@ -19,7 +23,7 @@ import java.util.*
 class BookingConfirmationFragment :
   BaseFragment<FragmentBookingConfirmationBinding, BookingConfirmationViewModel>(
     FragmentBookingConfirmationBinding::inflate, BookingConfirmationViewModel::class
-  ), OnBannerActionButtonClickListener {
+  ), OnBannerActionButtonClickListener, RouteToCallback {
 
   companion object {
     private const val OPEN_TIME_PICKER = "OPEN TIME PICKER"
@@ -90,7 +94,15 @@ class BookingConfirmationFragment :
   }
 
   override fun onBannerButtonClicked() {
-    Router.goToEditProfile(mContext)
+    // TODO: Go to id verification
+  }
+
+  override fun goToHome() {
+    findNavController().navigate(HomeFragmentDirections.actionGlobalHomeFragment())
+  }
+
+  override fun goToHistory() {
+    findNavController().navigate(HistoryFragmentDirections.actionGlobalHistoryFragment())
   }
 
   private fun enableProcessBooking(isVerified: Boolean, hasUploadedLetter: Boolean) {
@@ -101,7 +113,7 @@ class BookingConfirmationFragment :
   }
 
   private fun openSuccessBookBottomSheet() {
-    SuccessBookBottomSheetDialogFragment.newInstance().show(
+    SuccessBookBottomSheetDialogFragment.newInstance(this).show(
       parentFragmentManager,
       SuccessBookBottomSheetDialogFragment.OPEN_SUCCESS_BOOK_BOTTOM_SHEET
     )
