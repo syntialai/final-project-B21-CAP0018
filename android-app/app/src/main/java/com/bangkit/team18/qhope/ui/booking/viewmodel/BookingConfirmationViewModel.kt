@@ -101,7 +101,7 @@ class BookingConfirmationViewModel(
 
   fun uploadReferralLetter(fileUri: Uri) {
     getUserId()?.let { id ->
-      val fileName = Timestamp.now().toString()
+      val fileName = Timestamp.now().seconds.toString()
       launchViewModelScope({
         roomBookingUseCase.uploadReferralLetter(id, fileUri, fileName).runFlow({
           _bookingDetail.value?.referralLetterUri = it.toString()
