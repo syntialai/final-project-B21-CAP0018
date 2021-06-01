@@ -13,7 +13,7 @@
         android:layout_width="@dimen/dp_0"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/dp_24"
-        android:layout_marginTop="@dimen/dp_56"
+        android:layout_marginTop="@dimen/dp_76"
         android:text="@string/welcome_label"
         android:textAppearance="?textAppearanceHeadline1"
         android:textColor="?colorPrimary"
@@ -45,16 +45,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/registration_profile_picture"
         android:layout_width="124dp"
         android:layout_height="124dp"
         android:layout_marginTop="@dimen/dp_32"
-        android:elevation="@dimen/dp_2"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_person"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/registration_description_label" />
+        app:layout_constraintTop_toBottomOf="@id/registration_description_label"
+        app:shapeAppearance="@style/ShapeAppearance.QHope.LargeComponent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/registration_edit_profile_picture"
@@ -63,7 +64,9 @@
         android:backgroundTint="?attr/colorSurface"
         app:borderWidth="@dimen/dp_0"
         app:fabSize="mini"
+        app:layout_constraintTop_toBottomOf="@id/registration_profile_picture"
         app:layout_constraintBottom_toBottomOf="@id/registration_profile_picture"
+        app:layout_constraintStart_toEndOf="@id/registration_profile_picture"
         app:layout_constraintEnd_toEndOf="@id/registration_profile_picture"
         app:srcCompat="@drawable/ic_edit_outline"
         tools:ignore="ContentDescription" />
@@ -84,6 +87,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/registration_name"
             android:layout_width="match_parent"
+            android:maxLines="1"
+            android:inputType="text"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 

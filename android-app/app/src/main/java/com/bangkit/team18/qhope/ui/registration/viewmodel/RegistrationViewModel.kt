@@ -5,17 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.model.user.VerificationStatus
-import com.bangkit.team18.core.domain.repository.UserRepository
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
+import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import com.google.firebase.Timestamp
-import kotlinx.coroutines.Dispatchers
 import java.io.File
 
 class RegistrationViewModel(
   authUseCase: AuthUseCase,
-  private val userRepository: UserRepository
+  private val userUseCase: UserUseCase
 ) : BaseViewModelWithAuth(authUseCase) {
   private var _profilePicture = MutableLiveData<File>()
   val profilePicture: LiveData<File> get() = _profilePicture
@@ -25,7 +24,7 @@ class RegistrationViewModel(
   val birthDate: LiveData<Long> get() = _birthDate
 
   init {
-    authUseCase.addAuthStateListener(this)
+    initAuthStateListener()
   }
 
   fun setProfilePicture(filePath: String) {
@@ -33,32 +32,42 @@ class RegistrationViewModel(
   }
 
   fun submitData(name: String) {
-    if (profilePicture.value.isNotNull()) {
-      val imageUri = Uri.fromFile(_profilePicture.value)
-      user.value?.let {
-        launchViewModelScope({
-          userRepository.uploadUserImage(it.uid, imageUri).runFlow({ uri ->
+    user.value?.let {
+      launchViewModelScope({
+        if (profilePicture.value.isNotNull()) {
+          val imageUri = Uri.fromFile(_profilePicture.value)
+          userUseCase.uploadUserImage(it.uid, imageUri).runFlow({ uri ->
             val user = User(
               it.uid,
               name,
               it.phoneNumber.toString(),
               uri.toString(),
-              Timestamp(birthDate.value as Long, 0),
+              Timestamp(birthDate.value as Long / 1000, 0),
               VerificationStatus.NOT_UPLOAD
             )
             submitUser(user)
           }, {})
-        }, Dispatchers.IO)
-      }
+        } else {
+          val user = User(
+            it.uid,
+            name,
+            it.phoneNumber.toString(),
+            "",
+            Timestamp(birthDate.value as Long / 1000, 0),
+            VerificationStatus.NOT_UPLOAD
+          )
+          submitUser(user)
+        }
+      })
     }
   }
 
   private fun submitUser(user: User) {
     launchViewModelScope({
-      userRepository.addUser(user.id, user).runFlow({
+      userUseCase.addUser(user.id, user).runFlow({
         _isSubmitted.postValue(it)
       }, {})
-    }, Dispatchers.IO)
+    })
   }
 
   fun setBirthDate(birthDate: Long) {
