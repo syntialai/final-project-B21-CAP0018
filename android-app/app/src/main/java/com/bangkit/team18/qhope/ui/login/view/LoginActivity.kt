@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import androidx.core.widget.doAfterTextChanged
-import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityLoginBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseActivityViewModel

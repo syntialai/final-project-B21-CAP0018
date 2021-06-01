@@ -29,7 +29,7 @@
     <fragment
         android:id="@+id/bookingConfirmationFragment"
         android:name="com.bangkit.team18.qhope.ui.booking.view.BookingConfirmationFragment"
-        android:label="fragment_booking_confirmation"
+        android:label="@string/booking_confirmation_title"
         tools:layout="@layout/fragment_booking_confirmation" >
         <argument
             android:name="bookedHospital"

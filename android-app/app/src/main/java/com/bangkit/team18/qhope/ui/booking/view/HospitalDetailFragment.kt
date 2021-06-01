@@ -82,7 +82,7 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
   override fun onClick(view: View?) {
     with(binding) {
       when (view) {
-        buttonHospitalDetailBack -> activity?.finish()
+        buttonHospitalDetailBack -> findNavController().navigateUp()
         buttonHospitalDetailBook -> processBook()
         else -> Unit
       }
