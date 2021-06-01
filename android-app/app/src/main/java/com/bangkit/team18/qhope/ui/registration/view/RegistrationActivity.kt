@@ -40,7 +40,7 @@ class RegistrationActivity :
       registrationLogOut.setOnClickListener(this@RegistrationActivity)
       registrationBirthDate.setOnClickListener(this@RegistrationActivity)
       registrationEditProfilePicture.setOnClickListener(this@RegistrationActivity)
-      registrationFinish.setOnClickListener(this@RegistrationActivity)
+      registrationNext.setOnClickListener(this@RegistrationActivity)
       registrationName.doOnTextChanged { _, _, _, _ ->
         registrationName.error = null
       }
@@ -65,7 +65,7 @@ class RegistrationActivity :
     })
     viewModel.isSubmitted.observe(this, {
       if (it) {
-        Router.goToMain(this)
+        Router.goToIdVerification(this)
       }
     })
   }
@@ -85,7 +85,7 @@ class RegistrationActivity :
         }
       }
       R.id.registration_edit_profile_picture -> openGallery()
-      R.id.registration_finish -> {
+      R.id.registration_next -> {
         if (validateInput()) {
           viewModel.submitData(binding.registrationName.text.toString())
         }

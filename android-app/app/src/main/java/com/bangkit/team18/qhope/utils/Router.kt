@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import com.bangkit.team18.qhope.ui.login.view.LoginActivity
 import com.bangkit.team18.qhope.ui.main.view.MainActivity
+import com.bangkit.team18.qhope.ui.registration.view.IdVerificationActivity
 import com.bangkit.team18.qhope.ui.registration.view.RegistrationActivity
 
 object Router {
@@ -14,22 +15,29 @@ object Router {
 
   fun goToLogin(context: Context) {
     val intent = Intent(context, LoginActivity::class.java).apply {
-      addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-      addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
     context.startActivity(intent)
   }
 
   fun goToMain(context: Context) {
     val intent = Intent(context, MainActivity::class.java).apply {
-      addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-      addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    }
+    context.startActivity(intent)
+  }
+
+  fun goToIdVerification(context: Context) {
+    val intent = Intent(context, IdVerificationActivity::class.java).apply {
+      flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
     context.startActivity(intent)
   }
 
   fun goToRegistration(context: Context) {
-    val intent = Intent(context, RegistrationActivity::class.java)
+    val intent = Intent(context, RegistrationActivity::class.java).apply {
+      flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    }
     context.startActivity(intent)
   }
 
