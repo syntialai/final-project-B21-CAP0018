@@ -6,16 +6,16 @@ import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryDetailViewModel
 import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryViewModel
 import com.bangkit.team18.qhope.ui.home.viewmodel.HomeViewModel
 import com.bangkit.team18.qhope.ui.login.viewmodel.LoginViewModel
-import com.bangkit.team18.qhope.ui.main.viewmodel.MainViewModel
 import com.bangkit.team18.qhope.ui.profile.viewmodel.ProfileViewModel
 import com.bangkit.team18.qhope.ui.registration.viewmodel.IdVerificationViewModel
 import com.bangkit.team18.qhope.ui.registration.viewmodel.RegistrationViewModel
 import com.bangkit.team18.qhope.ui.registration.viewmodel.VerificationResultViewModel
+import com.bangkit.team18.qhope.ui.splash.viewmodel.SplashScreenViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-  viewModel { MainViewModel(get(), get()) }
+  viewModel { SplashScreenViewModel(get(), get()) }
   viewModel { HomeViewModel(get()) }
   viewModel { HospitalDetailViewModel(get()) }
   viewModel { BookingConfirmationViewModel(get(), get(), get()) }

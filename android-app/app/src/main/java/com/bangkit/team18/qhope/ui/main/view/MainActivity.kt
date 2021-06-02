@@ -6,19 +6,15 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.bangkit.team18.core.utils.view.DataUtils.isNull
 import com.bangkit.team18.core.utils.view.DataUtils.orFalse
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityMainBinding
-import com.bangkit.team18.qhope.ui.base.view.BaseActivityViewModel
-import com.bangkit.team18.qhope.ui.main.viewmodel.MainViewModel
-import com.bangkit.team18.qhope.utils.Router
+import com.bangkit.team18.qhope.ui.base.view.BaseActivity
 import com.bangkit.team18.qhope.utils.setupWithNavController
 
-class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
-  ActivityMainBinding::inflate,
-  MainViewModel::class
+class MainActivity : BaseActivity<ActivityMainBinding>(
+  ActivityMainBinding::inflate
 ) {
 
   companion object {
@@ -35,28 +31,10 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
       showBottomNav(destination.id)
     }
 
-  override fun showLoadingState(isLoading: Boolean) {}
-
   override fun setupViews(savedInstanceState: Bundle?) {
     if (savedInstanceState == null) {
       setupBottomNavigationBar()
     }
-    viewModel.user.observe(this, {
-      if (it.isNull()) {
-        Router.goToLogin(this)
-      } else {
-        viewModel.getUserDoc()
-      }
-    })
-    viewModel.userDoc.observe(this, {
-      if (it.isNull()) {
-        showErrorToast(
-          null,
-          R.string.fill_information_message
-        )
-        Router.goToRegistration(this)
-      }
-    })
   }
 
   override fun onClick(v: View?) {
@@ -110,7 +88,7 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
     else -> true
   }
 
-  private fun getShouldShowBottomNav(id: Int) = when(id) {
+  private fun getShouldShowBottomNav(id: Int) = when (id) {
     R.id.homeFragment -> true
     R.id.historyFragment -> true
     R.id.profileFragment -> true
@@ -134,7 +112,7 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
   }
 
   private fun showBottomNav(id: Int?, defaultValue: Boolean = false) {
-    binding.mainBottomNavBnv.showOrRemove(id?.let{
+    binding.mainBottomNavBnv.showOrRemove(id?.let {
       getShouldShowBottomNav(it)
     } ?: defaultValue)
   }

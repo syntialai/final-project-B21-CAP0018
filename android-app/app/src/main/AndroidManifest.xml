@@ -30,7 +30,7 @@
         android:theme="@style/Theme.QHope">
         <activity
             android:name=".ui.main.view.MainActivity"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan" />
 
         <activity android:name=".ui.splash.view.SplashScreenActivity">
             <intent-filter>
@@ -53,12 +53,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-        <activity
-            android:name=".ui.main.view.MainActivity"
-            android:windowSoftInputMode="adjustPan" />
-
-        <activity android:name=".ui.login.view.LoginActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
