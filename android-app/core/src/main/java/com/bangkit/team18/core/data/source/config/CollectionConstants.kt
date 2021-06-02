@@ -10,4 +10,6 @@ object CollectionConstants {
   const val USERS_COLLECTION = "users"
   const val IMAGES_USERS_STORAGE_PATH = "images/users"
   const val PROFILE_STORAGE_PATH = "profile"
+  const val KTP_STORAGE_PATH = "ktp"
+  const val SELFIE_STORAGE_PATH = "selfie"
 }

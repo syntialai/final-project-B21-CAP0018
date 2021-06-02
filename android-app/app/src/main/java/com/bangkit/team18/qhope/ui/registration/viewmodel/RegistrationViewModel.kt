@@ -28,7 +28,7 @@ class RegistrationViewModel(
   }
 
   fun setProfilePicture(filePath: String) {
-    _profilePicture.postValue(File(filePath))
+    _profilePicture.value = File(filePath)
   }
 
   fun submitData(name: String) {
@@ -65,12 +65,12 @@ class RegistrationViewModel(
   private fun submitUser(user: User) {
     launchViewModelScope({
       userUseCase.addUser(user.id, user).runFlow({
-        _isSubmitted.postValue(it)
+        _isSubmitted.value = it
       }, {})
     })
   }
 
   fun setBirthDate(birthDate: Long) {
-    _birthDate.postValue(birthDate)
+    _birthDate.value = birthDate
   }
 }

@@ -3,13 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/dp_16">
+    android:layout_height="match_parent">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/id_verification_skip"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/skip_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/id_verification_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_4"
+        android:paddingVertical="@dimen/dp_8"
+        android:text="@string/id_verification_label"
+        android:textAppearance="?attr/textAppearanceHeadline1"
+        android:textColor="?attr/colorOnSurface"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/id_verification_skip"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/id_verification_skip" />
+
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/id_verification_ktp_label"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="@dimen/dp_16"
         android:layout_marginEnd="@dimen/dp_4"
         android:gravity="center"
         android:paddingVertical="@dimen/dp_8"
@@ -20,13 +45,15 @@
         app:layout_constraintBottom_toTopOf="@id/id_verification_barrier"
         app:layout_constraintEnd_toStartOf="@id/id_verification_selfie_label"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/id_verification_selfie_label" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/id_verification_selfie_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_4"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
         android:gravity="center"
         android:paddingVertical="@dimen/dp_8"
         android:text="@string/selfie_ktp_label"
@@ -35,7 +62,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/id_verification_ktp_label"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/id_verification_title" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/id_verification_barrier"
@@ -48,6 +75,7 @@
         android:id="@+id/id_verification_ktp_picture"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="@dimen/dp_16"
         android:layout_marginTop="@dimen/dp_16"
         android:layout_marginEnd="@dimen/dp_4"
         android:contentDescription="@string/e_ktp_label"
@@ -99,6 +127,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/dp_4"
         android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
         android:contentDescription="@string/selfie_ktp_label"
         android:padding="@dimen/dp_2"
         android:scaleType="centerCrop"
@@ -145,8 +174,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dp_8"
+        android:layout_marginStart="@dimen/dp_24"
         android:layout_marginTop="@dimen/dp_48"
+        android:layout_marginEnd="@dimen/dp_16"
         android:drawablePadding="@dimen/dp_8"
         android:text="@string/verification_information"
         android:textAppearance="?attr/textAppearanceBody2"
@@ -157,6 +187,7 @@
         android:id="@+id/id_verification_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_16"
         android:enabled="false"
         android:text="@string/submit_label"
         app:layout_constraintBottom_toBottomOf="parent"

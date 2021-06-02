@@ -27,6 +27,8 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
       showBottomNav(destination.id)
     }
 
+  override fun showLoadingState(isLoading: Boolean) {}
+
   override fun setupViews(savedInstanceState: Bundle?) {
     if (savedInstanceState == null) {
       setupBottomNavigationBar()
@@ -34,6 +36,17 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
     viewModel.user.observe(this, {
       if (it.isNull()) {
         Router.goToLogin(this)
+      } else {
+        viewModel.getUserDoc()
+      }
+    })
+    viewModel.userDoc.observe(this, {
+      if (it.isNull()) {
+        showErrorToast(
+          null,
+          R.string.fill_information_message
+        )
+        Router.goToRegistration(this)
       }
     })
   }
@@ -89,12 +102,14 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
   }
 
   private fun showBottomNav(id: Int) {
-    binding.mainBottomNavBnv.showOrRemove(when(id) {
-      R.id.homeFragment -> true
-      R.id.historyFragment -> true
-      R.id.profileFragment -> true
-      else -> false
-    })
+    binding.mainBottomNavBnv.showOrRemove(
+      when (id) {
+        R.id.homeFragment -> true
+        R.id.historyFragment -> true
+        R.id.profileFragment -> true
+        else -> false
+      }
+    )
   }
 
   override fun onSupportNavigateUp(): Boolean {

@@ -1,56 +1,87 @@
 package com.bangkit.team18.qhope.ui.registration.viewmodel
 
-import android.graphics.Bitmap
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import com.bangkit.team18.qhope.ui.registration.view.IdVerificationActivity.DocumentType
+import java.io.File
 
 class IdVerificationViewModel(
   private val userUseCase: UserUseCase,
   authUseCase: AuthUseCase
 ) : BaseViewModelWithAuth(authUseCase) {
   private var documentType: DocumentType = DocumentType.KTP
-  private val _ktpPicture = MutableLiveData<Bitmap?>()
-  val ktpPicture: LiveData<Bitmap?> get() = _ktpPicture
-  private val _selfiePicture = MutableLiveData<Bitmap?>()
-  val selfiePicture: LiveData<Bitmap?> get() = _selfiePicture
+  private var ktpFile: File? = null
+  private var selfieFile: File? = null
+  private val _ktpPicture = MutableLiveData<File?>()
+  val ktpPicture: LiveData<File?> get() = _ktpPicture
+  private val _selfiePicture = MutableLiveData<File?>()
+  val selfiePicture: LiveData<File?> get() = _selfiePicture
   private val _isSubmitted = MutableLiveData<Boolean>()
   val isSubmitted: LiveData<Boolean> get() = _isSubmitted
-  private val _userDoc = MutableLiveData<User>()
-  val userDoc: LiveData<User> get() = _userDoc
 
   init {
     initAuthStateListener()
-    user.value?.let {
-      launchViewModelScope({
-        userUseCase.getUser(it.uid).runFlow({
-          _userDoc.value = it
-        })
-      })
-    }
   }
 
   fun setDocumentType(documentType: DocumentType) {
     this.documentType = documentType
   }
 
-  fun setDocument(bitmap: Bitmap) {
+  fun setTemporaryFile(file: File) {
     if (documentType == DocumentType.KTP) {
-      _ktpPicture.postValue(bitmap)
+      ktpFile = file
     } else {
-      _selfiePicture.postValue(bitmap)
+      selfieFile = file
+    }
+  }
+
+  fun setDocument() {
+    if (documentType == DocumentType.KTP) {
+      _ktpPicture.value = ktpFile
+    } else {
+      _selfiePicture.value = selfieFile
     }
   }
 
   fun clearDocument(documentType: DocumentType) {
     if (documentType == DocumentType.KTP) {
-      _ktpPicture.postValue(null)
+      _ktpPicture.value = null
     } else {
-      _selfiePicture.postValue(null)
+      _selfiePicture.value = null
     }
   }
+
+  fun getTemporaryDocumentFile(): File? {
+    return if (documentType == DocumentType.KTP) {
+      ktpFile
+    } else {
+      selfieFile
+    }
+  }
+
+  fun upload() {
+    val ktp = Uri.fromFile(ktpPicture.value)
+    val selfie = Uri.fromFile(selfiePicture.value)
+    getUserId()?.let { id ->
+      launchViewModelScope({
+        userUseCase.uploadUserKtp(id, ktp).runFlow({ ktpUri ->
+          launchViewModelScope({
+            userUseCase.uploadUserSelfie(id, selfie).runFlow({ selfieUri ->
+              launchViewModelScope({
+                userUseCase.updateUserVerification(id, ktpUri.toString(), selfieUri.toString())
+                  .runFlow({
+                    _isSubmitted.value = it
+                  })
+              })
+            })
+          })
+        })
+      })
+    }
+  }
+
 }

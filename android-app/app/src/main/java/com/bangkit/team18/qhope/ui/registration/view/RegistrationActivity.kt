@@ -52,7 +52,6 @@ class RegistrationActivity :
     viewModel.user.observe(this, {
       if (it.isNull()) {
         goToLogin(this)
-        finish()
       }
     })
     viewModel.profilePicture.observe(this, {
