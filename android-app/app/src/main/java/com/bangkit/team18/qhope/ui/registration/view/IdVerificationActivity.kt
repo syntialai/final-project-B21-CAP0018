@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.core.view.isVisible
+import com.bangkit.team18.core.domain.model.user.DocumentType
 import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.core.utils.view.DataUtils.isNull
 import com.bangkit.team18.core.utils.view.FileUtil
@@ -28,9 +29,6 @@ class IdVerificationActivity :
     ActivityIdVerificationBinding::inflate,
     IdVerificationViewModel::class
   ) {
-  enum class DocumentType {
-    KTP, SELFIE
-  }
 
   override fun setupViews(savedInstanceState: Bundle?) {
     supportActionBar?.hide()

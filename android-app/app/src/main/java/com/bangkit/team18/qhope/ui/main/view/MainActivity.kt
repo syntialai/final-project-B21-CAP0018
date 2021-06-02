@@ -94,6 +94,7 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
 
   private fun getShouldShowActionBar(id: Int) = when (id) {
     R.id.hospitalDetailFragment -> false
+    R.id.profileVerificationResultFragment -> false
     else -> true
   }
 
