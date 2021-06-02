@@ -16,4 +16,19 @@ class UserInteractor(private val userRepository: UserRepository) : UserUseCase {
 
   override suspend fun getUser(userId: String): Flow<ResponseWrapper<User?>> =
     userRepository.getUser(userId)
+
+  override suspend fun uploadUserKtp(userId: String, uri: Uri): Flow<ResponseWrapper<Uri>> =
+    userRepository.uploadUserKtp(userId, uri)
+
+  override suspend fun uploadUserSelfie(
+    userId: String,
+    uri: Uri
+  ): Flow<ResponseWrapper<Uri>> = userRepository.uploadUserSelfie(userId, uri)
+
+  override suspend fun updateUserVerification(
+    userId: String,
+    ktpUrl: String,
+    selfieUrl: String
+  ): Flow<ResponseWrapper<Boolean>> =
+    userRepository.updateUserVerification(userId, ktpUrl, selfieUrl)
 }

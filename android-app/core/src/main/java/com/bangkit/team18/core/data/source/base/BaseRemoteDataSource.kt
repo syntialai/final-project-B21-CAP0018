@@ -1,5 +1,6 @@
 package com.bangkit.team18.core.data.source.base
 
+import android.graphics.Bitmap
 import android.net.Uri
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.utils.view.DataUtils.isNull
@@ -17,10 +18,10 @@ import com.google.firebase.storage.ktx.storageMetadata
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
+import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -142,7 +143,7 @@ abstract class BaseRemoteDataSource {
     data: HashMap<String, Any?>
   ) {
     return suspendCoroutine { continuation ->
-      document(documentId).set(data).addOnSuccessListener {
+      document(documentId).set(data, SetOptions.merge()).addOnSuccessListener {
         continuation.resume(Unit)
       }.addOnFailureListener { exception ->
         continuation.resumeWithException(exception)
@@ -165,6 +166,41 @@ abstract class BaseRemoteDataSource {
       }
 
       awaitClose {}
+    }
+  }
+
+  protected suspend fun StorageReference.addFile(bitmap: Bitmap): Flow<Uri> {
+    val baos = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+    val data = baos.toByteArray()
+    return callbackFlow {
+      putBytes(data).continueWithTask { task ->
+        if (task.isSuccessful.not()) {
+          close(task.exception)
+        }
+        this@addFile.downloadUrl
+      }.addOnCompleteListener {
+        if (it.result.isNull()) close(it.exception)
+        offer(it.result)
+      }.addOnFailureListener {
+        close(it)
+      }
+
+      awaitClose {}
+    }
+  }
+
+  protected fun <T> Flow<T>.transformToResponse(): Flow<ResponseWrapper<T>> {
+    return transform { value ->
+      emit(ResponseWrapper.Success(value) as ResponseWrapper<T>)
+    }.onStart {
+      emit(ResponseWrapper.Loading())
+    }.catch { exception ->
+      if (exception is IOException) {
+        emit(ResponseWrapper.NetworkError())
+      } else {
+        emit(ResponseWrapper.Error(exception.message))
+      }
     }
   }
 

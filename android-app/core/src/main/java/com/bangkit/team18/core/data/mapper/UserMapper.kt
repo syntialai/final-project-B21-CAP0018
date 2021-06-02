@@ -12,6 +12,8 @@ object UserMapper {
   const val VERIFICATION_STATUS_FIELD = "verification_status"
   const val NO_KTP_FIELD = "no_ktp"
   const val GENDER_FIELD = "gender"
+  const val KTP_URL_FIELD = "ktp_url"
+  const val SELFIE_URL_FIELD = "selfie_url"
 
   fun UserResponse.mapToUser(): User {
     return User(

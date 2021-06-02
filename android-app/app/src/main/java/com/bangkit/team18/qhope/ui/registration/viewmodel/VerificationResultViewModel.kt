@@ -1,4 +1,4 @@
-package com.bangkit.team18.qhope.ui.splash.viewmodel
+package com.bangkit.team18.qhope.ui.registration.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +7,7 @@ import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 
-class SplashScreenViewModel(private val userUseCase: UserUseCase, authUseCase: AuthUseCase) :
+class VerificationResultViewModel(private val userUseCase: UserUseCase, authUseCase: AuthUseCase) :
   BaseViewModelWithAuth(authUseCase) {
   private val _userDoc = MutableLiveData<User>()
   val userDoc: LiveData<User> get() = _userDoc
@@ -19,8 +19,10 @@ class SplashScreenViewModel(private val userUseCase: UserUseCase, authUseCase: A
   fun getUserDoc() {
     launchViewModelScope({
       getUserId()?.let {
-        userUseCase.getUser(it).runFlow({ user ->
-          _userDoc.value = user
+        userUseCase.getUser(it).runFlow({
+          it?.let { user ->
+            _userDoc.value = user
+          }
         })
       }
     })

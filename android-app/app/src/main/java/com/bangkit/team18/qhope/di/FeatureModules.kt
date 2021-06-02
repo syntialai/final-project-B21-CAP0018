@@ -10,11 +10,13 @@ import com.bangkit.team18.qhope.ui.main.viewmodel.MainViewModel
 import com.bangkit.team18.qhope.ui.profile.viewmodel.ProfileViewModel
 import com.bangkit.team18.qhope.ui.registration.viewmodel.IdVerificationViewModel
 import com.bangkit.team18.qhope.ui.registration.viewmodel.RegistrationViewModel
+import com.bangkit.team18.qhope.ui.registration.viewmodel.VerificationResultViewModel
 import com.bangkit.team18.qhope.ui.splash.viewmodel.SplashScreenViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
+  viewModel { SplashScreenViewModel(get(), get()) }
   viewModel { MainViewModel(get()) }
   viewModel { HomeViewModel(get()) }
   viewModel { HospitalDetailViewModel(get()) }
@@ -25,5 +27,5 @@ val viewModelModule = module {
   viewModel { RegistrationViewModel(get(), get()) }
   viewModel { ProfileViewModel(get(), get()) }
   viewModel { IdVerificationViewModel(get(), get()) }
-  viewModel { SplashScreenViewModel(get()) }
+  viewModel { VerificationResultViewModel(get(), get()) }
 }

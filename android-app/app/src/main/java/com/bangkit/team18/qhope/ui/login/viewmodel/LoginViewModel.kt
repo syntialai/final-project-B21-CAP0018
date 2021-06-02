@@ -97,7 +97,7 @@ class LoginViewModel(private val authUseCase: AuthUseCase, private val userUseCa
   fun getUser(userId: String) {
     launchViewModelScope({
       userUseCase.getUser(userId).runFlow({
-        _userDoc.postValue(it)
+        _userDoc.value = it
       })
     })
   }

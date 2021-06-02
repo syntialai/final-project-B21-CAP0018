@@ -109,4 +109,13 @@
     <string name="close_action">Close</string>
     <string name="no_connection_message">Failed to connect. Please check your internet connection.</string>
     <string name="unknown_error_message">An error occurred when retrieving the data. Please try again later.</string>
+    <string name="skip_label">Skip</string>
+    <string name="got_it">Got It!</string>
+    <string name="verified_message">Verified!</string>
+    <string name="verified_message_description">You can start <b>book</b> now.</string>
+    <string name="uploaded_message">Uploaded!</string>
+    <string name="uploaded_message_description">Your document still on process. You can see the result in your profile later.</string>
+    <string name="rejected_message">Failed!</string>
+    <string name="rejected_message_description">Your document is not valid. Please re-submit the document later in your profile.</string>
+    <string name="fill_information_message">Please fill some information first.</string>
 </resources>

@@ -97,7 +97,7 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
     else -> true
   }
 
-  private fun getShouldShowBottomNav(id: Int) = when(id) {
+  private fun getShouldShowBottomNav(id: Int) = when (id) {
     R.id.homeFragment -> true
     R.id.historyFragment -> true
     R.id.profileFragment -> true
@@ -121,7 +121,7 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
   }
 
   private fun showBottomNav(id: Int?, defaultValue: Boolean = false) {
-    binding.mainBottomNavBnv.showOrRemove(id?.let{
+    binding.mainBottomNavBnv.showOrRemove(id?.let {
       getShouldShowBottomNav(it)
     } ?: defaultValue)
   }

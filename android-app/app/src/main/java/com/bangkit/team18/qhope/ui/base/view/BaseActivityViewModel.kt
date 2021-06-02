@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -50,6 +51,7 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
     intentLauncher =
       registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
+          onResultWithoutData(result)
           onIntentResult(result.data)
         }
       }
@@ -121,4 +123,5 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
   open fun onPermissionGranted() {}
   open fun onPermissionNotGranted() {}
   open fun onIntentResult(data: Intent?) {}
+  open fun onResultWithoutData(result: ActivityResult?) {}
 }
