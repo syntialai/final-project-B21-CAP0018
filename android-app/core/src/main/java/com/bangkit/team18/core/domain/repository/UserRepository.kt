@@ -16,4 +16,9 @@ interface UserRepository {
     ktpUrl: String,
     selfieUrl: String
   ): Flow<ResponseWrapper<Boolean>>
+
+  suspend fun updatePersonalData(
+    userId: String,
+    user: User
+  ): Flow<ResponseWrapper<Boolean>>
 }

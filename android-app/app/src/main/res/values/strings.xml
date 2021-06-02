@@ -98,17 +98,6 @@
     <string name="selfie_ktp_label">Selfie with e-KTP</string>
     <string name="submit_label">Submit</string>
     <string name="verification_information">Your data are <b>secure</b> and only be used for <b>verification purposes</b>.</string>
-
-    <!-- Profile -->
-    <string name="id_verification_label">ID Verification</string>
-    <string name="personal_data">Personal Data</string>
-
-    <!-- Other -->
-    <string name="empty_state_label">Empty state</string>
-    <string name="referral_letter_content_description">Pdf</string>
-    <string name="close_action">Close</string>
-    <string name="no_connection_message">Failed to connect. Please check your internet connection.</string>
-    <string name="unknown_error_message">An error occurred when retrieving the data. Please try again later.</string>
     <string name="skip_label">Skip</string>
     <string name="got_it">Got It!</string>
     <string name="verified_message">Verified!</string>
@@ -117,7 +106,27 @@
     <string name="uploaded_message_description">Your document still on process. You can see the result in your profile later.</string>
     <string name="rejected_message">Failed!</string>
     <string name="rejected_message_description">Your document is not valid. Please re-submit the document later in your profile.</string>
+
+    <!-- Profile -->
+    <string name="id_verification_label">ID Verification</string>
+    <string name="personal_data_label">Personal Data</string>
+
+    <!-- Splash -->
     <string name="fill_information_message">Please fill some information first.</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Other -->
+    <string name="empty_state_label">Empty state</string>
+    <string name="referral_letter_content_description">Pdf</string>
+    <string name="close_action">Close</string>
+    <string name="no_connection_message">Failed to connect. Please check your internet connection.</string>
+    <string name="unknown_error_message">An error occurred when retrieving the data. Please try again later.</string>
+    <string name="ktp_number_hint">KTP Number</string>
+    <string name="place_of_birth_hint">Place of Birth</string>
+    <string name="address_hint">Address</string>
+    <string name="male_label">Male</string>
+    <string name="female_label">Female</string>
+    <string name="edit_label">Edit</string>
+    <string name="gender_field_error">You need to select one.</string>
+    <string name="verified_label">Verified</string>
+    <string name="not_verified_label">Not Verified</string>
 </resources>

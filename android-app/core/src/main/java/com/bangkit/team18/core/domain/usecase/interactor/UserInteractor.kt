@@ -31,4 +31,9 @@ class UserInteractor(private val userRepository: UserRepository) : UserUseCase {
     selfieUrl: String
   ): Flow<ResponseWrapper<Boolean>> =
     userRepository.updateUserVerification(userId, ktpUrl, selfieUrl)
+
+  override suspend fun updatePersonalData(
+    userId: String,
+    user: User
+  ): Flow<ResponseWrapper<Boolean>> = userRepository.updatePersonalData(userId, user)
 }

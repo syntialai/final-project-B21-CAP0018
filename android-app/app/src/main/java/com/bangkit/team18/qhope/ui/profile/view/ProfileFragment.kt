@@ -1,9 +1,7 @@
 package com.bangkit.team18.qhope.ui.profile.view
 
-import android.os.Bundle
-import android.view.LayoutInflater
+import android.content.res.ColorStateList
 import android.view.View
-import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.model.user.VerificationStatus
@@ -30,14 +28,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(
     })
   }
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
-    return super.onCreateView(inflater, container, savedInstanceState)
-  }
-
   private fun setupListener() {
     binding.apply {
       profileLogOut.setOnClickListener(this@ProfileFragment)
@@ -50,6 +40,19 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(
     binding.apply {
       profileName.text = user.name
       profilePictureImage.loadImage(mContext, user.imageUrl, R.drawable.ic_person)
+      if (user.verificationStatus == VerificationStatus.VERIFIED) {
+        profileVerificationStatus.apply {
+          chipBackgroundColor =
+            ColorStateList.valueOf(mContext.getColor(R.color.green_700))
+          text = getString(R.string.verified_label)
+        }
+      } else {
+        profileVerificationStatus.apply {
+          chipBackgroundColor =
+            ColorStateList.valueOf(mContext.getColor(R.color.grey_300))
+          text = getString(R.string.not_verified_label)
+        }
+      }
     }
   }
 
@@ -64,6 +67,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(
           }
         }
       }
+      R.id.profile_personal_data -> findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToPersonalDataFragment())
       R.id.profile_log_out -> viewModel.logOut()
     }
   }

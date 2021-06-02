@@ -23,6 +23,11 @@ object DataUtils {
 
   fun Boolean?.orFalse() = this ?: false
 
+  fun String?.orHyphen(): String {
+    return if (this.isNullOrEmpty()) "-"
+    else this
+  }
+
   fun LiveData<Boolean>.orFalse() = this.value ?: false
 
   fun <T : Enum<T>> Enum<T>?.getText() = this?.name?.replaceFirstChar {

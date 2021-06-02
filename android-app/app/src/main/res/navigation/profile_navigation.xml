@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_profileFragment_to_profileVerificationResultFragment2"
             app:destination="@id/profileVerificationResultFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_personalDataFragment"
+            app:destination="@id/personalDataFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileIdVerificationFragment"
@@ -38,4 +41,9 @@
             app:popUpTo="@id/profileVerificationResultFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/personalDataFragment"
+        android:name="com.bangkit.team18.qhope.ui.profile.view.PersonalDataFragment"
+        android:label="@string/personal_data_label"
+        tools:layout="@layout/fragment_personal_data" />
 </navigation>
