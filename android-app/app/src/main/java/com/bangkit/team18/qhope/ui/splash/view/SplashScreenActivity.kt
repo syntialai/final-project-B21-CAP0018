@@ -18,7 +18,7 @@ class SplashScreenActivity :
   ) {
 
   override fun setupViews(savedInstanceState: Bundle?) {
-    // No Implementation Needed
+    supportActionBar?.hide()
   }
 
   override fun setupObserver() {
