@@ -2,10 +2,12 @@ package com.bangkit.team18.qhope.ui.main.view
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.bangkit.team18.core.utils.view.DataUtils.isNull
+import com.bangkit.team18.core.utils.view.DataUtils.orFalse
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityMainBinding
@@ -18,6 +20,12 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
   ActivityMainBinding::inflate,
   MainViewModel::class
 ) {
+
+  companion object {
+    private const val SHOW_ACTION_BAR = "SHOW_ACTION_BAR"
+    private const val SHOW_BOTTOM_NAV = "SHOW_BOTTOM_NAV"
+  }
+
   private var currentNavController: LiveData<NavController>? = null
 
   private val destinationChangedListener =
@@ -54,9 +62,17 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
   override fun onClick(v: View?) {
   }
 
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    outState.putBoolean(SHOW_ACTION_BAR, supportActionBar?.isShowing.orFalse())
+    outState.putBoolean(SHOW_BOTTOM_NAV, binding.mainBottomNavBnv.isVisible)
+  }
+
   override fun onRestoreInstanceState(savedInstanceState: Bundle) {
     super.onRestoreInstanceState(savedInstanceState)
     setupBottomNavigationBar()
+    showActionBar(null, savedInstanceState.getBoolean(SHOW_ACTION_BAR, true))
+    showBottomNav(null, savedInstanceState.getBoolean(SHOW_BOTTOM_NAV, false))
   }
 
   private fun setupBottomNavigationBar() {
@@ -89,27 +105,38 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
     supportActionBar?.elevation = elevation
   }
 
-  private fun showActionBar(id: Int) {
-    val show = when (id) {
-      R.id.hospitalDetailFragment -> false
-      else -> true
-    }
-    if (show) {
-      supportActionBar?.show()
-    } else {
-      supportActionBar?.hide()
+  private fun getShouldShowActionBar(id: Int) = when (id) {
+    R.id.hospitalDetailFragment -> false
+    else -> true
+  }
+
+  private fun getShouldShowBottomNav(id: Int) = when(id) {
+    R.id.homeFragment -> true
+    R.id.historyFragment -> true
+    R.id.profileFragment -> true
+    else -> false
+  }
+
+  private fun showActionBar(id: Int?, defaultValue: Boolean = false) {
+    id?.let {
+      if (getShouldShowActionBar(it)) {
+        supportActionBar?.show()
+      } else {
+        supportActionBar?.hide()
+      }
+    } ?: run {
+      if (defaultValue) {
+        supportActionBar?.show()
+      } else {
+        supportActionBar?.hide()
+      }
     }
   }
 
-  private fun showBottomNav(id: Int) {
-    binding.mainBottomNavBnv.showOrRemove(
-      when (id) {
-        R.id.homeFragment -> true
-        R.id.historyFragment -> true
-        R.id.profileFragment -> true
-        else -> false
-      }
-    )
+  private fun showBottomNav(id: Int?, defaultValue: Boolean = false) {
+    binding.mainBottomNavBnv.showOrRemove(id?.let{
+      getShouldShowBottomNav(it)
+    } ?: defaultValue)
   }
 
   override fun onSupportNavigateUp(): Boolean {

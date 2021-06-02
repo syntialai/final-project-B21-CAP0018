@@ -37,4 +37,6 @@
     <!-- Grey -->
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_300">#E0E0E0</color>
+
+    <color name="ic_launcher_background">@color/blue_100</color>
 </resources>

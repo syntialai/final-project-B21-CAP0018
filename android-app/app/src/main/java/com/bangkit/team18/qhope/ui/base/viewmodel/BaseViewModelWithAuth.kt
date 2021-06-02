@@ -9,7 +9,7 @@ import com.google.firebase.auth.FirebaseUser
 abstract class BaseViewModelWithAuth(private val authUseCase: AuthUseCase) : BaseViewModel(),
   FirebaseAuth.AuthStateListener {
 
-  protected var _user = MutableLiveData<FirebaseUser?>()
+  private var _user = MutableLiveData<FirebaseUser?>()
   val user: LiveData<FirebaseUser?>
     get() = _user
 

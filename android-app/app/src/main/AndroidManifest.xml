@@ -31,6 +31,8 @@
         <activity
             android:name=".ui.main.view.MainActivity"
             android:windowSoftInputMode="adjustPan">
+
+        <activity android:name=".ui.splash.view.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,6 +53,12 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <activity
+            android:name=".ui.main.view.MainActivity"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity android:name=".ui.login.view.LoginActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
