@@ -1,71 +1,71 @@
-pip3 install absl-py==0.12.0
-pip3 install astunparse==1.6.3
-pip3 install CacheControl==0.12.6
-pip3 install cached-property==1.5.2
-pip3 install cachetools==4.2.2
-pip3 install certifi==2020.12.5
-pip3 install cffi==1.14.5
-pip3 install chardet==4.0.0
-pip3 install click==8.0.1
-pip3 install colorama==0.4.4
-pip3 install firebase-admin==5.0.0
-pip3 install Flask==2.0.1
-pip3 install flatbuffers==1.12
-pip3 install gast==0.4.0
-pip3 install google-api-core==1.28.0
-pip3 install google-api-python-client==2.6.0
-pip3 install google-auth==1.30.1
-pip3 install google-auth-httplib2==0.1.0
-pip3 install google-auth-oauthlib==0.4.4
-pip3 install google-cloud-core==1.6.0
-pip3 install google-cloud-firestore==2.1.1
-pip3 install google-cloud-storage==1.38.0
-pip3 install google-crc32c==1.1.2
-pip3 install google-pasta==0.2.0
-pip3 install google-resumable-media==1.3.0
-pip3 install googleapis-common-protos==1.53.0
-pip3 install grpcio==1.34.1
-pip3 install h5py==3.1.0
-pip3 install httplib2==0.19.1
-pip3 install idna==2.10
-pip3 install importlib-metadata==4.3.1
-pip3 install itsdangerous==2.0.1
-pip3 install Jinja2==3.0.1
-pip3 install keras-nightly==2.5.0.dev2021032900
-pip3 install Keras-Preprocessing==1.1.2
-pip3 install Markdown==3.3.4
-pip3 install MarkupSafe==2.0.1
-pip3 install msgpack==1.0.2
-pip3 install numpy==1.19.5
-pip3 install oauthlib==3.1.0
-pip3 install opencv-python==4.5.2.52
-pip3 install opt-einsum==3.3.0
-pip3 install packaging==20.9
-pip3 install pandas==1.2.4
-pip3 install Pillow==7.1.2
-pip3 install proto-plus==1.18.1
-pip3 install protobuf==3.17.1
-pip3 install pyasn1==0.4.8
-pip3 install pyasn1-modules==0.2.8
-pip3 install pycparser==2.20
-pip3 install pyparsing==2.4.7
-pip3 install pytesseract==0.3.7
-pip3 install python-dateutil==2.8.1
-pip3 install pytz==2021.1
-pip3 install requests==2.25.1
-pip3 install requests-oauthlib==1.3.0
-pip3 install rsa==4.7.2
-pip3 install six==1.15.0
-pip3 install tensorboard==2.5.0
-pip3 install tensorboard-data-server==0.6.1
-pip3 install tensorboard-plugin-wit==1.8.0
-pip3 install tensorflow==2.5.0
-pip3 install tensorflow-estimator==2.5.0
-pip3 install termcolor==1.1.0
-pip3 install typing-extensions==3.7.4.3
-pip3 install uritemplate==3.0.1
-pip3 install urllib3==1.26.5
-pip3 install Werkzeug==2.0.1
-pip3 install wincertstore==0.2
-pip3 install wrapt==1.12.1
-pip3 install zipp==3.4.1
+absl-py==0.12.0
+astunparse==1.6.3
+CacheControl==0.12.6
+cached-property==1.5.2
+cachetools==4.2.2
+certifi==2020.12.5
+cffi==1.14.5
+chardet==4.0.0
+click==8.0.1
+colorama==0.4.4
+firebase-admin==5.0.0
+Flask==2.0.1
+flatbuffers==1.12
+gast==0.4.0
+google-api-core==1.28.0
+google-api-python-client==2.6.0
+google-auth==1.30.1
+google-auth-httplib2==0.1.0
+google-auth-oauthlib==0.4.4
+google-cloud-core==1.6.0
+google-cloud-firestore==2.1.1
+google-cloud-storage==1.38.0
+google-crc32c==1.1.2
+google-pasta==0.2.0
+google-resumable-media==1.3.0
+googleapis-common-protos==1.53.0
+grpcio==1.34.1
+h5py==3.1.0
+httplib2==0.19.1
+idna==2.10
+importlib-metadata==4.3.1
+itsdangerous==2.0.1
+Jinja2==3.0.1
+keras-nightly==2.5.0.dev2021032900
+Keras-Preprocessing==1.1.2
+Markdown==3.3.4
+MarkupSafe==2.0.1
+msgpack==1.0.2
+numpy==1.19.5
+oauthlib==3.1.0
+opencv-python==4.5.2.52
+opt-einsum==3.3.0
+packaging==20.9
+pandas==1.2.4
+Pillow==7.1.2
+proto-plus==1.18.1
+protobuf==3.17.1
+pyasn1==0.4.8
+pyasn1-modules==0.2.8
+pycparser==2.20
+pyparsing==2.4.7
+pytesseract==0.3.7
+python-dateutil==2.8.1
+pytz==2021.1
+requests==2.25.1
+requests-oauthlib==1.3.0
+rsa==4.7.2
+six==1.15.0
+tensorboard==2.5.0
+tensorboard-data-server==0.6.1
+tensorboard-plugin-wit==1.8.0
+tensorflow==2.5.0
+tensorflow-estimator==2.5.0
+termcolor==1.1.0
+typing-extensions==3.7.4.3
+uritemplate==3.0.1
+urllib3==1.26.5
+Werkzeug==2.0.1
+wincertstore==0.2
+wrapt==1.12.1
+zipp==3.4.1
