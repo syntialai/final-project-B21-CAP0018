@@ -7,6 +7,8 @@ import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryViewModel
 import com.bangkit.team18.qhope.ui.home.viewmodel.HomeViewModel
 import com.bangkit.team18.qhope.ui.login.viewmodel.LoginViewModel
 import com.bangkit.team18.qhope.ui.main.viewmodel.MainViewModel
+import com.bangkit.team18.qhope.ui.profile.viewmodel.ProfileIdVerificationViewModel
+import com.bangkit.team18.qhope.ui.profile.viewmodel.ProfileVerificationResultViewModel
 import com.bangkit.team18.qhope.ui.profile.viewmodel.ProfileViewModel
 import com.bangkit.team18.qhope.ui.registration.viewmodel.IdVerificationViewModel
 import com.bangkit.team18.qhope.ui.registration.viewmodel.RegistrationViewModel
@@ -28,4 +30,6 @@ val viewModelModule = module {
   viewModel { ProfileViewModel(get(), get()) }
   viewModel { IdVerificationViewModel(get(), get()) }
   viewModel { VerificationResultViewModel(get(), get()) }
+  viewModel { ProfileVerificationResultViewModel(get(), get()) }
+  viewModel { ProfileIdVerificationViewModel(get(), get()) }
 }

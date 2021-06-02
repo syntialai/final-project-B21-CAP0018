@@ -1,19 +1,22 @@
-package com.bangkit.team18.qhope.ui.registration.viewmodel
+package com.bangkit.team18.qhope.ui.profile.viewmodel
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bangkit.team18.core.domain.model.user.DocumentType
+import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
-import com.bangkit.team18.core.domain.model.user.DocumentType
 import java.io.File
 
-class IdVerificationViewModel(
+class ProfileIdVerificationViewModel(
   private val userUseCase: UserUseCase,
   authUseCase: AuthUseCase
-) : BaseViewModelWithAuth(authUseCase) {
-  private var documentType: DocumentType = DocumentType.KTP
+) :
+  BaseViewModelWithAuth(authUseCase) {
+  private var documentType: DocumentType =
+    DocumentType.KTP
   private var ktpFile: File? = null
   private var selfieFile: File? = null
   private val _ktpPicture = MutableLiveData<File?>()
@@ -22,9 +25,23 @@ class IdVerificationViewModel(
   val selfiePicture: LiveData<File?> get() = _selfiePicture
   private val _isSubmitted = MutableLiveData<Boolean>()
   val isSubmitted: LiveData<Boolean> get() = _isSubmitted
+  private val _userDoc = MutableLiveData<User>()
+  val userDoc: LiveData<User> get() = _userDoc
 
   init {
     initAuthStateListener()
+  }
+
+  fun getUserDoc() {
+    launchViewModelScope({
+      getUserId()?.let {
+        userUseCase.getUser(it).runFlow({
+          it?.let { user ->
+            _userDoc.value = user
+          }
+        })
+      }
+    })
   }
 
   fun setDocumentType(documentType: DocumentType) {

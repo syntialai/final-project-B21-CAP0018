@@ -9,5 +9,33 @@
         android:id="@+id/profileFragment"
         android:name="com.bangkit.team18.qhope.ui.profile.view.ProfileFragment"
         android:label="@string/profile_label"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_profileIdVerificationFragment"
+            app:destination="@id/profileIdVerificationFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_profileVerificationResultFragment2"
+            app:destination="@id/profileVerificationResultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileIdVerificationFragment"
+        android:name="com.bangkit.team18.qhope.ui.profile.view.ProfileIdVerificationFragment"
+        android:label="@string/id_verification_label"
+        tools:layout="@layout/fragment_profile_id_verification">
+        <action
+            android:id="@+id/action_profileIdVerificationFragment_to_profileVerificationResultFragment"
+            app:destination="@id/profileVerificationResultFragment"
+            app:popUpTo="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileVerificationResultFragment"
+        android:name="com.bangkit.team18.qhope.ui.profile.view.ProfileVerificationResultFragment"
+        android:label=""
+        tools:layout="@layout/fragment_profile_verification_result">
+        <action
+            android:id="@+id/action_profileVerificationResultFragment_to_profileIdVerificationFragment"
+            app:destination="@id/profileIdVerificationFragment"
+            app:popUpTo="@id/profileVerificationResultFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

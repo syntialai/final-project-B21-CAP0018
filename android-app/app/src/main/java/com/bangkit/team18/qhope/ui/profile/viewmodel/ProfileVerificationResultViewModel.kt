@@ -7,8 +7,10 @@ import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 
-class ProfileViewModel(authUseCase: AuthUseCase, private val userUseCase: UserUseCase) :
-  BaseViewModelWithAuth(authUseCase) {
+class ProfileVerificationResultViewModel(
+  private val userUseCase: UserUseCase,
+  authUseCase: AuthUseCase
+) : BaseViewModelWithAuth(authUseCase) {
   private val _userDoc = MutableLiveData<User>()
   val userDoc: LiveData<User> get() = _userDoc
 
@@ -17,12 +19,14 @@ class ProfileViewModel(authUseCase: AuthUseCase, private val userUseCase: UserUs
   }
 
   fun getUserDoc() {
-    getUserId()?.let {
-      launchViewModelScope({
+    launchViewModelScope({
+      getUserId()?.let {
         userUseCase.getUser(it).runFlow({
-          _userDoc.value = it
+          it?.let { user ->
+            _userDoc.value = user
+          }
         })
-      })
-    }
+      }
+    })
   }
 }
