@@ -47,17 +47,16 @@
         app:layout_constraintTop_toTopOf="@id/profile_picture_image"
         tools:text="Steven" />
 
-    <TextView
+    <com.google.android.material.chip.Chip
         android:id="@+id/profile_verification_status"
-        android:layout_width="@dimen/dp_0"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_16"
         android:layout_marginTop="@dimen/dp_8"
-        android:textAppearance="?attr/textAppearanceBody1"
-        android:textColor="?attr/colorOnSurface"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:chipMinTouchTargetSize="@dimen/dp_0"
         app:layout_constraintStart_toEndOf="@id/profile_picture_image"
         app:layout_constraintTop_toBottomOf="@id/profile_name"
+        app:rippleColor="@color/transparent"
         tools:text="Verified" />
 
     <androidx.constraintlayout.widget.Barrier
@@ -97,7 +96,7 @@
             android:focusable="true"
             android:paddingHorizontal="@dimen/dp_16"
             android:paddingVertical="@dimen/dp_12"
-            android:text="@string/personal_data"
+            android:text="@string/personal_data_label"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?attr/colorOnSurface"
             app:drawableEndCompat="@drawable/ic_navigate_next"

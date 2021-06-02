@@ -14,6 +14,8 @@ object UserMapper {
   const val GENDER_FIELD = "gender"
   const val KTP_URL_FIELD = "ktp_url"
   const val SELFIE_URL_FIELD = "selfie_url"
+  const val ADDRESS_FIELD = "address"
+  const val PLACE_OF_BIRTH_FIELD = "place_of_birth"
 
   fun UserResponse.mapToUser(): User {
     return User(
@@ -22,7 +24,11 @@ object UserMapper {
       phone_number,
       image_url,
       birth_date,
-      verification_status
+      verification_status,
+      no_ktp,
+      gender,
+      place_of_birth,
+      address
     )
   }
 
@@ -33,7 +39,11 @@ object UserMapper {
       phoneNumber,
       imageUrl,
       birthDate,
-      verificationStatus
+      verificationStatus,
+      ktpNumber,
+      gender,
+      placeOfBirth,
+      address
     )
   }
 }

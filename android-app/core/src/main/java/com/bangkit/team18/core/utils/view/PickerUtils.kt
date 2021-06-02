@@ -1,6 +1,7 @@
 package com.bangkit.team18.core.utils.view
 
 import androidx.annotation.StringRes
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 
@@ -19,5 +20,11 @@ object PickerUtils {
       .setMinute(minute ?: MINUTE_0)
       .setTitleText(titleRes)
       .build()
+  }
+
+  fun getDatePicker(@StringRes titleRes: Int, time: Long? = null): MaterialDatePicker<Long> {
+    return MaterialDatePicker.Builder.datePicker().setTitleText(
+      titleRes
+    ).setSelection(time).build()
   }
 }

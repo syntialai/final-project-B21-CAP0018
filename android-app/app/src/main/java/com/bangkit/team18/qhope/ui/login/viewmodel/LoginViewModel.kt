@@ -66,6 +66,7 @@ class LoginViewModel(private val authUseCase: AuthUseCase, private val userUseCa
   }
 
   fun clearCountDown() {
+    _countDown.value = 0
     timer?.cancel()
     timer = null
   }

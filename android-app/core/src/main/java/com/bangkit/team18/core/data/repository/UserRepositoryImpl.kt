@@ -75,4 +75,24 @@ class UserRepositoryImpl(
       }
     }.updateData().flowOn(ioDispatcher)
   }
+
+  override suspend fun updatePersonalData(
+    userId: String,
+    user: User
+  ): Flow<ResponseWrapper<Boolean>> {
+    return object : UpdateDataWrapper<Unit>() {
+      override suspend fun doUpdate() {
+        val data = hashMapOf<String, Any?>(
+          UserMapper.NAME_FIELD to user.name,
+          UserMapper.IMAGE_URL_FIELD to user.imageUrl,
+          UserMapper.BIRTH_DATE_FIELD to user.birthDate,
+          UserMapper.ADDRESS_FIELD to user.address,
+          UserMapper.PLACE_OF_BIRTH_FIELD to user.placeOfBirth,
+          UserMapper.GENDER_FIELD to user.gender,
+          UserMapper.NO_KTP_FIELD to user.ktpNumber
+        )
+        userRemoteDataSource.updateUser(userId, data)
+      }
+    }.updateData().flowOn(ioDispatcher)
+  }
 }
