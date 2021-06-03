@@ -4,19 +4,24 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.databinding.FragmentHistoryBinding
-import com.bangkit.team18.qhope.ui.base.adapter.OnItemClickListener
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.history.adapter.HistoryAdapter
+import com.bangkit.team18.qhope.ui.history.adapter.HistoryItemCallback
 import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryViewModel
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import org.koin.android.ext.android.inject
 
 class HistoryFragment : BaseFragment<FragmentHistoryBinding, HistoryViewModel>(
   FragmentHistoryBinding::inflate,
   HistoryViewModel::class
-), OnItemClickListener {
+), HistoryItemCallback {
 
   companion object {
     fun newInstance() = HistoryFragment()
   }
+
+  private val storage: FirebaseStorage by inject()
 
   private val historyAdapter by lazy {
     HistoryAdapter(this)
@@ -66,5 +71,9 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding, HistoryViewModel>(
         id
       )
     )
+  }
+
+  override fun getStorageRef(imagePath: String): StorageReference {
+    return storage.getReference(imagePath)
   }
 }

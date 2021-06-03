@@ -9,9 +9,8 @@ import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.LayoutBookingHistoryItemBinding
 import com.bangkit.team18.qhope.ui.base.adapter.BaseAdapter
 import com.bangkit.team18.qhope.ui.base.adapter.BaseDiffCallback
-import com.bangkit.team18.qhope.ui.base.adapter.OnItemClickListener
 
-class HistoryAdapter(private val onItemClickListener: OnItemClickListener) :
+class HistoryAdapter(private val historyItemCallback: HistoryItemCallback) :
   BaseAdapter<History, LayoutBookingHistoryItemBinding>(diffCallback) {
 
   companion object {
@@ -35,11 +34,11 @@ class HistoryAdapter(private val onItemClickListener: OnItemClickListener) :
     override fun bind(data: History) {
       binding.apply {
         root.setOnClickListener {
-          onItemClickListener.onClickListener(data.id)
+          historyItemCallback.onClickListener(data.id)
         }
 
         imageViewHistoryItem.loadImage(
-          data.hospitalImagePath,
+          historyItemCallback.getStorageRef(data.hospitalImagePath),
           R.drawable.drawable_hospital_placeholder
         )
 
