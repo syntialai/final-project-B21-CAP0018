@@ -3,10 +3,10 @@ package com.bangkit.team18.qhope.ui.registration.viewmodel
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bangkit.team18.core.domain.model.user.DocumentType
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
-import com.bangkit.team18.core.domain.model.user.DocumentType
 import java.io.File
 
 class IdVerificationViewModel(

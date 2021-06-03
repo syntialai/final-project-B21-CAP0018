@@ -26,7 +26,7 @@ data class HistoryDetail(
 
     val startDate: String,
 
-    val endDate: String,
+    val endDate: String?,
 
     val nightCount: Int?,
 

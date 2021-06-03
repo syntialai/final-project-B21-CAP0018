@@ -45,7 +45,7 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
 
   private var loadingDialog: Dialog? = null
 
-  protected var lifecycleJob: Job? = null
+  private var lifecycleJob: Job? = null
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

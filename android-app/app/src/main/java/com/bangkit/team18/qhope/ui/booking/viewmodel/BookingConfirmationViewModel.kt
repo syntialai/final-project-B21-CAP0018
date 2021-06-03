@@ -50,12 +50,12 @@ class BookingConfirmationViewModel(
     _isEnableBooking.removeSource(_bookingDetail)
   }
 
-  fun fetchUserDetails(userId: String) {
+  fun fetchUserDetails(userId: String, userPhoneNumber: String) {
     launchViewModelScope({
       userUseCase.getUser(userId).runFlow({ userData ->
         userData?.let {
           _userDetails.value = userData
-          addUserData(userData)
+          addUserData(userData, userPhoneNumber)
         }
       }, ::logOut)
     })
@@ -112,8 +112,9 @@ class BookingConfirmationViewModel(
     }
   }
 
-  private fun addUserData(userDetails: User) {
+  private fun addUserData(userDetails: User, phoneNumber: String) {
     _bookingDetail.value?.user = userDetails
+    _bookingDetail.value?.userPhoneNumber = phoneNumber
   }
 
   private fun getIsVerified(status: VerificationStatus?) = status == VerificationStatus.VERIFIED

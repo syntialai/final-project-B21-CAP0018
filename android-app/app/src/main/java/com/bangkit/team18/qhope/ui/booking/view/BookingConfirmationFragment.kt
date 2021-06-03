@@ -49,7 +49,7 @@ class BookingConfirmationFragment :
     viewModel.setBookingDetail(args.bookedHospital, args.roomType)
     viewModel.user.observe(viewLifecycleOwner, {
       it?.let { user ->
-        viewModel.fetchUserDetails(user.uid)
+        viewModel.fetchUserDetails(user.uid, user.phoneNumber.orEmpty())
       }
     })
     viewModel.bookingDetail.observe(viewLifecycleOwner, {
@@ -124,7 +124,7 @@ class BookingConfirmationFragment :
       binding.cardBookingConfirmReferralLetter.apply {
         show()
         setFileName(fileName)
-        setOnClickListener {
+        setOnClick {
           Router.openPdfFile(mContext, fileUrl)
         }
       }

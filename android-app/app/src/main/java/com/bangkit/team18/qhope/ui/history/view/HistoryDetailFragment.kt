@@ -14,6 +14,8 @@ import com.bangkit.team18.qhope.databinding.FragmentHistoryDetailBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryDetailViewModel
 import com.bangkit.team18.qhope.utils.Router
+import com.google.firebase.storage.FirebaseStorage
+import org.koin.android.ext.android.inject
 
 class HistoryDetailFragment :
   BaseFragment<FragmentHistoryDetailBinding, HistoryDetailViewModel>(
@@ -21,6 +23,8 @@ class HistoryDetailFragment :
   ) {
 
   private val args: HistoryDetailFragmentArgs by navArgs()
+
+  private val storage: FirebaseStorage by inject()
 
   override fun setupViews() {
     binding.apply {
@@ -43,7 +47,7 @@ class HistoryDetailFragment :
         setBookingDataMainInfo(historyDetail.id, historyDetail.bookedAt, historyDetail.status)
         setBookingDataHospitalInfo(
           historyDetail.hospitalImagePath, historyDetail.hospitalName,
-          historyDetail.hospitalAddress, historyDetail.hospitalType
+          historyDetail.hospitalType, historyDetail.hospitalAddress
         )
         setBookingOtherInfo(
           historyDetail.startDate, historyDetail.endDate,
@@ -106,7 +110,7 @@ class HistoryDetailFragment :
     binding.layoutHistoryDetailBookingData.apply {
       imageViewBookingDataHospital.loadImageFromStorage(
         mContext,
-        hospitalImage,
+        storage.getReference(hospitalImage),
         R.drawable.drawable_hospital_placeholder
       )
       textViewBookingDataHospitalName.text = hospitalName
@@ -143,7 +147,7 @@ class HistoryDetailFragment :
   private fun setBookingReferralLetterData(fileName: String, fileUrl: String) {
     binding.layoutHistoryDetailUserData.cardBookingUserReferralLetter.apply {
       setFileName(fileName)
-      setOnClickListener {
+      setOnClick {
         Router.openPdfFile(mContext, fileUrl)
       }
     }
