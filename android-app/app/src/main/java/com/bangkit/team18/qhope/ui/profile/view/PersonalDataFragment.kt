@@ -49,6 +49,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
   }
 
   override fun setupObserver() {
+    super.setupObserver()
     viewModel.user.observe(viewLifecycleOwner, {
       if (it.isNotNull()) {
         viewModel.getUserDoc()
@@ -60,6 +61,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
     viewModel.mode.observe(viewLifecycleOwner, {
       setupPersonalData(it, viewModel.userDoc.value)
       setupMenuItem(it)
+      showModeChangingMessage(it)
     })
     viewModel.birthDate.observe(this, {
       binding.personalDataBirthDate.setText(
@@ -69,6 +71,14 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
     viewModel.profilePicture.observe(this, {
       binding.personalDataProfilePicture.loadImage<File>(mContext, it)
     })
+  }
+
+  private fun showModeChangingMessage(mode: PersonalDataViewModel.ModeType) {
+    if (mode == PersonalDataViewModel.ModeType.VIEW) {
+      showToast(R.string.view_mode_message)
+    } else {
+      showToast(R.string.editing_mode_message)
+    }
   }
 
   private fun setupMenuItem(mode: PersonalDataViewModel.ModeType) {

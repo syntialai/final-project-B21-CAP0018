@@ -21,7 +21,6 @@ import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.utils.view.DialogUtils
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModel
-import com.bangkit.team18.qhope.utils.SnackbarUtils
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -130,7 +129,8 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
   }
 
   protected fun showToast(messageId: Int) {
-    SnackbarUtils.showSnackbar(binding.root, getString(messageId))
+    Toast.makeText(binding.root.context, mContext.getString(messageId), Toast.LENGTH_SHORT)
+      .show()
   }
 
   protected fun launchJob(block: () -> Unit) {

@@ -54,6 +54,7 @@
         android:layout_marginStart="@dimen/dp_16"
         android:layout_marginTop="@dimen/dp_8"
         app:chipMinTouchTargetSize="@dimen/dp_0"
+        android:textAppearance="?attr/textAppearanceCaption"
         app:layout_constraintStart_toEndOf="@id/profile_picture_image"
         app:layout_constraintTop_toBottomOf="@id/profile_name"
         app:rippleColor="@color/transparent"

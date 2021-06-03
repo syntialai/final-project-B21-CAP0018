@@ -129,4 +129,6 @@
     <string name="gender_field_error">You need to select one.</string>
     <string name="verified_label">Verified</string>
     <string name="not_verified_label">Not Verified</string>
+    <string name="editing_mode_message">You\'re in editing mode.</string>
+    <string name="view_mode_message">You\'re in view mode.</string>
 </resources>
