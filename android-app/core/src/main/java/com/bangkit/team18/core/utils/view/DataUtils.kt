@@ -7,6 +7,7 @@ import java.util.*
 object DataUtils {
 
   const val MMMM_D_YYYY = "MMMM d, yyyy"
+  const val MMMM_D_YYYY_HH_MM_A = "MMMM d, yyyy, hh:mm a"
   const val HH_MM_A_12H_FORMAT = "hh:mm a"
 
   fun <T> T.isNull() = this == null

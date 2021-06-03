@@ -72,7 +72,6 @@
     <string name="search_hint">Find hospital</string>
 
     <!--  Login  -->
-    <string name="welcome_icon">Welcome icon</string>
     <string name="indonesian_phone_code">+62</string>
     <string name="indonesian_phone_code_pattern">+62%s</string>
     <string name="phone_number_hint">8xxxxx</string>
