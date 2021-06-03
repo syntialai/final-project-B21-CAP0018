@@ -1,25 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.bangkit.team18.qhope">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="CAPTURE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.front"
+        android:required="false" />
 
     <application
         android:name=".QHopeApplication"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.QHope">
-        <activity android:name=".ui.registration.view.RegistrationActivity" />
-        <activity android:name=".ui.login.view.LoginActivity">
+        <activity
+            android:name=".ui.main.view.MainActivity"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity android:name=".ui.splash.view.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.login.view.LoginActivity" />
+        <activity android:name=".ui.registration.view.RegistrationActivity" />
+        <activity android:name=".ui.registration.view.VerificationResultActivity" />
+        <activity android:name=".ui.registration.view.IdVerificationActivity" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.bangkit.team18.qhope.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -27,10 +60,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
-
-        <activity android:name=".ui.booking.view.RoomBookingActivity" />
-        <activity android:name=".ui.history.view.HistoryDetailActivity" />
-        <activity android:name=".ui.main.view.MainActivity" />
 
         <uses-library
             android:name="org.apache.http.legacy"

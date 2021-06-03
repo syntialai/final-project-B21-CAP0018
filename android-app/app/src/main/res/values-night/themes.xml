@@ -6,6 +6,8 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/blue_400</item>
         <item name="colorPrimaryVariant">@color/blue_900</item>
+        <item name="colorPrimarySurface">@color/black_blue_300</item>
+        <item name="colorOnPrimarySurface">@color/black_blue_200</item>
         <item name="colorOnPrimary">@color/white</item>
 
         <!-- Secondary brand color. -->
@@ -15,6 +17,7 @@
 
         <!-- Other colors. -->
         <item name="colorSurface">@color/black_blue_900</item>
+        <item name="colorSurfaceDarker">@color/black_blue_800_50</item>
         <item name="colorOnSurface">@color/white</item>
         <item name="colorTextMedium">@color/white_87</item>
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>

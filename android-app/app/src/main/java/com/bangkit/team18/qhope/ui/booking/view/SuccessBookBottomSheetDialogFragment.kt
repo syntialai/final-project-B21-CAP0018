@@ -5,8 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bangkit.team18.qhope.databinding.FragmentSuccessBookBottomSheetDialogBinding
-import com.bangkit.team18.qhope.ui.main.adapter.MainAdapter
-import com.bangkit.team18.qhope.utils.Router
+import com.bangkit.team18.qhope.ui.booking.callback.RouteToCallback
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -16,12 +15,17 @@ class SuccessBookBottomSheetDialogFragment : BottomSheetDialogFragment(), View.O
   companion object {
     const val OPEN_SUCCESS_BOOK_BOTTOM_SHEET = "OPEN_SUCCESS_BOOK_BOTTOM_SHEET"
 
-    fun newInstance() = SuccessBookBottomSheetDialogFragment()
+    fun newInstance(routeToCallback: RouteToCallback) =
+      SuccessBookBottomSheetDialogFragment().apply {
+        this.routeToCallback = routeToCallback
+      }
   }
 
   private var _binding: FragmentSuccessBookBottomSheetDialogBinding? = null
   private val binding: FragmentSuccessBookBottomSheetDialogBinding
     get() = _binding as FragmentSuccessBookBottomSheetDialogBinding
+
+  private lateinit var routeToCallback: RouteToCallback
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
@@ -44,11 +48,11 @@ class SuccessBookBottomSheetDialogFragment : BottomSheetDialogFragment(), View.O
     with(binding) {
       when (view) {
         buttonBackToHome -> {
-          Router.goToMain(requireContext())
+          routeToCallback.goToHome()
           dismiss()
         }
         buttonGoToHistory -> {
-          Router.goToMain(requireContext(), MainAdapter.HISTORY_FRAGMENT_INDEX)
+          routeToCallback.goToHistory()
           dismiss()
         }
       }

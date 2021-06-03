@@ -3,7 +3,6 @@ package com.bangkit.team18.core.data.source.response.hospital
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.GeoPoint
 
-// TODO: Add image, state and country
 data class HospitalResponse(
 
   @DocumentId
@@ -33,7 +32,11 @@ data class HospitalResponse(
 
   val nomor_telepon: String,
 
+  val provinsi: String,
+
   val telepon_humas: String,
+
+  val total_kamar_kosong: Int,
 
   val website: String
 ) {
@@ -52,6 +55,8 @@ data class HospitalResponse(
     "",
     "",
     "",
+    "",
+    0,
     "",
   )
 }

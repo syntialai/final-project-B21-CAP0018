@@ -6,11 +6,14 @@ import java.util.*
 
 object DataUtils {
 
+  const val MMMM_D_YYYY = "MMMM d, yyyy"
   const val HH_MM_A_12H_FORMAT = "hh:mm a"
 
   fun <T> T.isNull() = this == null
 
   fun <T> T.isNotNull() = this.isNull().not()
+
+  fun areNotEmpty(vararg data: String) = data.all { it.isNotBlank() }
 
   fun Int?.orZero() = this ?: 0
 
@@ -19,6 +22,11 @@ object DataUtils {
   fun Double?.orZero() = this ?: 0.0
 
   fun Boolean?.orFalse() = this ?: false
+
+  fun String?.orHyphen(): String {
+    return if (this.isNullOrEmpty()) "-"
+    else this
+  }
 
   fun LiveData<Boolean>.orFalse() = this.value ?: false
 
@@ -35,7 +43,7 @@ object DataUtils {
     return Pair(currentTimestamp, calendar.timeInMillis)
   }
 
-  fun toFormattedTime(date: Date, pattern: String): String {
+  fun toFormattedDateTime(date: Date, pattern: String): String {
     return SimpleDateFormat(pattern, Locale.getDefault()).format(date)
   }
 }

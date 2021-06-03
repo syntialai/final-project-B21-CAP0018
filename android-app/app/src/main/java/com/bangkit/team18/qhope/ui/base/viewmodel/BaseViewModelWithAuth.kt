@@ -2,11 +2,11 @@ package com.bangkit.team18.qhope.ui.base.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.bangkit.team18.core.domain.repository.AuthRepository
+import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-abstract class BaseViewModelWithAuth(private val authRepository: AuthRepository) : BaseViewModel(),
+abstract class BaseViewModelWithAuth(private val authUseCase: AuthUseCase) : BaseViewModel(),
   FirebaseAuth.AuthStateListener {
 
   private var _user = MutableLiveData<FirebaseUser?>()
@@ -14,7 +14,7 @@ abstract class BaseViewModelWithAuth(private val authRepository: AuthRepository)
     get() = _user
 
   override fun onCleared() {
-    authRepository.removeAuthStateListener(this)
+    authUseCase.removeAuthStateListener(this)
   }
 
   override fun onAuthStateChanged(auth: FirebaseAuth) {
@@ -22,11 +22,11 @@ abstract class BaseViewModelWithAuth(private val authRepository: AuthRepository)
   }
 
   fun logOut() {
-    authRepository.logout()
+    authUseCase.logout()
   }
 
   protected fun initAuthStateListener() {
-    authRepository.addAuthStateListener(this)
+    authUseCase.addAuthStateListener(this)
   }
 
   protected fun getUserId() = _user.value?.uid

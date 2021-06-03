@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.profile.view.ProfileIdVerificationFragment">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/profile_id_verification_ktp_label"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_4"
+        android:gravity="center"
+        android:paddingVertical="@dimen/dp_8"
+        android:text="@string/e_ktp_label"
+        android:textAppearance="?attr/textAppearanceHeadline3"
+        android:textColor="?attr/colorOnSurface"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/profile_id_verification_barrier"
+        app:layout_constraintEnd_toStartOf="@id/profile_id_verification_selfie_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/profile_id_verification_selfie_label" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/profile_id_verification_selfie_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_4"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:gravity="center"
+        android:paddingVertical="@dimen/dp_8"
+        android:text="@string/selfie_ktp_label"
+        android:textAppearance="?attr/textAppearanceHeadline3"
+        android:textColor="?attr/colorOnSurface"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/profile_id_verification_ktp_label"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/profile_id_verification_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="profile_id_verification_ktp_label,profile_id_verification_selfie_label" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profile_id_verification_ktp_picture"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_4"
+        android:contentDescription="@string/e_ktp_label"
+        android:padding="@dimen/dp_2"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_add"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/profile_id_verification_selfie_picture"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/profile_id_verification_barrier"
+        app:shapeAppearance="@style/ShapeAppearance.QHope.MediumComponent"
+        app:strokeColor="@color/grey_300"
+        app:strokeWidth="@dimen/dp_2"
+        app:tint="@color/grey_300" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/profile_id_verification_edit_ktp_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?attr/colorSurface"
+        android:visibility="gone"
+        app:borderWidth="@dimen/dp_0"
+        app:fabCustomSize="@dimen/dp_32"
+        app:layout_constraintBottom_toBottomOf="@id/profile_id_verification_ktp_picture"
+        app:layout_constraintEnd_toStartOf="@id/profile_id_verification_delete_ktp_picture"
+        app:layout_constraintTop_toBottomOf="@id/profile_id_verification_ktp_picture"
+        app:srcCompat="@drawable/ic_edit_outline"
+        tools:ignore="ContentDescription"
+        tools:visibility="visible" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/profile_id_verification_delete_ktp_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?attr/colorSurface"
+        android:visibility="gone"
+        app:borderWidth="@dimen/dp_0"
+        app:fabCustomSize="@dimen/dp_32"
+        app:layout_constraintBottom_toBottomOf="@id/profile_id_verification_ktp_picture"
+        app:layout_constraintEnd_toEndOf="@id/profile_id_verification_ktp_picture"
+        app:layout_constraintTop_toBottomOf="@id/profile_id_verification_ktp_picture"
+        app:srcCompat="@drawable/ic_delete_outline"
+        tools:ignore="ContentDescription"
+        tools:visibility="visible" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profile_id_verification_selfie_picture"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/dp_4"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:contentDescription="@string/selfie_ktp_label"
+        android:padding="@dimen/dp_2"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_add"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/profile_id_verification_ktp_picture"
+        app:layout_constraintTop_toTopOf="@id/profile_id_verification_barrier"
+        app:shapeAppearance="@style/ShapeAppearance.QHope.MediumComponent"
+        app:strokeColor="@color/grey_300"
+        app:strokeWidth="@dimen/dp_2"
+        app:tint="@color/grey_300" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/profile_id_verification_edit_selfie_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?attr/colorSurface"
+        android:visibility="gone"
+        app:borderWidth="@dimen/dp_0"
+        app:fabCustomSize="@dimen/dp_32"
+        app:layout_constraintBottom_toBottomOf="@id/profile_id_verification_selfie_picture"
+        app:layout_constraintEnd_toStartOf="@id/profile_id_verification_delete_selfie_picture"
+        app:layout_constraintTop_toBottomOf="@id/profile_id_verification_selfie_picture"
+        app:srcCompat="@drawable/ic_edit_outline"
+        tools:ignore="ContentDescription"
+        tools:visibility="visible" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/profile_id_verification_delete_selfie_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?attr/colorSurface"
+        android:visibility="gone"
+        app:borderWidth="@dimen/dp_0"
+        app:fabCustomSize="@dimen/dp_32"
+        app:layout_constraintBottom_toBottomOf="@id/profile_id_verification_selfie_picture"
+        app:layout_constraintEnd_toEndOf="@id/profile_id_verification_selfie_picture"
+        app:layout_constraintTop_toBottomOf="@id/profile_id_verification_selfie_picture"
+        app:srcCompat="@drawable/ic_delete_outline"
+        tools:ignore="ContentDescription"
+        tools:visibility="visible" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_24"
+        android:layout_marginTop="@dimen/dp_48"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:drawablePadding="@dimen/dp_8"
+        android:text="@string/verification_information"
+        android:textAppearance="?attr/textAppearanceBody2"
+        app:drawableStartCompat="@drawable/ic_information"
+        app:layout_constraintTop_toBottomOf="@id/profile_id_verification_ktp_picture" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/profile_id_verification_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_16"
+        android:enabled="false"
+        android:text="@string/submit_label"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

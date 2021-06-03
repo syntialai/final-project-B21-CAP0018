@@ -13,6 +13,8 @@ import com.google.firebase.firestore.GeoPoint
 object HospitalMapper {
 
   const val NAME_FIELD = "nama_rumah_sakit"
+  const val ROOM_DATA_ID_FIELD = "id"
+  const val ROOM_DATA_NAME_FIELD = "name"
 
   fun mapToHospitals(responses: List<HospitalResponse>): List<Hospital> {
     return DataMapper.mapToModels(responses, ::mapToHospital)
@@ -49,7 +51,7 @@ object HospitalMapper {
     type = response.jenis_rumah_sakit,
     location = getGeoLocation(response.alamat_rumah_sakit),
     address = getAddress(response),
-    availableRoomCount = 0
+    availableRoomCount = response.total_kamar_kosong
   )
 
   private fun mapToRoomType(response: RoomTypeResponse) = RoomType(
@@ -64,6 +66,7 @@ object HospitalMapper {
     response.kelurahan,
     response.kecamatan,
     response.kota_administrasi,
+    response.provinsi,
     response.kode_pos
   ).joinToString()
 

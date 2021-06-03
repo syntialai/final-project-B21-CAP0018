@@ -3,7 +3,6 @@ package com.bangkit.team18.core.data.source.response.history
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentId
 
-// TODO: Add user and letter data
 data class HistoryDetailResponse(
 
   @DocumentId
@@ -25,13 +24,19 @@ data class HistoryDetailResponse(
 
   val check_out_at: Timestamp,
 
-  val room_type: String,
+  val room_type: RoomTypeHistoryResponse,
 
   val room_cost_per_day: Double,
 
   val status: String,
 
-  val user_id: String
+  val referral_letter_name: String,
+
+  val referral_letter_url: String,
+
+  val user_id: String,
+
+  val user_data: UserHistoryResponse
 ) {
   constructor() : this(
     "",
@@ -43,9 +48,12 @@ data class HistoryDetailResponse(
     Timestamp.now(),
     Timestamp.now(),
     Timestamp.now(),
-    "",
+    RoomTypeHistoryResponse(),
     0.0,
     "",
-    ""
+    "",
+    "",
+    "",
+    UserHistoryResponse()
   )
 }

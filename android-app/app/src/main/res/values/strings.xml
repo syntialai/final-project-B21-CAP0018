@@ -34,9 +34,13 @@
     <string name="success_book_a_room_description">We\'ll process your booking and notify you for any changes soon.</string>
     <string name="go_to_booking_history_label">Go to Booking History</string>
     <string name="back_to_home_label">Back to Home</string>
+    <string name="update_profile_banner">Update your profile to continue your booking process.</string>
+    <string name="update_profile_banner_button">Go to Profile</string>
+    <string name="booking_confirmation_title">Book a Room</string>
 
     <!-- History -->
     <string name="history_label">History</string>
+    <string name="history_detail_label">History Details</string>
     <string name="history_empty_state_title">Your history is empty.</string>
     <string name="history_empty_state_description">Let\'s start booking a hospital room.</string>
     <plurals name="history_night_state">
@@ -80,12 +84,35 @@
     <string name="resend_otp_count_down">Resend OTP (%s)</string>
 
     <!-- Register -->
-    <string name="welcome_label">Welcome!</string>
+    <string name="hi_label">Hi!</string>
     <string name="let_us_know_about_you">Let us know a little bit about you.</string>
     <string name="name_hint">Name</string>
     <string name="birth_date_hint">Birth Date</string>
-    <string name="logout_label">Logout</string>
-    <string name="finish_label">Finish</string>
+    <string name="logout_label">Log Out</string>
+    <string name="next_label">Next</string>
+    <string name="name_field_error">Name cannot be empty.</string>
+    <string name="birth_date_field_error">Birth date cannot be empty.</string>
+
+    <!-- ID Verification -->
+    <string name="e_ktp_label">e-KTP</string>
+    <string name="selfie_ktp_label">Selfie with e-KTP</string>
+    <string name="submit_label">Submit</string>
+    <string name="verification_information">Your data are <b>secure</b> and only be used for <b>verification purposes</b>.</string>
+    <string name="skip_label">Skip</string>
+    <string name="got_it">Got It!</string>
+    <string name="verified_message">Verified!</string>
+    <string name="verified_message_description">You can start <b>book</b> now.</string>
+    <string name="uploaded_message">Uploaded!</string>
+    <string name="uploaded_message_description">Your document still on process. You can see the result in your profile later.</string>
+    <string name="rejected_message">Failed!</string>
+    <string name="rejected_message_description">Your document is not valid. Please re-submit the document later in your profile.</string>
+
+    <!-- Profile -->
+    <string name="id_verification_label">ID Verification</string>
+    <string name="personal_data_label">Personal Data</string>
+
+    <!-- Splash -->
+    <string name="fill_information_message">Please fill some information first.</string>
 
     <!-- Other -->
     <string name="empty_state_label">Empty state</string>
@@ -93,8 +120,13 @@
     <string name="close_action">Close</string>
     <string name="no_connection_message">Failed to connect. Please check your internet connection.</string>
     <string name="unknown_error_message">An error occurred when retrieving the data. Please try again later.</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="name_field_error">Name cannot be empty.</string>
-    <string name="birth_date_field_error">Birth date cannot be empty.</string>
+    <string name="ktp_number_hint">KTP Number</string>
+    <string name="place_of_birth_hint">Place of Birth</string>
+    <string name="address_hint">Address</string>
+    <string name="male_label">Male</string>
+    <string name="female_label">Female</string>
+    <string name="edit_label">Edit</string>
+    <string name="gender_field_error">You need to select one.</string>
+    <string name="verified_label">Verified</string>
+    <string name="not_verified_label">Not Verified</string>
 </resources>

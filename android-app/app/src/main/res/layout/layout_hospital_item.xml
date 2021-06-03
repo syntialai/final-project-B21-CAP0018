@@ -17,7 +17,7 @@
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/image_view_hospital_item"
             android:layout_width="@dimen/dp_106"
-            android:layout_height="@dimen/dp_150"
+            android:layout_height="@dimen/dp_120"
             android:layout_marginVertical="@dimen/dp_8"
             android:layout_marginStart="@dimen/dp_8"
             android:paddingStart="@dimen/dp_0"
@@ -90,15 +90,6 @@
             app:layout_constraintStart_toEndOf="@id/image_view_hospital_item"
             tools:text="Not Available"
             tools:visibility="visible" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_hospital_item_book_room"
-            style="?attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/book_a_room_label"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.circularreveal.cardview.CircularRevealCardView>

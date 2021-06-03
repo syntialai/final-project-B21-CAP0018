@@ -14,6 +14,7 @@
     <dimen name="dp_300">300dp</dimen>
     <dimen name="dp_200">200dp</dimen>
     <dimen name="dp_150">150dp</dimen>
+    <dimen name="dp_120">120dp</dimen>
     <dimen name="dp_106">106dp</dimen>
     <dimen name="dp_100">100dp</dimen>
     <dimen name="dp_80">80dp</dimen>
@@ -34,5 +35,5 @@
     <dimen name="dp_0">0dp</dimen>
     <dimen name="dp_minus_4">-4dp</dimen>
     <dimen name="dp_minus_16">-16dp</dimen>
-
+    <dimen name="rounded_layout_radius">8dp</dimen>
 </resources>

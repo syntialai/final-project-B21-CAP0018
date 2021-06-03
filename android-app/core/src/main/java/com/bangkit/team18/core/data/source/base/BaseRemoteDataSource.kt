@@ -1,12 +1,16 @@
 package com.bangkit.team18.core.data.source.base
 
+import android.graphics.Bitmap
 import android.net.Uri
+import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.utils.view.DataUtils.isNull
 import com.bangkit.team18.core.utils.view.DataUtils.orZero
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
@@ -14,10 +18,10 @@ import com.google.firebase.storage.ktx.storageMetadata
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
+import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -85,7 +89,7 @@ abstract class BaseRemoteDataSource {
     val nearbyTasks = getQueryBounds(this@loadNearby, location, radiusInMeter)
     Tasks.whenAllComplete(nearbyTasks).addOnCompleteListener {
       val validDocuments = getFilteredData(nearbyTasks, location, radiusInMeter)
-      trySend(validDocuments.mapNotNull { snapshot ->
+      offer(validDocuments.mapNotNull { snapshot ->
         snapshot.toObject(clazz)
       })
     }.addOnFailureListener {
@@ -134,21 +138,96 @@ abstract class BaseRemoteDataSource {
     }
   }
 
-  protected suspend fun StorageReference.addFile(fileUri: Uri, contentType: String): Flow<Boolean> {
+  protected suspend fun CollectionReference.updateData(
+    documentId: String,
+    data: HashMap<String, Any?>
+  ) {
+    return suspendCoroutine { continuation ->
+      document(documentId).set(data, SetOptions.merge()).addOnSuccessListener {
+        continuation.resume(Unit)
+      }.addOnFailureListener { exception ->
+        continuation.resumeWithException(exception)
+      }
+    }
+  }
+
+  protected suspend fun StorageReference.addFile(fileUri: Uri): Flow<Uri> {
+    return callbackFlow {
+      putFile(fileUri).continueWithTask { task ->
+        if (task.isSuccessful.not()) {
+          close(task.exception)
+        }
+        this@addFile.downloadUrl
+      }.addOnCompleteListener {
+        if (it.result.isNull()) close(it.exception)
+        offer(it.result)
+      }.addOnFailureListener {
+        close(it)
+      }
+
+      awaitClose {}
+    }
+  }
+
+  protected suspend fun StorageReference.addFile(bitmap: Bitmap): Flow<Uri> {
+    val baos = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+    val data = baos.toByteArray()
+    return callbackFlow {
+      putBytes(data).continueWithTask { task ->
+        if (task.isSuccessful.not()) {
+          close(task.exception)
+        }
+        this@addFile.downloadUrl
+      }.addOnCompleteListener {
+        if (it.result.isNull()) close(it.exception)
+        offer(it.result)
+      }.addOnFailureListener {
+        close(it)
+      }
+
+      awaitClose {}
+    }
+  }
+
+  protected fun <T> Flow<T>.transformToResponse(): Flow<ResponseWrapper<T>> {
+    return transform { value ->
+      emit(ResponseWrapper.Success(value) as ResponseWrapper<T>)
+    }.onStart {
+      emit(ResponseWrapper.Loading())
+    }.catch { exception ->
+      if (exception is IOException) {
+        emit(ResponseWrapper.NetworkError())
+      } else {
+        emit(ResponseWrapper.Error(exception.message))
+      }
+    }
+  }
+
+  protected suspend fun StorageReference.addAndGetFileUrl(
+    fileUri: Uri,
+    contentType: String
+  ): Flow<ResponseWrapper<Uri>> {
     val metadata = storageMetadata {
       this.contentType = contentType
     }
     return channelFlow {
-      val storageTask = putFile(fileUri, metadata).addOnSuccessListener {
+      send(ResponseWrapper.Loading())
+      putFile(fileUri, metadata).continueWithTask { task ->
+        task.exception?.let {
+          close(it)
+        }
+        this@addAndGetFileUrl.downloadUrl
+      }.addOnSuccessListener { uri ->
         launch {
-          send(true)
+          send(ResponseWrapper.Success(uri))
         }
       }.addOnFailureListener { exception ->
         close(exception)
       }
 
       awaitClose {
-        storageTask.cancel()
+        // No implementation needed
       }
     }
   }
@@ -183,5 +262,17 @@ abstract class BaseRemoteDataSource {
       })
     }
     return filteredDocuments
+  }
+
+  protected fun Task<AuthResult>.loadData(): Flow<ResponseWrapper<FirebaseUser>> = callbackFlow {
+    offer(ResponseWrapper.Loading())
+    addOnCompleteListener { task ->
+      if (!task.isSuccessful) {
+        close(task.exception)
+      } else {
+        offer(ResponseWrapper.Success(task.result.user as FirebaseUser))
+      }
+    }
+    awaitClose { }
   }
 }

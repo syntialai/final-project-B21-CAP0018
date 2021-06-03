@@ -63,7 +63,8 @@
             android:layout_marginTop="@dimen/dp_12"
             android:text="@string/patient_email_label"
             android:textAppearance="?attr/textAppearanceCaption"
-            android:textColor="?attr/colorTextMedium" />
+            android:textColor="?attr/colorTextMedium"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/text_view_booking_user_email"
@@ -72,6 +73,7 @@
             android:layout_marginTop="@dimen/dp_4"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="?attr/colorOnSurface"
+            android:visibility="gone"
             tools:text="Patient Name" />
 
         <TextView
@@ -117,7 +119,8 @@
             android:layout_marginTop="@dimen/dp_12"
             android:text="@string/patient_address_label"
             android:textAppearance="?attr/textAppearanceCaption"
-            android:textColor="?attr/colorTextMedium" />
+            android:textColor="?attr/colorTextMedium"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/text_view_booking_user_address"
@@ -126,6 +129,7 @@
             android:layout_marginTop="@dimen/dp_4"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="?attr/colorOnSurface"
+            android:visibility="gone"
             tools:text="Patient Name" />
 
         <TextView

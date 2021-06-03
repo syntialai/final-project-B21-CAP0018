@@ -9,6 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipToPadding="false"
         android:paddingHorizontal="@dimen/dp_16"
         tools:context=".ui.home.view.HomeFragment">
 
@@ -42,10 +43,24 @@
             android:layout_marginTop="@dimen/dp_4"
             android:textAppearance="?attr/textAppearanceHeadline5"
             android:textColor="?attr/colorOnSurface"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/image_view_your_location"
             app:layout_constraintTop_toBottomOf="@id/text_view_your_location_label"
-            tools:text="Jl. Anana" />
+            tools:text="Jl. Anana"
+            tools:visibility="visible" />
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/spin_kit_load_your_location"
+            style="@style/SpinKitView.ThreeBounce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dp_16"
+            app:SpinKit_Color="?attr/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_your_location"
+            app:layout_constraintStart_toEndOf="@id/image_view_your_location"
+            app:layout_constraintTop_toTopOf="@id/text_view_your_location" />
 
         <View
             android:id="@+id/view_your_location_listener"
@@ -104,12 +119,13 @@
             app:layout_constraintTop_toBottomOf="@id/search_view_home"
             tools:visibility="visible" />
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
+        <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/spin_kit_load_home"
+            style="@style/SpinKitView.Large.DoubleBounce"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_24"
-            android:indeterminate="true"
+            android:layout_marginTop="@dimen/dp_48"
+            app:SpinKit_Color="?attr/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_view_recommendation_hospitals_label" />

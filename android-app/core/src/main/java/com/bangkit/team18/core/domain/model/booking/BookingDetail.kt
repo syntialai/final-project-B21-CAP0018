@@ -1,11 +1,10 @@
 package com.bangkit.team18.core.domain.model.booking
 
 import com.bangkit.team18.core.domain.model.hospital.RoomType
+import com.bangkit.team18.core.domain.model.user.User
 import java.util.*
 
 data class BookingDetail(
-
-  var userId: String,
 
   var hospital: BookedHospital,
 
@@ -13,13 +12,18 @@ data class BookingDetail(
 
   var selectedDateTime: Calendar,
 
-  var referralLetterFilePath: String
+  var referralLetterUri: String,
+
+  var referralLetterName: String,
+
+  var user: User
 ) {
   constructor(hospital: BookedHospital, selectedRoomType: RoomType) : this(
-    "",
     hospital,
     selectedRoomType,
     Calendar.getInstance(),
-    ""
+    "",
+    "",
+    User()
   )
 }

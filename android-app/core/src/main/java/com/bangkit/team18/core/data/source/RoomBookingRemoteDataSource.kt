@@ -14,5 +14,9 @@ interface RoomBookingRemoteDataSource {
 
   suspend fun createBooking(bookingHashmap: HashMap<String, Any>)
 
-  suspend fun uploadReferralLetter(userId: String, fileUri: Uri): Flow<ResponseWrapper<String>>
+  suspend fun uploadReferralLetter(
+    userId: String,
+    fileUri: Uri,
+    fileName: String? = null
+  ): Flow<ResponseWrapper<Uri>>
 }

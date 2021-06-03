@@ -22,6 +22,7 @@ class RoomBookingInteractor(private val roomBookingRepository: RoomBookingReposi
 
   override suspend fun uploadReferralLetter(
     userId: String,
-    fileUri: Uri
-  ) = roomBookingRepository.uploadReferralLetter(userId, fileUri)
+    fileUri: Uri,
+    fileName: String
+  ) = roomBookingRepository.uploadReferralLetter(userId, fileUri, fileName)
 }
