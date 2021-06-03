@@ -11,7 +11,6 @@ import com.bangkit.team18.qhope.ui.registration.view.VerificationResultActivity
 
 object Router {
 
-  private const val GOOGLE_DRIVE_VIEWER = "http://drive.google.com/viewer?url="
   private const val HTML_TYPE = "text/html"
 
   fun goToLogin(context: Context) {
@@ -51,7 +50,7 @@ object Router {
 
   fun openPdfFile(context: Context, pdfUrl: String) {
     val pdfIntent = Intent(Intent.ACTION_VIEW).apply {
-      setDataAndType(Uri.parse(GOOGLE_DRIVE_VIEWER + pdfUrl), HTML_TYPE)
+      setDataAndType(Uri.parse(pdfUrl), HTML_TYPE)
     }
     context.startActivity(pdfIntent)
   }
