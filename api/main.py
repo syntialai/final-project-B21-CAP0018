@@ -14,7 +14,6 @@ def verify_identity(event, context):
         ktpUrl = event["value"]["fields"]["ktp_url"]["stringValue"]
         selfieUrl = event["value"]["fields"]["selfie_url"]["stringValue"]
         # Call the API here 
-        # key = b44da9c5e5d1082e3b113ab656df00b310b0d2b5
         payload = { 'userId': userId, 'ktp_url': ktpUrl, 'selfie_url': selfieUrl }
         r = requests.request("POST", url="http://34.101.79.70:4321/register", json=payload)
         print(f"Changed by user: {userId} with status {verificationStatus}, data ktp : {ktpUrl}, data selfie: {selfieUrl}")
