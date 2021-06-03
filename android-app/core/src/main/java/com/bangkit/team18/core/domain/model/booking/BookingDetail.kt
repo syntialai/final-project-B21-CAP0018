@@ -16,7 +16,9 @@ data class BookingDetail(
 
   var referralLetterName: String,
 
-  var user: User
+  var user: User,
+
+  var userPhoneNumber: String
 ) {
   constructor(hospital: BookedHospital, selectedRoomType: RoomType) : this(
     hospital,
@@ -24,6 +26,7 @@ data class BookingDetail(
     Calendar.getInstance(),
     "",
     "",
-    User()
+    User(),
+    ""
   )
 }

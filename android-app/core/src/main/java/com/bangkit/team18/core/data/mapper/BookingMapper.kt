@@ -45,7 +45,7 @@ object BookingMapper {
       ROOM_TYPE_FIELD to mapToRoomTypeData(bookingDetail.selectedRoomType),
       ROOM_COST_PER_DAY_FIELD to bookingDetail.selectedRoomType.price,
       USER_ID_FIELD to bookingDetail.user.id,
-      USER_DATA_FIELD to mapToUserData(bookingDetail.user)
+      USER_DATA_FIELD to mapToUserData(bookingDetail.user, bookingDetail.userPhoneNumber)
     )
   }
 
@@ -85,10 +85,10 @@ object BookingMapper {
     HospitalMapper.ROOM_DATA_NAME_FIELD to roomType.name
   )
 
-  private fun mapToUserData(user: User) = hashMapOf<String, Any?>(
+  private fun mapToUserData(user: User, phoneNumber: String) = hashMapOf<String, Any?>(
     UserMapper.NAME_FIELD to user.name,
     UserMapper.BIRTH_DATE_FIELD to (user.birthDate ?: Timestamp.now()),
-    UserMapper.PHONE_NUMBER_FIELD to user.phoneNumber,
+    UserMapper.PHONE_NUMBER_FIELD to phoneNumber,
     UserMapper.NO_KTP_FIELD to user.ktpNumber,
     UserMapper.GENDER_FIELD to user.gender?.name,
     UserMapper.PLACE_OF_BIRTH_FIELD to user.placeOfBirth
