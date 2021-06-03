@@ -39,7 +39,7 @@ class ReferralLetterCard constructor(context: Context, attrs: AttributeSet) :
     binding.textViewReferralLetterFile.text = fileName
   }
 
-  fun setImage(type: Int) {
+  private fun setImage(type: Int) {
     binding.imageViewReferralLetterFile.setImageResource(
       when (type) {
         PDF -> R.drawable.drawable_pdf_type

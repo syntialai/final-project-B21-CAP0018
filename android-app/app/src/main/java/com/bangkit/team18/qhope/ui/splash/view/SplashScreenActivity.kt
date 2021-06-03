@@ -24,6 +24,7 @@ class SplashScreenActivity :
 
   override fun onResume() {
     super.onResume()
+
     viewModel.user.observe(this, {
       if (it.isNull()) {
         Router.goToLogin(this)
@@ -31,6 +32,7 @@ class SplashScreenActivity :
         viewModel.getUserDoc()
       }
     })
+
     viewModel.userDoc.observe(this, {
       if (it.isNull()) {
         showErrorToast(
@@ -38,12 +40,12 @@ class SplashScreenActivity :
           R.string.fill_information_message
         )
         lifecycleScope.launch {
-          delay(1000)
+          delay(500)
           Router.goToRegistration(this@SplashScreenActivity)
         }
       } else {
         lifecycleScope.launch {
-          delay(1000)
+          delay(500)
           Router.goToMain(this@SplashScreenActivity)
         }
       }
