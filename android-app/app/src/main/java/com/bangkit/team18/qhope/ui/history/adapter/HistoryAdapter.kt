@@ -54,7 +54,6 @@ class HistoryAdapter(private val onItemClickListener: OnItemClickListener) :
         with(textViewHistoryItemStatus) {
           text = data.status.getText()
           setTextColor(getStatusColor(data.status))
-          setBackgroundColor(getStatusColor(data.status))
         }
       }
     }

@@ -48,6 +48,12 @@ class ReferralLetterCard constructor(context: Context, attrs: AttributeSet) :
     )
   }
 
+  fun setOnClick(block: () -> Unit) {
+    binding.root.setOnClickListener {
+      block.invoke()
+    }
+  }
+
   private fun initBinding() {
     val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     binding = WidgetLayoutReferralLetterCardBinding.inflate(layoutInflater, this, true)

@@ -22,7 +22,7 @@ data class HistoryDetailResponse(
 
   val check_in_at: Timestamp,
 
-  val check_out_at: Timestamp,
+  val check_out_at: Timestamp? = null,
 
   val room_type: RoomTypeHistoryResponse,
 

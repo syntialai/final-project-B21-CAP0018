@@ -25,6 +25,8 @@ object BookingMapper {
   const val CHECK_OUT_AT_FIELD = "check_out_at"
   const val ROOM_TYPE_FIELD = "room_type"
   const val ROOM_COST_PER_DAY_FIELD = "room_cost_per_day"
+  const val REFERRAL_LETTER_NAME = "referral_letter_name"
+  const val REFERRAL_LETTER_URL = "referral_letter_url"
   const val USER_ID_FIELD = "user_id"
   const val USER_DATA_FIELD = "user_data"
 
@@ -37,6 +39,8 @@ object BookingMapper {
       HOSPITAL_ADDRESS_FIELD to bookingDetail.hospital.address,
       HOSPITAL_IMAGE_PATH_FIELD to bookingDetail.hospital.imagePath,
       HOSPITAL_TYPE_FIELD to bookingDetail.hospital.type,
+      REFERRAL_LETTER_NAME to bookingDetail.referralLetterName,
+      REFERRAL_LETTER_URL to bookingDetail.referralLetterUri,
       CHECK_IN_AT_FIELD to bookingDetail.selectedDateTime.time,
       ROOM_TYPE_FIELD to mapToRoomTypeData(bookingDetail.selectedRoomType),
       ROOM_COST_PER_DAY_FIELD to bookingDetail.selectedRoomType.price,
@@ -54,11 +58,19 @@ object BookingMapper {
     hospitalId = response.hospital_id,
     hospitalImagePath = response.hospital_image_path,
     hospitalName = response.hospital_name,
-    startDate = response.check_in_at.toString(),
-    endDate = response.check_out_at.toString(),
+    startDate = DataUtils.toFormattedDateTime(
+      response.check_in_at.toDate(),
+      DataUtils.MMMM_D_YYYY_HH_MM_A
+    ),
+    endDate = response.check_out_at?.toDate()?.let {
+      DataUtils.toFormattedDateTime(it, DataUtils.MMMM_D_YYYY_HH_MM_A)
+    },
     nightCount = getNightCount(response.check_in_at, response.check_out_at),
     status = HistoryStatus.valueOf(response.status),
-    bookedAt = response.booked_at.toString(),
+    bookedAt = DataUtils.toFormattedDateTime(
+      response.booked_at.toDate(),
+      DataUtils.MMMM_D_YYYY_HH_MM_A
+    ),
     hospitalAddress = response.hospital_address,
     hospitalType = response.hospital_type,
     roomType = mapToRoomTypeHistory(response.room_type),
@@ -73,13 +85,13 @@ object BookingMapper {
     HospitalMapper.ROOM_DATA_NAME_FIELD to roomType.name
   )
 
-  // TODO: Complete profile fields
-  private fun mapToUserData(user: User) = hashMapOf<String, Any>(
+  private fun mapToUserData(user: User) = hashMapOf<String, Any?>(
     UserMapper.NAME_FIELD to user.name,
     UserMapper.BIRTH_DATE_FIELD to (user.birthDate ?: Timestamp.now()),
     UserMapper.PHONE_NUMBER_FIELD to user.phoneNumber,
-    UserMapper.NO_KTP_FIELD to "",
-    UserMapper.GENDER_FIELD to ""
+    UserMapper.NO_KTP_FIELD to user.ktpNumber,
+    UserMapper.GENDER_FIELD to user.gender?.name,
+    UserMapper.PLACE_OF_BIRTH_FIELD to user.placeOfBirth
   )
 
   private fun mapToRoomTypeHistory(response: RoomTypeHistoryResponse) = RoomTypeHistory(
@@ -104,7 +116,7 @@ object BookingMapper {
     id = response.id,
     hospitalImagePath = response.hospital_image_path,
     hospitalName = response.hospital_name,
-    createdAt = response.booked_at.toString(),
+    createdAt = DataUtils.toFormattedDateTime(response.booked_at.toDate(), DataUtils.MMMM_D_YYYY),
     nightCount = getNightCount(response.check_in_at, response.check_out_at),
     status = HistoryStatus.valueOf(response.status)
   )

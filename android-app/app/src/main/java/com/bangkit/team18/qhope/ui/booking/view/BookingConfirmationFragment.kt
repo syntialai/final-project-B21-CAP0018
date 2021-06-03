@@ -124,7 +124,7 @@ class BookingConfirmationFragment :
       binding.cardBookingConfirmReferralLetter.apply {
         show()
         setFileName(fileName)
-        setOnClickListener {
+        setOnClick {
           Router.openPdfFile(mContext, fileUrl)
         }
       }

@@ -43,7 +43,7 @@ class HistoryDetailFragment :
         setBookingDataMainInfo(historyDetail.id, historyDetail.bookedAt, historyDetail.status)
         setBookingDataHospitalInfo(
           historyDetail.hospitalImagePath, historyDetail.hospitalName,
-          historyDetail.hospitalAddress, historyDetail.hospitalType
+          historyDetail.hospitalType, historyDetail.hospitalAddress
         )
         setBookingOtherInfo(
           historyDetail.startDate, historyDetail.endDate,
@@ -143,7 +143,7 @@ class HistoryDetailFragment :
   private fun setBookingReferralLetterData(fileName: String, fileUrl: String) {
     binding.layoutHistoryDetailUserData.cardBookingUserReferralLetter.apply {
       setFileName(fileName)
-      setOnClickListener {
+      setOnClick {
         Router.openPdfFile(mContext, fileUrl)
       }
     }
