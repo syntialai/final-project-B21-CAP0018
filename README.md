@@ -12,7 +12,7 @@ Bangkit Final Project 2021: Automatic Hospital Registering and Room Booking with
 
 ### About the Project
 
-**Q-Hope**, a mobile application integrated with hospitals and let you get a room in a hospital in seconds. With face detection and e-KTP, you won't manually write down your identity because we will do it for you by sending the photo to cloud and trigger the machine learning. To ensure that you got the right hospital, we will give you nearby hospital recommendation with the GPS in your smartphone. Q-Hope provided in simple UI and easy to use!
+**Q-Hope**, a mobile application integrated with hospitals and let you get a room in a hospital in seconds. With face detection and e-KTP, you won't manually write down your identity because we will do it for you (by sending the photo to cloud and trigger the machine learning). To ensure that you got the right hospital, we will give you nearby hospital recommendation with the GPS in your smartphone. Q-Hope provided in simple UI and easy to use!
 
 ### Prerequisites
 
