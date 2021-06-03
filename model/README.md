@@ -1,3 +1,7 @@
-# final-project-B21-CAP0018
+# B21-CAP0018 - Machine Learning Models
 
-Bangkit Final Project - Machine Learning Path
+## Built With
+
+## Usage
+
+## References
