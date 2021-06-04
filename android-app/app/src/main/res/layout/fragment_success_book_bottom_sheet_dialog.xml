@@ -34,18 +34,10 @@
         android:textColor="?attr/colorTextMedium" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_go_to_history"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_32"
-        android:minHeight="@dimen/dp_56"
-        android:text="@string/go_to_booking_history_label" />
-
-    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_back_to_home"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_4"
+        android:layout_marginTop="@dimen/dp_16"
         android:text="@string/back_to_home_label" />
 </LinearLayout>

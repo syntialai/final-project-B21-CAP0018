@@ -34,8 +34,8 @@ class ProfileIdVerificationViewModel(
 
   fun getUserDoc() {
     launchViewModelScope({
-      getUserId()?.let {
-        userUseCase.getUser(it).runFlow({
+      getUserId()?.let { uid ->
+        userUseCase.getUser(uid).runFlow({
           it?.let { user ->
             _userDoc.value = user
           }
@@ -56,11 +56,11 @@ class ProfileIdVerificationViewModel(
     }
   }
 
-  fun setDocument() {
+  fun setDocument(file: File? = null) {
     if (documentType == DocumentType.KTP) {
-      _ktpPicture.value = ktpFile
+      _ktpPicture.value = file ?: ktpFile
     } else {
-      _selfiePicture.value = selfieFile
+      _selfiePicture.value = file ?: selfieFile
     }
   }
 

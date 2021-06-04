@@ -18,8 +18,8 @@ class VerificationResultViewModel(private val userUseCase: UserUseCase, authUseC
 
   fun getUserDoc() {
     launchViewModelScope({
-      getUserId()?.let {
-        userUseCase.getUser(it).runFlow({
+      getUserId()?.let { uid ->
+        userUseCase.getUser(uid).runFlow({
           it?.let { user ->
             _userDoc.value = user
           }

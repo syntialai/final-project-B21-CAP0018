@@ -5,6 +5,7 @@ import com.bangkit.team18.core.domain.model.user.VerificationStatus
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentId
 
+@Suppress("unused")
 data class UserResponse(
   @DocumentId
   val id: String,
