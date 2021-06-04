@@ -37,10 +37,7 @@ class SuccessBookBottomSheetDialogFragment : BottomSheetDialogFragment(), View.O
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    binding.apply {
-      buttonBackToHome.setOnClickListener(this@SuccessBookBottomSheetDialogFragment)
-      buttonGoToHistory.setOnClickListener(this@SuccessBookBottomSheetDialogFragment)
-    }
+    binding.buttonBackToHome.setOnClickListener(this@SuccessBookBottomSheetDialogFragment)
     (dialog as BottomSheetDialog).behavior.state = BottomSheetBehavior.STATE_EXPANDED
   }
 
@@ -49,10 +46,6 @@ class SuccessBookBottomSheetDialogFragment : BottomSheetDialogFragment(), View.O
       when (view) {
         buttonBackToHome -> {
           routeToCallback.goToHome()
-          dismiss()
-        }
-        buttonGoToHistory -> {
-          routeToCallback.goToHistory()
           dismiss()
         }
       }
