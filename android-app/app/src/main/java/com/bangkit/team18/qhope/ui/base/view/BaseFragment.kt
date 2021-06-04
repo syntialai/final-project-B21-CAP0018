@@ -149,4 +149,11 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
       }
     }
   }
+
+  protected fun isPermissionGranted(permission: String): Boolean {
+    return checkSelfPermission(
+      mContext,
+      permission
+    ) == PackageManager.PERMISSION_GRANTED
+  }
 }

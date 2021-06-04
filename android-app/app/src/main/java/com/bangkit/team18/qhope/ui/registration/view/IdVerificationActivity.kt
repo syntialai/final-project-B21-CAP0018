@@ -1,6 +1,7 @@
 package com.bangkit.team18.qhope.ui.registration.view
 
 import android.Manifest.permission.CAMERA
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.app.Activity
 import android.content.Intent
 import android.graphics.PorterDuff
@@ -106,11 +107,26 @@ class IdVerificationActivity :
   }
 
   override fun onPermissionGranted() {
-    viewModel.getTemporaryDocumentFile()?.let {
-      val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-        putExtra(MediaStore.EXTRA_OUTPUT, getUri(this@IdVerificationActivity, it))
+    if (!isPermissionGranted(READ_EXTERNAL_STORAGE)) {
+      checkPermission(READ_EXTERNAL_STORAGE)
+    } else if (!isPermissionGranted(CAMERA)) {
+      checkPermission(CAMERA)
+    } else {
+      viewModel.getTemporaryDocumentFile()?.let {
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+          putExtra(MediaStore.EXTRA_OUTPUT, getUri(this@IdVerificationActivity, it))
+        }
+        val openGalleryIntent = Intent(
+          Intent.ACTION_PICK,
+          MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        ).apply {
+          type = "image/*"
+        }
+        val chooserIntent = Intent.createChooser(cameraIntent, "Capture with ...").apply {
+          putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(openGalleryIntent))
+        }
+        intentLauncher.launch(chooserIntent)
       }
-      intentLauncher.launch(cameraIntent)
     }
   }
 
@@ -121,7 +137,13 @@ class IdVerificationActivity :
   }
 
   override fun onResultWithoutData(result: ActivityResult?) {
-    if (result?.resultCode == Activity.RESULT_OK) {
+    if (result?.data != null) {
+      result.data?.data?.let { uri ->
+        FileUtil.getFileAbsolutePath(this.contentResolver, uri)?.let {
+          viewModel.setDocument(File(it))
+        }
+      }
+    } else if (result?.resultCode == Activity.RESULT_OK) {
       viewModel.setDocument()
     }
   }

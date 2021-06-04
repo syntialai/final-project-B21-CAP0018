@@ -31,19 +31,4 @@ object UserMapper {
       address
     )
   }
-
-  fun User.mapToUserResponse(): UserResponse {
-    return UserResponse(
-      id,
-      name,
-      phoneNumber,
-      imageUrl,
-      birthDate,
-      verificationStatus,
-      ktpNumber,
-      gender,
-      placeOfBirth,
-      address
-    )
-  }
 }

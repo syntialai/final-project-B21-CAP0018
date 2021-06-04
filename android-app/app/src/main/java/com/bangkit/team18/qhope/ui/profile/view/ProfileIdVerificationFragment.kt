@@ -99,12 +99,25 @@ class ProfileIdVerificationFragment :
   }
 
   override fun onPermissionGrantedChange(isGranted: Boolean) {
-    if (isGranted) {
+    if (!isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+      checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+    } else if (!isPermissionGranted(Manifest.permission.CAMERA)) {
+      checkPermission(Manifest.permission.CAMERA)
+    } else {
       viewModel.getTemporaryDocumentFile()?.let {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
           putExtra(MediaStore.EXTRA_OUTPUT, FileUtil.getUri(mContext, it))
         }
-        intentLauncher.launch(cameraIntent)
+        val openGalleryIntent = Intent(
+          Intent.ACTION_PICK,
+          MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        ).apply {
+          type = "image/*"
+        }
+        val chooserIntent = Intent.createChooser(cameraIntent, "Capture with ...").apply {
+          putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(openGalleryIntent))
+        }
+        intentLauncher.launch(chooserIntent)
       }
     }
   }
@@ -116,7 +129,13 @@ class ProfileIdVerificationFragment :
   }
 
   override fun onResultWithoutData(result: ActivityResult?) {
-    if (result?.resultCode == Activity.RESULT_OK) {
+    if (result?.data != null) {
+      result.data?.data?.let { uri ->
+        FileUtil.getFileAbsolutePath(mContext.contentResolver, uri)?.let {
+          viewModel.setDocument(File(it))
+        }
+      }
+    } else if (result?.resultCode == Activity.RESULT_OK) {
       viewModel.setDocument()
     }
   }

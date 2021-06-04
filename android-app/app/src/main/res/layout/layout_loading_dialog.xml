@@ -3,6 +3,6 @@
     android:id="@+id/progress_bar_loading"
     android:layout_width="@dimen/dp_56"
     android:layout_height="@dimen/dp_56"
-    android:layout_margin="@dimen/dp_16"
     android:layout_gravity="center"
+    android:layout_margin="@dimen/dp_16"
     android:indeterminate="true" />

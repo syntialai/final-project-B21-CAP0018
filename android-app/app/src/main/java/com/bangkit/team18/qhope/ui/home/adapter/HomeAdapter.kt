@@ -51,7 +51,7 @@ class HomeAdapter(private val hospitalItemCallback: HomeHospitalItemCallback) :
         chipHospitalItemRoomAvailable.showOrRemove(isRoomAvailable)
         chipHospitalItemRoomNotAvailable.showOrRemove(isRoomAvailable.not())
 
-        context.resources.getQuantityString(
+        mContext.resources.getQuantityString(
           R.plurals.room_available_label, roomAvailable,
           roomAvailable
         ).also { roomAvailableLabel ->

@@ -68,7 +68,7 @@ class PersonalDataViewModel(private val userUseCase: UserUseCase, authUseCase: A
               placeOfBirth = placeOfBirth,
               address = address,
               gender = gender,
-              birthDate = Timestamp(birthDate.value as Long / 1000, 0)
+              birthDate = Timestamp(birthDate.value as Long, 0)
             )
             launchViewModelScope({
               userUseCase.updatePersonalData(it, user).runFlow({
@@ -85,7 +85,7 @@ class PersonalDataViewModel(private val userUseCase: UserUseCase, authUseCase: A
           placeOfBirth = placeOfBirth,
           address = address,
           gender = gender,
-          birthDate = Timestamp(birthDate.value as Long / 1000, 0)
+          birthDate = Timestamp(birthDate.value as Long, 0)
         )
         launchViewModelScope({
           userUseCase.updatePersonalData(it, user).runFlow({

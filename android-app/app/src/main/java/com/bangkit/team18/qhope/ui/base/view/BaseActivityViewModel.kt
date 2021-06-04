@@ -22,6 +22,7 @@ import com.bangkit.team18.qhope.utils.SnackbarUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.reflect.KClass
 
+
 abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
   private val inflater: (LayoutInflater) -> VB, viewModelClazz: KClass<VM>
 ) : AppCompatActivity(),
@@ -109,15 +110,18 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
   }
 
   protected fun checkPermission(permission: String) {
-    if (ContextCompat.checkSelfPermission(
-        this,
-        permission
-      ) == PackageManager.PERMISSION_GRANTED
-    ) {
+    if (isPermissionGranted(permission)) {
       onPermissionGranted()
     } else {
       requestPermissionLauncher.launch(permission)
     }
+  }
+
+  protected fun isPermissionGranted(permission: String): Boolean {
+    return ContextCompat.checkSelfPermission(
+      this,
+      permission
+    ) == PackageManager.PERMISSION_GRANTED
   }
 
   open fun onPermissionGranted() {}

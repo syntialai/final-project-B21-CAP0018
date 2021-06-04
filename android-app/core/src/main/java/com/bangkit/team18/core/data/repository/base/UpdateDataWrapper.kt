@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
 
+@Suppress("RemoveExplicitTypeArguments")
 abstract class UpdateDataWrapper<Response> {
 
   protected abstract suspend fun doUpdate(): Response
