@@ -114,8 +114,8 @@ class ProfileIdVerificationFragment :
         ).apply {
           type = "image/*"
         }
-        val chooserIntent = Intent.createChooser(cameraIntent, "Capture with ...").apply {
-          putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(openGalleryIntent))
+        val chooserIntent = Intent.createChooser(openGalleryIntent, getString(R.string.intent_choose_capturer)).apply {
+          putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(cameraIntent))
         }
         intentLauncher.launch(chooserIntent)
       }
