@@ -128,4 +128,5 @@
     <string name="gender_field_error">You need to select one.</string>
     <string name="verified_label">Verified</string>
     <string name="not_verified_label">Not Verified</string>
+    <string name="intent_choose_capturer">Capture with ...</string>
 </resources>
