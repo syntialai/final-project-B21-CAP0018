@@ -24,6 +24,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
+@Suppress("RemoveExplicitTypeArguments")
 @ExperimentalCoroutinesApi
 abstract class BaseRemoteDataSource {
 
@@ -80,7 +81,7 @@ abstract class BaseRemoteDataSource {
     }
   }
 
-  protected fun <T : Any> CollectionReference.loadNearby(
+  private fun <T : Any> CollectionReference.loadNearby(
     clazz: Class<T>, location: GeoLocation,
     radiusInMeter: Int = DEFAULT_RADIUS
   ): Flow<List<T>> = callbackFlow {

@@ -45,7 +45,7 @@ class HistoryAdapter(private val historyItemCallback: HistoryItemCallback) :
         textViewHistoryItemName.text = data.hospitalName
         textViewHistoryItemDate.text = data.createdAt
         data.nightCount?.let { nightCount ->
-          textViewHistoryItemNight.text = context.resources.getQuantityString(
+          textViewHistoryItemNight.text = mContext.resources.getQuantityString(
             R.plurals.history_night_state, nightCount, nightCount
           )
         }

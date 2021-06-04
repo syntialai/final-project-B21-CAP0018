@@ -39,11 +39,11 @@ class IdVerificationViewModel(
     }
   }
 
-  fun setDocument() {
+  fun setDocument(file: File? = null) {
     if (documentType == DocumentType.KTP) {
-      _ktpPicture.value = ktpFile
+      _ktpPicture.value = file ?: ktpFile
     } else {
-      _selfiePicture.value = selfieFile
+      _selfiePicture.value = file ?: selfieFile
     }
   }
 

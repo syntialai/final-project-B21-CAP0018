@@ -44,7 +44,7 @@ class UserRemoteDataSourceImpl(
     uri: Uri
   ): Flow<ResponseWrapper<Uri>> {
     val imageReference = storageReference
-      .child("${CollectionConstants.IMAGES_USERS_STORAGE_PATH}/$userId/${CollectionConstants.KTP_STORAGE_PATH}/selfie_$userId.jpg")
+      .child("${CollectionConstants.IMAGES_USERS_STORAGE_PATH}/$userId/${CollectionConstants.SELFIE_STORAGE_PATH}/selfie_$userId.jpg")
     return imageReference.addFile(uri).transformToResponse()
   }
 }
