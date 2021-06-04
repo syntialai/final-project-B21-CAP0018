@@ -27,12 +27,12 @@ abstract class BaseAdapter<T : Any, VB : ViewBinding>(diffCallback: BaseDiffCall
   abstract inner class BaseViewHolder(protected val binding: VB) :
     RecyclerView.ViewHolder(binding.root) {
 
-    protected val context = binding.root.context
+    protected val mContext = binding.root.context
 
     abstract fun bind(data: T)
 
     protected fun <IV> ImageView.loadImage(image: IV, @DrawableRes placeholder: Int? = null) {
-      loadImageFromStorage(binding.root.context, image, placeholder)
+      loadImageFromStorage(mContext, image, placeholder)
     }
   }
 }

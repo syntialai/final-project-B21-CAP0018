@@ -42,7 +42,7 @@ class RegistrationViewModel(
               name,
               it.phoneNumber.toString(),
               uri.toString(),
-              Timestamp(birthDate.value as Long / 1000, 0),
+              Timestamp(birthDate.value as Long, 0),
               VerificationStatus.NOT_UPLOAD
             )
             submitUser(user)
@@ -53,7 +53,7 @@ class RegistrationViewModel(
             name,
             it.phoneNumber.toString(),
             "",
-            Timestamp(birthDate.value as Long / 1000, 0),
+            Timestamp(birthDate.value as Long, 0),
             VerificationStatus.NOT_UPLOAD
           )
           submitUser(user)

@@ -22,13 +22,4 @@ abstract class BaseActivity<VB : ViewBinding>(private val inflater: (LayoutInfla
   }
 
   abstract fun setupViews(savedInstanceState: Bundle?)
-
-  protected fun showErrorToast(message: String?, defaultMessageId: Int) {
-    Toast.makeText(binding.root.context, message ?: getString(defaultMessageId), Toast.LENGTH_SHORT)
-      .show()
-  }
-
-  protected fun showToast(messageId: Int) {
-    SnackbarUtils.showSnackbar(binding.root, getString(messageId))
-  }
 }
