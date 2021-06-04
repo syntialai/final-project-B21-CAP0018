@@ -11,9 +11,9 @@
 
 The models and weights can be accessed here : 
 
-- [YOLOv3] - https://drive.google.com/drive/folders/1nyrWCDc5Ae8hzrmaGpyF-aE37hL_Yzro?usp=sharing
-- [FaceNet] - https://drive.google.com/drive/folders/1I0s5-goRvowMf58994l_xoV8dtL5fqnE?usp=sharing (Courtesy of David Sandberg)
-- [Xception] - https://drive.google.com/drive/folders/1pciVugNqxhCiaauMbkaUaOQx9ML9y81M?usp=sharing
+- [YOLOv3](https://drive.google.com/drive/folders/1nyrWCDc5Ae8hzrmaGpyF-aE37hL_Yzro?usp=sharing)
+- [FaceNet](https://drive.google.com/drive/folders/1I0s5-goRvowMf58994l_xoV8dtL5fqnE?usp=sharing) (Courtesy of David Sandberg)
+- [Xception](https://drive.google.com/drive/folders/1pciVugNqxhCiaauMbkaUaOQx9ML9y81M?usp=sharing)
 
 The .py script (and the requirements.txt) used in this project is in the deploy folder. This is an implementation using the Flask API. To use it : 
 
