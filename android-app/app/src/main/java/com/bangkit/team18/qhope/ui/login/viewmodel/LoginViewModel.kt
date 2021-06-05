@@ -34,7 +34,8 @@ class LoginViewModel(private val authUseCase: AuthUseCase, private val userUseCa
     }
 
     override fun onVerificationFailed(e: FirebaseException) {
-      showErrorResponse("An internal error has occurred. Please try again later.")
+      showErrorResponse(e.message.toString())
+      clearCountDown()
     }
 
     override fun onCodeSent(
