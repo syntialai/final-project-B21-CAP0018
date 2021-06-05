@@ -33,6 +33,7 @@ class ProfileIdVerificationFragment :
         setupImage(profileIdVerificationKtpPicture, it)
         profileIdVerificationEditKtpPicture.isVisible = it.isNotNull()
         profileIdVerificationDeleteKtpPicture.isVisible = it.isNotNull()
+        checkSubmitButton()
       })
       viewModel.selfiePicture.observe(viewLifecycleOwner, {
         setupImage(profileIdVerificationSelfiePicture, it)
