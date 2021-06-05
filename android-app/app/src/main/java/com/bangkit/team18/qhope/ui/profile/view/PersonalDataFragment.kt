@@ -49,6 +49,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
   }
 
   override fun setupObserver() {
+    super.setupObserver()
     viewModel.user.observe(viewLifecycleOwner, {
       if (it.isNotNull()) {
         viewModel.getUserDoc()

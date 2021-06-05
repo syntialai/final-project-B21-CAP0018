@@ -39,6 +39,7 @@ class IdVerificationActivity :
         setupImage(idVerificationKtpPicture, it)
         idVerificationEditKtpPicture.isVisible = it.isNotNull()
         idVerificationDeleteKtpPicture.isVisible = it.isNotNull()
+        checkSubmitButton()
       })
       viewModel.selfiePicture.observe(this@IdVerificationActivity, {
         setupImage(idVerificationSelfiePicture, it)
