@@ -141,11 +141,11 @@ class IdVerificationActivity :
     if (result?.data != null) {
       result.data?.data?.let { uri ->
         FileUtil.getFileAbsolutePath(this.contentResolver, uri)?.let {
-          viewModel.setDocument(File(it))
+          viewModel.setDocument(this, File(it))
         }
       }
     } else if (result?.resultCode == Activity.RESULT_OK) {
-      viewModel.setDocument()
+      viewModel.setDocument(this)
     }
   }
 }
