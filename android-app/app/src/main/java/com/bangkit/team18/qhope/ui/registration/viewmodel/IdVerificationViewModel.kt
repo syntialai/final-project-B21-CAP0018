@@ -1,12 +1,15 @@
 package com.bangkit.team18.qhope.ui.registration.viewmodel
 
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bangkit.team18.core.domain.model.user.DocumentType
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
+import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
+import id.zelory.compressor.Compressor
 import java.io.File
 
 class IdVerificationViewModel(
@@ -39,12 +42,20 @@ class IdVerificationViewModel(
     }
   }
 
-  fun setDocument(file: File? = null) {
-    if (documentType == DocumentType.KTP) {
-      _ktpPicture.value = file ?: ktpFile
-    } else {
-      _selfiePicture.value = file ?: selfieFile
-    }
+  fun setDocument(context: Context, file: File? = null) {
+    launchViewModelScope({
+      if (documentType == DocumentType.KTP) {
+        val imageFile = file ?: ktpFile
+        val compressedImageFile =
+          if (imageFile != null) Compressor.compress(context, imageFile) else imageFile
+        _ktpPicture.value = compressedImageFile
+      } else {
+        val imageFile = file ?: selfieFile
+        val compressedImageFile =
+          if (imageFile != null) Compressor.compress(context, imageFile) else imageFile
+        _selfiePicture.value = compressedImageFile
+      }
+    })
   }
 
   fun clearDocument(documentType: DocumentType) {
