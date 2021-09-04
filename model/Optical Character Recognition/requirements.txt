@@ -1,0 +1,10 @@
+virtualenv
+pytesseract    
+numpy
+pandas
+requests
+google-cloud-firestore
+opencv-python == 4.5.2.52
+pytesseract
+matplotlib
+Pillow==7.1.2

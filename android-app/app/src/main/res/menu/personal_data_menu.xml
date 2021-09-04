@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/personal_data_edit_item"
+        android:icon="@drawable/ic_edit"
+        android:title="@string/edit_label"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/personal_data_close_item"
+        android:icon="@drawable/ic_close"
+        android:title="@string/edit_label"
+        android:visible="false"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
+    <item
+        android:id="@+id/personal_data_done_item"
+        android:icon="@drawable/ic_done"
+        android:title="@string/edit_label"
+        android:visible="false"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
+</menu>

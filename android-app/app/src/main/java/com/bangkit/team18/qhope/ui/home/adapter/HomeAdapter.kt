@@ -2,16 +2,16 @@ package com.bangkit.team18.qhope.ui.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.bangkit.team18.core.domain.model.home.Hospital
+import com.bangkit.team18.core.utils.view.DataUtils.orZero
+import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.LayoutHospitalItemBinding
-import com.bangkit.team18.qhope.model.home.Hospital
 import com.bangkit.team18.qhope.ui.base.adapter.BaseAdapter
 import com.bangkit.team18.qhope.ui.base.adapter.BaseDiffCallback
-import com.bangkit.team18.qhope.utils.view.DataUtils.orZero
-import com.bangkit.team18.qhope.utils.view.ViewUtils.showOrRemove
 
-class HomeAdapter(private val hospitalItemCallback: HospitalItemCallback) :
-    BaseAdapter<Hospital, LayoutHospitalItemBinding>(diffCallback) {
+class HomeAdapter(private val hospitalItemCallback: HomeHospitalItemCallback) :
+  BaseAdapter<Hospital, LayoutHospitalItemBinding>(diffCallback) {
 
   companion object {
     private val diffCallback = object : BaseDiffCallback<Hospital>() {
@@ -33,13 +33,13 @@ class HomeAdapter(private val hospitalItemCallback: HospitalItemCallback) :
     override fun bind(data: Hospital) {
       binding.apply {
         root.setOnClickListener {
-          hospitalItemCallback.onClickListener(data.id.orEmpty())
-        }
-        buttonHospitalItemBookRoom.setOnClickListener {
-          hospitalItemCallback.onBookHospitalButtonClick(data.id.orEmpty())
+          hospitalItemCallback.onClickListener(data.id)
         }
 
-        imageViewHospitalItem.loadImage(data.image, R.drawable.drawable_hospital_placeholder)
+        imageViewHospitalItem.loadImage(
+          hospitalItemCallback.getStorageRef(data.image),
+          R.drawable.drawable_hospital_placeholder
+        )
 
         textViewHospitalItemName.text = data.name
         textViewHospitalItemAddress.text = data.address
@@ -48,17 +48,20 @@ class HomeAdapter(private val hospitalItemCallback: HospitalItemCallback) :
         val roomAvailable = data.availableRoomCount.orZero()
         val isRoomAvailable = isRoomAvailable(roomAvailable)
 
-        buttonHospitalItemBookRoom.isEnabled = isRoomAvailable
         chipHospitalItemRoomAvailable.showOrRemove(isRoomAvailable)
         chipHospitalItemRoomNotAvailable.showOrRemove(isRoomAvailable.not())
 
-        context.resources.getQuantityString(R.plurals.room_available_label, roomAvailable,
-            roomAvailable).also { roomAvailableLabel ->
-          chipHospitalItemRoomNotAvailable.setChipIconResource(if (isRoomAvailable) {
-            R.drawable.ic_info
-          } else {
-            R.drawable.ic_not_available
-          })
+        mContext.resources.getQuantityString(
+          R.plurals.room_available_label, roomAvailable,
+          roomAvailable
+        ).also { roomAvailableLabel ->
+          chipHospitalItemRoomNotAvailable.setChipIconResource(
+            if (isRoomAvailable) {
+              R.drawable.ic_info
+            } else {
+              R.drawable.ic_not_available
+            }
+          )
           chipHospitalItemRoomNotAvailable.text = roomAvailableLabel
           chipHospitalItemRoomAvailable.text = roomAvailableLabel
         }

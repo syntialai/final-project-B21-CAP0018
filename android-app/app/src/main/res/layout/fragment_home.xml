@@ -9,6 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipToPadding="false"
         android:paddingHorizontal="@dimen/dp_16"
         tools:context=".ui.home.view.HomeFragment">
 
@@ -20,9 +21,9 @@
             android:paddingStart="@dimen/dp_minus_4"
             android:paddingEnd="@dimen/dp_4"
             android:src="@drawable/ic_location"
-            app:layout_constraintTop_toTopOf="@id/text_view_your_location_label"
             app:layout_constraintBottom_toBottomOf="@id/text_view_your_location"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_view_your_location_label" />
 
         <TextView
             android:id="@+id/text_view_your_location_label"
@@ -31,9 +32,9 @@
             android:layout_marginTop="@dimen/dp_16"
             android:text="@string/your_location_label"
             android:textAppearance="?attr/textAppearanceBody2"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/image_view_your_location"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/text_view_your_location"
@@ -42,10 +43,24 @@
             android:layout_marginTop="@dimen/dp_4"
             android:textAppearance="?attr/textAppearanceHeadline5"
             android:textColor="?attr/colorOnSurface"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_view_your_location_label"
             app:layout_constraintStart_toEndOf="@id/image_view_your_location"
-            tools:text="Jl. Anana" />
+            app:layout_constraintTop_toBottomOf="@id/text_view_your_location_label"
+            tools:text="Jl. Anana"
+            tools:visibility="visible" />
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/spin_kit_load_your_location"
+            style="@style/SpinKitView.ThreeBounce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dp_16"
+            app:SpinKit_Color="?attr/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_your_location"
+            app:layout_constraintStart_toEndOf="@id/image_view_your_location"
+            app:layout_constraintTop_toTopOf="@id/text_view_your_location" />
 
         <View
             android:id="@+id/view_your_location_listener"
@@ -53,10 +68,10 @@
             android:layout_height="@dimen/dp_0"
             android:clickable="true"
             android:focusable="true"
-            app:layout_constraintTop_toTopOf="@id/text_view_your_location_label"
             app:layout_constraintBottom_toBottomOf="@id/text_view_your_location"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/text_view_your_location_label" />
 
         <SearchView
             android:id="@+id/search_view_home"
@@ -64,10 +79,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_20"
             android:queryHint="@string/search_hint"
-            android:theme="@style/Widget.QHope.SearchView"
-            app:layout_constraintTop_toBottomOf="@id/text_view_your_location"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/text_view_your_location" />
 
         <TextView
             android:id="@+id/text_view_recommendation_hospitals_label"
@@ -77,9 +91,9 @@
             android:text="@string/recommendation_hospitals_label"
             android:textAppearance="?attr/textAppearanceHeadline4"
             android:textColor="?attr/colorOnSurface"
-            app:layout_constraintTop_toBottomOf="@id/search_view_home"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/search_view_home" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_recommended_hospitals"
@@ -88,9 +102,9 @@
             android:layout_marginTop="@dimen/dp_16"
             android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/text_view_recommendation_hospitals_label"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/text_view_recommendation_hospitals_label" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_hospital_search_results"
@@ -100,10 +114,21 @@
             android:clipToPadding="false"
             android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/search_view_home"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_view_home"
             tools:visibility="visible" />
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/spin_kit_load_home"
+            style="@style/SpinKitView.Large.DoubleBounce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_48"
+            app:SpinKit_Color="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_view_recommendation_hospitals_label" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

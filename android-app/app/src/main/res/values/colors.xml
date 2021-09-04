@@ -2,6 +2,8 @@
 <resources>
 
     <!-- Primary colors -->
+    <color name="blue_100">#b8e8f3</color>
+    <color name="blue_200">#8cd8ed</color>
     <color name="blue_400">#4dbde3</color>
     <color name="blue_700">#2b90bf</color>
     <color name="blue_900">#1d5f8a</color>
@@ -17,6 +19,8 @@
     <color name="black_blue_900">#0f1116</color>
     <color name="black_blue_900_60">#990F1116</color>
     <color name="black_blue_800_50">#802F3136</color>
+    <color name="black_blue_300">#2E383E</color>
+    <color name="black_blue_200">#4C5F66</color>
 
     <!-- White -->
     <color name="white">#FFFFFFFF</color>
@@ -29,4 +33,11 @@
     <!-- Red -->
     <color name="red_100_60">#99FF958C</color>
     <color name="red_700">#D50000</color>
+
+    <!-- Grey -->
+    <color name="grey_100">#F5F5F5</color>
+    <color name="grey_300">#E0E0E0</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="ic_launcher_background">@color/blue_100</color>
 </resources>

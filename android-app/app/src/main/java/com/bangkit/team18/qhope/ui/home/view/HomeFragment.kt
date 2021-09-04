@@ -6,26 +6,40 @@ import android.location.Geocoder
 import android.location.Location
 import android.view.View
 import android.widget.SearchView
+import androidx.navigation.fragment.findNavController
+import com.bangkit.team18.core.utils.location.LocationManager
+import com.bangkit.team18.core.utils.view.DataUtils.orFalse
+import com.bangkit.team18.core.utils.view.ViewUtils.hide
+import com.bangkit.team18.core.utils.view.ViewUtils.show
+import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentHomeBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.home.adapter.HomeAdapter
-import com.bangkit.team18.qhope.ui.home.adapter.HospitalItemCallback
-import com.bangkit.team18.qhope.utils.location.LocationManager
-import com.bangkit.team18.qhope.utils.view.DataUtils.orFalse
-import com.bangkit.team18.qhope.utils.view.ViewUtils.showOrRemove
+import com.bangkit.team18.qhope.ui.home.adapter.HomeHospitalItemCallback
+import com.bangkit.team18.qhope.ui.home.viewmodel.HomeViewModel
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
-import java.util.Locale
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import org.koin.android.ext.android.inject
+import java.util.*
 
-class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
-    HospitalItemCallback {
+class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
+  FragmentHomeBinding::inflate,
+  HomeViewModel::class
+), HomeHospitalItemCallback {
 
   companion object {
     fun newInstance() = HomeFragment()
   }
 
+  private val storage: FirebaseStorage by inject()
+
   private val homeAdapter by lazy {
+    HomeAdapter(this)
+  }
+  private val searchResultAdapter by lazy {
     HomeAdapter(this)
   }
 
@@ -41,7 +55,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
   override fun setupViews() {
     setupRecyclerView()
     setupSearchView()
+    showLoadingState(true)
+    showLocationLoadingState(true)
     getLocation()
+  }
+
+  override fun setupObserver() {
+    super.setupObserver()
+
+    viewModel.nearbyHospitals.observe(viewLifecycleOwner, { nearbyHospitals ->
+      homeAdapter.submitList(nearbyHospitals)
+    })
+    viewModel.searchHospitalResults.observe(viewLifecycleOwner, { searchResults ->
+      showSearchResults(true)
+      searchResultAdapter.submitList(searchResults)
+    })
   }
 
   override fun onPause() {
@@ -65,11 +93,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
   }
 
   override fun onClickListener(id: String) {
-    // TODO: Go to hospital details
+    findNavController().navigate(
+      HomeFragmentDirections.actionHomeFragmentToHospitalDetailFragment(
+        id
+      )
+    )
   }
 
-  override fun onBookHospitalButtonClick(id: String) {
-    // TODO: Go to book transaction
+  override fun getStorageRef(imagePath: String): StorageReference {
+    return storage.getReference(imagePath)
   }
 
   @SuppressLint("MissingPermission")
@@ -77,8 +109,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     if (isGranted) {
       locationManager.startUpdateLocation()
     } else {
-      showErrorToast(R.string.failed_to_get_location_message)
+      showErrorToast(defaultMessageId = R.string.failed_to_get_location_message)
     }
+  }
+
+  override fun showLoadingState(isLoading: Boolean) {
+    binding.spinKitLoadHome.showOrRemove(isLoading)
   }
 
   private fun getLocation() {
@@ -86,10 +122,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
   }
 
   private fun setLocation(location: Location) {
-    // TODO: Change recommendation by location latitude and longitude
-    val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(location.latitude,
-        location.longitude, 1)
+    viewModel.fetchNearbyHospitals(location.latitude, location.longitude)
+    val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(
+      location.latitude,
+      location.longitude, 1
+    )
     binding.textViewYourLocation.text = addresses[0].getAddressLine(0)
+    showLocationLoadingState(false)
   }
 
   private fun setupRecyclerView() {
@@ -99,7 +138,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         setHasFixedSize(false)
       }
       with(recyclerViewHospitalSearchResults) {
-        adapter = homeAdapter
+        adapter = searchResultAdapter
         setHasFixedSize(false)
       }
     }
@@ -110,16 +149,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
       setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
         override fun onQueryTextSubmit(query: String?): Boolean {
-          // TODO: Do search
-          showSearchResults(true)
+          viewModel.searchHospital(query.orEmpty())
           clearFocus()
           return true
         }
 
         override fun onQueryTextChange(newText: String?): Boolean {
-          launchJob {
-            // TODO: Do search
-            showSearchResults(true)
+          newText?.let {
+            launchJob {
+              if (it.isEmpty()) {
+                showSearchResults(false)
+              } else {
+                viewModel.searchHospital(it)
+              }
+            }
           }
           return false
         }
@@ -128,6 +171,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         showSearchResults(false)
         clearFocus()
         true
+      }
+    }
+  }
+
+  private fun showLocationLoadingState(isLoading: Boolean) {
+    binding.apply {
+      spinKitLoadYourLocation.showOrRemove(isLoading)
+      if (isLoading) {
+        textViewYourLocation.hide()
+      } else {
+        textViewYourLocation.show()
       }
     }
   }

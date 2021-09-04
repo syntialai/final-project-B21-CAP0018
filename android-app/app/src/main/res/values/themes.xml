@@ -5,7 +5,9 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/blue_700</item>
         <item name="colorPrimaryVariant">@color/blue_900</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimarySurface">@color/blue_100</item>
+        <item name="colorOnPrimarySurface">@color/blue_200</item>
+        <item name="colorOnPrimary">@color/white</item>
 
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/orange_300</item>
@@ -14,6 +16,7 @@
 
         <!-- Other colors. -->
         <item name="colorSurface">@color/white</item>
+        <item name="colorSurfaceDarker">@color/grey_100</item>
         <item name="colorOnSurface">@color/black_blue_900</item>
         <item name="colorTextMedium">@color/black_blue_900_60</item>
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
@@ -32,12 +35,15 @@
         <item name="textAppearanceButton">@style/TextAppearance.QHope.Button</item>
         <item name="textAppearanceCaption">@style/TextAppearance.QHope.Caption</item>
         <item name="textAppearanceOverline">@style/TextAppearance.QHope.Overline</item>
-        
+
         <!-- Customize your theme here. -->
-        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.QHope.LargeComponent</item>
-        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.QHope.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.QHope.LargeComponent
+        </item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.QHope.MediumComponent
+        </item>
         <item name="cardViewStyle">@style/Widget.QHope.CardView</item>
         <item name="android:searchViewStyle">@style/Widget.QHope.SearchView</item>
         <item name="toolbarStyle">@style/Widget.QHope.Toolbar</item>
+        <item name="imageButtonStyle">@style/Widget.QHope.ImageButton</item>
     </style>
 </resources>

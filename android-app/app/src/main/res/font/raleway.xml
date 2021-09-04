@@ -2,22 +2,22 @@
 <font-family xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <font
+        app:font="@font/raleway_regular"
         app:fontStyle="normal"
-        app:fontWeight="400"
-        app:font="@font/raleway_regular" />
+        app:fontWeight="400" />
 
     <font
+        app:font="@font/raleway_medium"
         app:fontStyle="normal"
-        app:fontWeight="500"
-        app:font="@font/raleway_medium" />
+        app:fontWeight="500" />
 
     <font
+        app:font="@font/raleway_semi_bold"
         app:fontStyle="normal"
-        app:fontWeight="600"
-        app:font="@font/raleway_semi_bold" />
+        app:fontWeight="600" />
 
     <font
+        app:font="@font/raleway_bold"
         app:fontStyle="normal"
-        app:fontWeight="700"
-        app:font="@font/raleway_bold" />
+        app:fontWeight="700" />
 </font-family>
