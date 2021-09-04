@@ -13,6 +13,40 @@
         android:paddingHorizontal="@dimen/dp_16"
         tools:context=".ui.home.view.HomeFragment">
 
+        <TextView
+            android:id="@+id/text_view_hello_label"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:text="@string/hello_label"
+            android:textAppearance="?attr/textAppearanceHeadline2"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_view_name_label"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceHeadline2"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_view_hello_label"
+            tools:text="@string/hello_label" />
+
+        <ImageView
+            android:id="@+id/image_view_hello"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/hello_label"
+            android:paddingStart="@dimen/dp_8"
+            android:paddingEnd="@dimen/dp_16"
+            android:src="@drawable/ic_hello"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_name_label"
+            app:layout_constraintStart_toEndOf="@id/text_view_name_label"
+            app:layout_constraintTop_toTopOf="@id/text_view_name_label" />
+
         <ImageView
             android:id="@+id/image_view_your_location"
             android:layout_width="wrap_content"
@@ -29,12 +63,12 @@
             android:id="@+id/text_view_your_location_label"
             android:layout_width="@dimen/dp_0"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_24"
             android:text="@string/your_location_label"
             android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/image_view_your_location"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/text_view_name_label" />
 
         <TextView
             android:id="@+id/text_view_your_location"
@@ -73,12 +107,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/text_view_your_location_label" />
 
+        <include
+            android:id="@+id/layout_verification_status"
+            layout="@layout/layout_verification_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_your_location_listener" />
+
         <SearchView
             android:id="@+id/search_view_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_20"
             android:queryHint="@string/search_hint"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_view_your_location" />
@@ -89,11 +134,24 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_20"
             android:text="@string/recommendation_hospitals_label"
+            android:visibility="gone"
             android:textAppearance="?attr/textAppearanceHeadline4"
             android:textColor="?attr/colorOnSurface"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search_view_home" />
+
+        <TextView
+            android:id="@+id/text_view_our_hospitals_label"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_24"
+            android:text="@string/our_hospitals_label"
+            android:textAppearance="?attr/textAppearanceHeadline3"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_verification_status" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_recommended_hospitals"
@@ -104,7 +162,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_view_recommendation_hospitals_label" />
+            app:layout_constraintTop_toBottomOf="@id/text_view_our_hospitals_label" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_hospital_search_results"
@@ -116,8 +174,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/search_view_home"
-            tools:visibility="visible" />
+            app:layout_constraintTop_toBottomOf="@id/layout_verification_status" />
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/spin_kit_load_home"
