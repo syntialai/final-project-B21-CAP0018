@@ -61,8 +61,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   override fun setupObserver() {
     super.setupObserver()
 
+    viewModel.fetchUserData()
     viewModel.nearbyHospitals.observe(viewLifecycleOwner, { nearbyHospitals ->
       homeAdapter.submitList(nearbyHospitals)
+    })
+    viewModel.userData.observe(viewLifecycleOwner, { userData ->
+      setUserName(userData.name)
+      userData.verificationStatus?.let {
+        setVerificationStatus(it)
+      }
     })
   }
 
