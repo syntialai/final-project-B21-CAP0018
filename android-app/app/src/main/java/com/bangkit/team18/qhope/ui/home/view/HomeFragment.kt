@@ -7,9 +7,11 @@ import android.location.Location
 import android.view.View
 import android.widget.SearchView
 import androidx.navigation.fragment.findNavController
+import com.bangkit.team18.core.domain.model.user.VerificationStatus
 import com.bangkit.team18.core.utils.location.LocationManager
 import com.bangkit.team18.core.utils.view.DataUtils.orFalse
 import com.bangkit.team18.core.utils.view.ViewUtils.hide
+import com.bangkit.team18.core.utils.view.ViewUtils.remove
 import com.bangkit.team18.core.utils.view.ViewUtils.show
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
@@ -39,9 +41,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   private val homeAdapter by lazy {
     HomeAdapter(this)
   }
-  private val searchResultAdapter by lazy {
-    HomeAdapter(this)
-  }
 
   private val locationManager by lazy {
     LocationManager(mContext, object : LocationCallback() {
@@ -54,7 +53,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
 
   override fun setupViews() {
     setupRecyclerView()
-    setupSearchView()
     showLoadingState(true)
     showLocationLoadingState(true)
     getLocation()
@@ -65,10 +63,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
 
     viewModel.nearbyHospitals.observe(viewLifecycleOwner, { nearbyHospitals ->
       homeAdapter.submitList(nearbyHospitals)
-    })
-    viewModel.searchHospitalResults.observe(viewLifecycleOwner, { searchResults ->
-      showSearchResults(true)
-      searchResultAdapter.submitList(searchResults)
     })
   }
 
@@ -114,12 +108,41 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   }
 
   override fun showLoadingState(isLoading: Boolean) {
-    binding.spinKitLoadHome.showOrRemove(isLoading)
+    binding.apply {
+      spinKitLoadHome.showOrRemove(isLoading)
+      layoutVerificationStatus.root.showOrRemove(isLoading.not())
+      textViewOurHospitalsLabel.showOrRemove(isLoading.not())
+      recyclerViewRecommendedHospitals.showOrRemove(isLoading.not())
+    }
   }
 
   private fun getLocation() {
     checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
   }
+
+  private fun getVerificationButtonText(status: VerificationStatus) = getString(when (status) {
+    VerificationStatus.VERIFIED -> R.string.verification_status_verified_button_label
+    VerificationStatus.REJECTED -> R.string.verification_status_not_verified_button_label
+    else -> R.string.verification_status_not_upload_button_label
+  })
+
+  private fun getVerificationDrawable(status: VerificationStatus) = when (status) {
+    VerificationStatus.VERIFIED -> R.drawable.drawable_verification_status_verified
+    VerificationStatus.REJECTED -> R.drawable.drawable_verification_status_not_verified
+    else -> R.drawable.drawable_verification_status_not_upload
+  }
+
+  private fun getVerificationDescription(status: VerificationStatus) = getString(when (status) {
+    VerificationStatus.VERIFIED -> R.string.verification_status_verified_description
+    VerificationStatus.REJECTED -> R.string.verification_status_not_verified_description
+    else -> R.string.verification_status_not_upload_description
+  })
+
+  private fun getVerificationTitle(status: VerificationStatus) = getString(when (status) {
+    VerificationStatus.NOT_UPLOAD -> R.string.verification_status_not_upload_title
+    VerificationStatus.UPLOADED -> R.string.verification_status_not_upload_title
+    else -> R.string.verification_status_uploaded_title
+  })
 
   private fun setLocation(location: Location) {
     viewModel.fetchNearbyHospitals(location.latitude, location.longitude)
@@ -131,15 +154,51 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
     showLocationLoadingState(false)
   }
 
-  private fun setupRecyclerView() {
+  private fun setUserName(name: String) {
     binding.apply {
-      with(recyclerViewRecommendedHospitals) {
-        adapter = homeAdapter
-        setHasFixedSize(false)
+      groupHello.show()
+      textViewNameLabel.text = name
+    }
+  }
+
+  private fun setVerificationStatus(status: VerificationStatus) {
+    binding.layoutVerificationStatus.apply {
+      buttonVerificationStatus.text = getVerificationButtonText(status)
+      imageViewVerificationStatus.setImageResource(getVerificationDrawable(status))
+      textViewVerificationStatusDescription.text = getVerificationDescription(status)
+      textViewVerificationStatusTitle.text = getVerificationTitle(status)
+
+      when (status) {
+        VerificationStatus.VERIFIED -> {
+          chipVerificationStatusNotVerified.remove()
+          chipVerificationStatusVerified.show()
+        }
+        VerificationStatus.REJECTED -> {
+          chipVerificationStatusNotVerified.show()
+          chipVerificationStatusVerified.hide()
+        }
+        else -> {
+          chipVerificationStatusNotVerified.remove()
+          chipVerificationStatusVerified.remove()
+        }
       }
-      with(recyclerViewHospitalSearchResults) {
-        adapter = searchResultAdapter
-        setHasFixedSize(false)
+    }
+  }
+
+  private fun setupRecyclerView() {
+    binding.recyclerViewRecommendedHospitals.apply {
+      adapter = homeAdapter
+      setHasFixedSize(false)
+    }
+  }
+
+  private fun showLocationLoadingState(isLoading: Boolean) {
+    binding.apply {
+      spinKitLoadYourLocation.showOrRemove(isLoading)
+      if (isLoading) {
+        textViewYourLocation.hide()
+      } else {
+        textViewYourLocation.show()
       }
     }
   }
@@ -167,21 +226,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
           return false
         }
       })
+
       setOnCloseListener {
         showSearchResults(false)
         clearFocus()
         true
-      }
-    }
-  }
-
-  private fun showLocationLoadingState(isLoading: Boolean) {
-    binding.apply {
-      spinKitLoadYourLocation.showOrRemove(isLoading)
-      if (isLoading) {
-        textViewYourLocation.hide()
-      } else {
-        textViewYourLocation.show()
       }
     }
   }
