@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:backgroundTint="?attr/colorPrimarySurface"
+    android:clickable="true"
+    android:focusable="true"
+    app:shapeAppearance="?shapeAppearanceLargeComponent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/dp_16">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_verification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.42" />
+
+        <ImageView
+            android:id="@+id/image_view_verification_status"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideline_verification"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/drawable_verification_status_not_verified" />
+
+        <TextView
+            android:id="@+id/text_view_verification_status_title"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceHeadline3"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintBottom_toTopOf="@+id/chip_verification_status_verified"
+            app:layout_constraintEnd_toStartOf="@id/guideline_verification"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Hello!" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_verification_status_verified"
+            style="@style/Widget.QHope.Chip.Info.Small.Green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
+            android:text="@string/verified_label"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/text_view_verification_status_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_verification_status_title"
+            tools:visibility="visible" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_verification_status_not_verified"
+            style="@style/Widget.QHope.Chip.Info.Small.Red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_0"
+            android:layout_marginBottom="@dimen/dp_8"
+            android:text="@string/not_verified_label"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/text_view_verification_status_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_verification_status_title"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/text_view_verification_status_description"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/colorTextMedium"
+            app:layout_constraintBottom_toTopOf="@+id/button_verification_status"
+            app:layout_constraintEnd_toStartOf="@id/guideline_verification"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chip_verification_status_verified"
+            tools:text="Hello! fdsfafdsafa fdafdafdsaf" />
+
+        <Button
+            android:id="@+id/button_verification_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_verification_status_description"
+            tools:text="Done" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
