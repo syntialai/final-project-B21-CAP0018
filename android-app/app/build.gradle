@@ -75,6 +75,9 @@ dependencies {
 
   // Lottie
   implementation "com.airbnb.android:lottie:3.4.1"
+
+  // Compressor
+  implementation 'id.zelory:compressor:3.0.1'
 }
 
 secrets {

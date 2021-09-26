@@ -133,11 +133,11 @@ class ProfileIdVerificationFragment :
     if (result?.data != null) {
       result.data?.data?.let { uri ->
         FileUtil.getFileAbsolutePath(mContext.contentResolver, uri)?.let {
-          viewModel.setDocument(File(it))
+          viewModel.setDocument(mContext, File(it))
         }
       }
     } else if (result?.resultCode == Activity.RESULT_OK) {
-      viewModel.setDocument()
+      viewModel.setDocument(mContext)
     }
   }
 }
