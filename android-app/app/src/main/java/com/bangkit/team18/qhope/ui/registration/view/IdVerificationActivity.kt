@@ -107,34 +107,29 @@ class IdVerificationActivity :
     }
   }
 
-  override fun onPermissionGranted() {
-    if (!isPermissionGranted(READ_EXTERNAL_STORAGE)) {
-      checkPermission(READ_EXTERNAL_STORAGE)
-    } else if (!isPermissionGranted(CAMERA)) {
-      checkPermission(CAMERA)
-    } else {
-      viewModel.getTemporaryDocumentFile()?.let {
-        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-          putExtra(MediaStore.EXTRA_OUTPUT, getUri(this@IdVerificationActivity, it))
-        }
-        val openGalleryIntent = Intent(
-          Intent.ACTION_PICK,
-          MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        ).apply {
-          type = "image/*"
-        }
-        val chooserIntent = Intent.createChooser(openGalleryIntent, getString(R.string.intent_choose_capturer)).apply {
+  override fun onPermissionsGranted() {
+    viewModel.getTemporaryDocumentFile()?.let {
+      val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+        putExtra(MediaStore.EXTRA_OUTPUT, getUri(this@IdVerificationActivity, it))
+      }
+      val openGalleryIntent = Intent(
+        Intent.ACTION_PICK,
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+      ).apply {
+        type = "image/*"
+      }
+      val chooserIntent =
+        Intent.createChooser(openGalleryIntent, getString(R.string.intent_choose_capturer)).apply {
           putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(cameraIntent))
         }
-        intentLauncher.launch(chooserIntent)
-      }
+      intentLauncher.launch(chooserIntent)
     }
   }
 
   private fun openCamera(documentType: DocumentType) {
     viewModel.setDocumentType(documentType)
     viewModel.setTemporaryFile(FileUtil.createImageFile(this))
-    checkPermission(CAMERA)
+    checkPermissions(CAMERA, READ_EXTERNAL_STORAGE)
   }
 
   override fun onResultWithoutData(result: ActivityResult?) {

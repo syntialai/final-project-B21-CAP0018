@@ -36,4 +36,9 @@ class UserInteractor(private val userRepository: UserRepository) : UserUseCase {
     userId: String,
     user: User
   ): Flow<ResponseWrapper<Boolean>> = userRepository.updatePersonalData(userId, user)
+
+  override suspend fun updateProfilePicture(
+    userId: String,
+    imageUrl: String
+  ): Flow<ResponseWrapper<Boolean>> = userRepository.updateProfilePicture(userId, imageUrl)
 }

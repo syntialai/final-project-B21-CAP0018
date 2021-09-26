@@ -7,10 +7,7 @@ import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryViewModel
 import com.bangkit.team18.qhope.ui.home.viewmodel.HomeViewModel
 import com.bangkit.team18.qhope.ui.login.viewmodel.LoginViewModel
 import com.bangkit.team18.qhope.ui.main.viewmodel.MainViewModel
-import com.bangkit.team18.qhope.ui.profile.viewmodel.PersonalDataViewModel
-import com.bangkit.team18.qhope.ui.profile.viewmodel.ProfileIdVerificationViewModel
-import com.bangkit.team18.qhope.ui.profile.viewmodel.ProfileVerificationResultViewModel
-import com.bangkit.team18.qhope.ui.profile.viewmodel.ProfileViewModel
+import com.bangkit.team18.qhope.ui.profile.viewmodel.*
 import com.bangkit.team18.qhope.ui.registration.viewmodel.IdVerificationViewModel
 import com.bangkit.team18.qhope.ui.registration.viewmodel.RegistrationViewModel
 import com.bangkit.team18.qhope.ui.registration.viewmodel.VerificationResultViewModel
@@ -21,7 +18,7 @@ import org.koin.dsl.module
 val viewModelModule = module {
   viewModel { SplashScreenViewModel(get(), get()) }
   viewModel { MainViewModel(get()) }
-  viewModel { HomeViewModel(get()) }
+  viewModel { HomeViewModel(get(), get(), get()) }
   viewModel { HospitalDetailViewModel(get()) }
   viewModel { BookingConfirmationViewModel(get(), get(), get()) }
   viewModel { HistoryViewModel(get(), get()) }
@@ -34,4 +31,6 @@ val viewModelModule = module {
   viewModel { ProfileVerificationResultViewModel(get(), get()) }
   viewModel { ProfileIdVerificationViewModel(get(), get()) }
   viewModel { PersonalDataViewModel(get(), get()) }
+  viewModel { ProfilePictureViewModel(get(), get()) }
+  viewModel { EditPersonalDataViewModel(get(), get()) }
 }

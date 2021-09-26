@@ -21,6 +21,7 @@ import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.utils.view.DialogUtils
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModel
+import com.bangkit.team18.qhope.utils.PermissionUtil
 import com.bangkit.team18.qhope.utils.SnackbarUtils
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -39,8 +40,6 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
 
   protected lateinit var mContext: Context
 
-  private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
-
   protected lateinit var intentLauncher: ActivityResultLauncher<Intent>
 
   private var loadingDialog: Dialog? = null
@@ -58,18 +57,13 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
         onIntentResult(result.data)
       }
     }
-    requestPermissionLauncher = registerForActivityResult(
-      ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-      onPermissionGrantedChange(isGranted)
-    }
   }
 
   open fun onResultWithoutData(result: ActivityResult?) {}
 
   open fun onIntentResult(data: Intent?) {}
 
-  open fun onPermissionGrantedChange(isGranted: Boolean) {}
+  open fun onPermissionsGranted() {}
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
@@ -116,12 +110,17 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
     }
   }
 
-  protected fun checkPermission(permission: String) {
-    if (checkSelfPermission(mContext, permission) == PackageManager.PERMISSION_GRANTED) {
-      onPermissionGrantedChange(true)
-    } else {
-      requestPermissionLauncher.launch(permission)
-    }
+  protected fun checkPermissions(vararg permissions: String) {
+    PermissionUtil.checkPermissions(
+      mContext,
+      permissions.toList(),
+      this::onPermissionsGranted,
+      this::onAnyPermissionsDenied
+    )
+  }
+
+  open fun onAnyPermissionsDenied(permissions: List<String>) {
+    PermissionUtil.onAnyPermissionsDenied(binding.root, permissions)
   }
 
   protected fun showErrorToast(message: String? = null, defaultMessageId: Int) {

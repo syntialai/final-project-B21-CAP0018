@@ -95,4 +95,18 @@ class UserRepositoryImpl(
       }
     }.updateData().flowOn(ioDispatcher)
   }
+
+  override suspend fun updateProfilePicture(
+    userId: String,
+    imageUrl: String
+  ): Flow<ResponseWrapper<Boolean>> {
+    return object : UpdateDataWrapper<Unit>() {
+      override suspend fun doUpdate() {
+        val data = hashMapOf<String, Any?>(
+          UserMapper.IMAGE_URL_FIELD to imageUrl,
+        )
+        userRemoteDataSource.updateUser(userId, data)
+      }
+    }.updateData().flowOn(ioDispatcher)
+  }
 }

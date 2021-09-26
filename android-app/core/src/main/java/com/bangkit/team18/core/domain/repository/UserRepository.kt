@@ -21,4 +21,6 @@ interface UserRepository {
     userId: String,
     user: User
   ): Flow<ResponseWrapper<Boolean>>
+
+  suspend fun updateProfilePicture(userId: String, photoUrl: String): Flow<ResponseWrapper<Boolean>>
 }

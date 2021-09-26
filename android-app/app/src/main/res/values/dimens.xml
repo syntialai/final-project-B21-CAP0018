@@ -34,5 +34,6 @@
     <dimen name="dp_0">0dp</dimen>
     <dimen name="dp_minus_4">-4dp</dimen>
     <dimen name="dp_minus_16">-16dp</dimen>
-    <dimen name="rounded_layout_radius">8dp</dimen>
+    <dimen name="rounded_button_radius">8dp</dimen>
+    <dimen name="rounded_view_radius">20dp</dimen>
 </resources>

@@ -1,96 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSurfaceDarker"
+    android:orientation="vertical"
     tools:context=".ui.profile.view.ProfileFragment"
     tools:ignore="Overdraw">
 
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/primary_gradient_overlay"
-        android:paddingHorizontal="@dimen/dp_16"
-        android:paddingTop="@dimen/dp_16"
-        app:layout_constraintBottom_toTopOf="@id/profile_guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/profile_picture_image"
-        android:layout_width="@dimen/dp_64"
-        android:layout_height="@dimen/dp_64"
-        android:layout_marginStart="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_16"
-        android:background="?attr/colorOnPrimary"
-        android:padding="@dimen/dp_2"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_person"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearance="@style/ShapeAppearance.QHope.MediumComponent"
-        app:strokeColor="?attr/colorOnPrimary"
-        app:strokeWidth="@dimen/dp_2" />
-
-    <TextView
-        android:id="@+id/profile_name"
-        android:layout_width="@dimen/dp_0"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dp_16"
-        android:textAppearance="?attr/textAppearanceHeadline3"
-        android:textColor="?attr/colorOnPrimary"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/profile_picture_image"
-        app:layout_constraintTop_toTopOf="@id/profile_picture_image"
-        tools:text="Steven" />
+        android:background="@drawable/rounded_bottom_view_shape"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dp_8"
+        android:paddingBottom="@dimen/dp_24">
 
-    <com.google.android.material.chip.Chip
-        android:id="@+id/profile_verification_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_8"
-        app:chipMinTouchTargetSize="@dimen/dp_0"
-        app:layout_constraintStart_toEndOf="@id/profile_picture_image"
-        app:layout_constraintTop_toBottomOf="@id/profile_name"
-        app:rippleColor="@color/transparent"
-        tools:text="Verified" />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/profile_picture_image"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_100"
+            android:background="?attr/colorOnPrimary"
+            android:padding="@dimen/dp_2"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_profile_picture"
+            app:shapeAppearance="@style/ShapeAppearance.QHope.LargeComponent"
+            app:strokeColor="?attr/colorSurface"
+            app:strokeWidth="@dimen/dp_2" />
 
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/profile_barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="profile_picture_image, profile_verification_status" />
+        <TextView
+            android:id="@+id/profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_12"
+            android:textAppearance="?attr/textAppearanceHeadline2"
+            android:textColor="?attr/colorOnPrimary"
+            android:textStyle="bold"
+            tools:text="Steven" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/profile_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="204dp" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/profile_verification_status"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_24"
+            android:layout_marginTop="@dimen/dp_4"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="?attr/colorSecondaryVariant"
+            app:chipBackgroundColor="?attr/colorSurface"
+            app:chipEndPadding="@dimen/dp_8"
+            app:chipIcon="@drawable/ic_check"
+            app:chipIconSize="@dimen/dp_20"
+            app:chipIconTint="?attr/colorSecondaryVariant"
+            app:chipMinTouchTargetSize="@dimen/dp_0"
+            app:chipStartPadding="@dimen/dp_8"
+            app:rippleColor="@color/transparent"
+            tools:text="Verified" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/personal_information_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_32"
+        android:layout_marginHorizontal="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_16"
         android:background="@drawable/rounded_shape"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_barrier">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/profile_personal_data"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/rounded_layout_radius"
+            android:layout_marginVertical="@dimen/rounded_button_radius"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:drawablePadding="@dimen/dp_16"
@@ -107,7 +89,7 @@
             android:id="@+id/profile_id_verification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/rounded_layout_radius"
+            android:layout_marginVertical="@dimen/rounded_button_radius"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:drawablePadding="@dimen/dp_16"
@@ -124,7 +106,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/dp_16"
+        android:layout_marginHorizontal="@dimen/dp_8"
         android:layout_marginTop="@dimen/dp_12"
         android:background="@drawable/rounded_shape"
         android:orientation="vertical"
@@ -136,7 +118,7 @@
             android:id="@+id/profile_log_out"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/rounded_layout_radius"
+            android:layout_marginVertical="@dimen/rounded_button_radius"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:drawablePadding="@dimen/dp_16"
@@ -149,4 +131,4 @@
             app:drawableEndCompat="@drawable/ic_navigate_next"
             app:drawableStartCompat="@drawable/ic_logout" />
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

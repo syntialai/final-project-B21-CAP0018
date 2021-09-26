@@ -83,7 +83,7 @@ class RegistrationActivity :
           birthDatePicker.show(this.supportFragmentManager, TAG)
         }
       }
-      R.id.registration_edit_profile_picture -> openGallery()
+      R.id.registration_edit_profile_picture -> checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)
       R.id.registration_next -> {
         if (validateInput()) {
           viewModel.submitData(binding.registrationName.text.toString())
@@ -107,7 +107,11 @@ class RegistrationActivity :
     return valid
   }
 
-  override fun onPermissionGranted() {
+  override fun onPermissionsGranted() {
+    openGallery()
+  }
+
+  private fun openGallery() {
     val openGalleryIntent = Intent(
       Intent.ACTION_PICK,
       MediaStore.Images.Media.EXTERNAL_CONTENT_URI
@@ -115,10 +119,6 @@ class RegistrationActivity :
       type = "image/*"
     }
     intentLauncher.launch(openGalleryIntent)
-  }
-
-  private fun openGallery() {
-    checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
   }
 
   override fun onIntentResult(data: Intent?) {

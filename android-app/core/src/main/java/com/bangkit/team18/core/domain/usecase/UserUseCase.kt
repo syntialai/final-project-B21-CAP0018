@@ -21,4 +21,9 @@ interface UserUseCase {
     userId: String,
     user: User
   ): Flow<ResponseWrapper<Boolean>>
+
+  suspend fun updateProfilePicture(
+    userId: String,
+    imageUrl: String
+  ): Flow<ResponseWrapper<Boolean>>
 }
