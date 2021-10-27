@@ -2,9 +2,14 @@ import werkzeug
 from firebase_admin import credentials, firestore, initialize_app
 from flask import Flask, request, jsonify
 from werkzeug.exceptions import HTTPException
+from marshmallow import Schema, fields, ValidationError
+from functools import wraps
+import jwt
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
-cred = credentials.Certificate('D:/BANGKIT/Capstone Project/final-project-B21-CAP0018/api/cloud-api/test-key.json')
+app.config['SECRET_KEY'] = 'cdf1791e499190767ec7267f2a1b1f8e'
+cred = credentials.Certificate('q-hope-cred.json')
 default_app = initialize_app(cred)
 db = firestore.client()  # this connects to our Firestore database
 collection = db.collection('hospital_data/1000030/room_data')  # opens 'places' collection
@@ -110,6 +115,68 @@ def update():
         return jsonify({"success": True}), 200
     except Exception as e:
         return f"An Error Occured: {e}"
+
+
+def token_required(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        token = None
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+
+        if not token:
+            return jsonify({'message': 'a valid token is missing'}), 401
+        try:
+            current_user = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        except:
+            return jsonify({'message': 'token is invalid'}), 401
+
+        return f(current_user['user_id'], *args, **kwargs)
+
+    return decorator
+
+
+class LoginSchema(Schema):
+    phone_number = fields.String(required=True)
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    request_data = request.json
+    schema = LoginSchema()
+    try:
+        result = schema.load(request_data)
+        phone_number = result.get('phone_number')
+        docs = db.collection('users').where('phone_number', '==', phone_number).limit(1).stream()
+        user_id = None
+        for document in docs:
+            user_id = document.id
+
+        if user_id is None:
+            doc_ref = db.collection('users').document()
+            doc_ref.set({'phone_number': phone_number, 'verification_status': False})
+            user_id = doc_ref.id
+
+        now = datetime.now()
+        exp = now + timedelta(minutes=30)
+        token = jwt.encode({
+            'user_id': user_id,
+            'exp': exp
+        }, app.config['SECRET_KEY'])
+
+        return jsonify({
+            'token': token.decode('UTF-8'),
+            'exp': int(exp.timestamp()),
+            'iat': int(now.timestamp())
+        }), 201
+    except ValidationError as err:
+        return jsonify(err.messages), 400
+
+
+@app.route('/trylah', methods=['GET'])
+@token_required
+def trylah(user_id):
+    return jsonify({"Success": user_id}), 200
 
 
 # port = int(os.environ.get('PORT', 80))
