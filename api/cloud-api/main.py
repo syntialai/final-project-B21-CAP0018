@@ -1,5 +1,5 @@
 import werkzeug
-from firebase_admin import credentials, firestore, initialize_app
+from firebase_admin import credentials, firestore, initialize_app, auth
 from flask import Flask, request, jsonify
 from werkzeug.exceptions import HTTPException
 from marshmallow import Schema, fields, ValidationError
@@ -18,6 +18,7 @@ doc = collection.document('1000030_business')  # specifies the 'rome' document
 
 COLLECTION_TRANSACTIONS = 'transaction'
 COLLECTION_HOSPITALS = 'hospitals'
+
 
 def getSuccessResponse(response):
     return jsonify(response), 200
@@ -155,22 +156,23 @@ def getTransactionsById(id):
 
     return getSuccessResponse(transactionDoc.to_dict())
 
-@app.route('/payment', methods = ['GET'])
+
+@app.route('/payment', methods=['GET'])
 def get_payment():
     '''
     Gets payment id and description from database.
     Returns a json containing payment info
     if request is successful
     '''
-    response = [] # List to save payment info dictionaries
+    response = []  # List to save payment info dictionaries
     payment_collection = db.collection(u'payment')
     payment_collection_stream = payment_collection.stream()
-    for doc in payment_collection_stream :
+    for doc in payment_collection_stream:
         payment_dict = {}
         payment_dict['id'] = doc.id
         doc_dict = doc.to_dict()
         payment_dict['name'] = doc_dict['name']
-        payment_dict['paidAt'] = datetime.datetime.fromtimestamp(doc_dict['paidAt']/1e3).strftime('%Y/%m/%d %H:%M:%S')
+        payment_dict['paidAt'] = datetime.datetime.fromtimestamp(doc_dict['paidAt'] / 1e3).strftime('%Y/%m/%d %H:%M:%S')
         payment_dict['total'] = doc_dict['total']
         payment_dict['transactionId'] = doc_dict['transactionId']
         response.append(payment_dict)
@@ -178,16 +180,17 @@ def get_payment():
 
     raise werkzeug.exceptions.BadRequest()
 
-@app.route('/payment/<id>', methods = ['GET'])
+
+@app.route('/payment/<id>', methods=['GET'])
 def get_payment_by_id(id):
     '''
     Gets payment by id from request route
     '''
-    response = [] # List to save payment info dictionaries
+    response = []  # List to save payment info dictionaries
     payment_id = id
     payment_collection = db.collection(u'payment')
     payment_doc = payment_collection.document(payment_id).get()
-    if not payment_doc.exists :
+    if not payment_doc.exists:
         raise werkzeug.exceptions.NotFound()
 
     doc_id = payment_doc.id
@@ -195,13 +198,14 @@ def get_payment_by_id(id):
     payment_dict['id'] = payment_doc.id
     doc_dict = payment_doc.to_dict()
     payment_dict['name'] = doc_dict['name']
-    payment_dict['paidAt'] = datetime.datetime.fromtimestamp(doc_dict['paidAt']/1e3).strftime('%Y/%m/%d %H:%M:%S')
+    payment_dict['paidAt'] = datetime.datetime.fromtimestamp(doc_dict['paidAt'] / 1e3).strftime('%Y/%m/%d %H:%M:%S')
     payment_dict['total'] = doc_dict['total']
     payment_dict['transactionId'] = doc_dict['transactionId']
     response.append(payment_dict)
     return jsonify(response), 200
 
     raise werkzeug.exceptions.BadRequest()
+
 
 @app.route('/hospital_data/1000030/room_data', methods=['POST'])
 def create():
@@ -264,13 +268,13 @@ def token_required(f):
             token = request.headers['x-access-token']
 
         if not token:
-            return jsonify({'message': 'a valid token is missing'}), 401
+            raise werkzeug.exceptions.NotFound('A valid token is missing.')
         try:
-            current_user = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            decoded_token = auth.verify_id_token(token)
         except:
-            return jsonify({'message': 'token is invalid'}), 401
+            raise werkzeug.exceptions.NotFound('Token is invalid.')
 
-        return f(current_user['user_id'], *args, **kwargs)
+        return f(decoded_token['uid'], *args, **kwargs)
 
     return decorator
 
@@ -299,45 +303,8 @@ def hospital_token_required(f):
     return decorator
 
 
-class LoginSchema(Schema):
-    phone_number = fields.String(required=True)
-
-
-@app.route('/login', methods=['POST'])
-def login():
-    request_data = request.json
-    schema = LoginSchema()
-    try:
-        result = schema.load(request_data)
-        phone_number = result.get('phone_number')
-        docs = db.collection('users').where('phone_number', '==', phone_number).limit(1).stream()
-        user_id = None
-        for document in docs:
-            user_id = document.id
-
-        if user_id is None:
-            doc_ref = db.collection('users').document()
-            doc_ref.set({'phone_number': phone_number, 'verification_status': False})
-            user_id = doc_ref.id
-
-        now = datetime.now()
-        exp = now + timedelta(minutes=30)
-        token = jwt.encode({
-            'user_id': user_id,
-            'exp': exp
-        }, app.config['SECRET_KEY'])
-
-        return jsonify({
-            'token': token.decode('UTF-8'),
-            'exp': int(exp.timestamp()),
-            'iat': int(now.timestamp())
-        }), 201
-    except ValidationError as err:
-        return jsonify(err.messages), 400
-
-
 @app.route('/trylah', methods=['GET'])
-@hospital_token_required
+@token_required
 def trylah(user_id):
     return jsonify({"Success": user_id}), 200
 
