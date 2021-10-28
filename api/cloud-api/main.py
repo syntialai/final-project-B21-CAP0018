@@ -303,6 +303,29 @@ def hospital_token_required(f):
     return decorator
 
 
+class AddUserSchema(Schema):
+    phone_number = fields.String(required=True)
+
+
+@app.route('/user', methods=['POST'])
+@token_required
+def addUser(uid):
+    request_data = request.json
+    schema = AddUserSchema()
+    try:
+        result = schema.load(request_data)
+        phone_number = result.get('phone_number')
+        user = db.collection('users').document(uid).get()
+        if user.exists:
+            raise werkzeug.exceptions.BadRequest("User already exists.")
+        newUser = {'phone_number': phone_number, 'verification_status': False}
+        db.collection('users').document(uid).set(newUser)
+
+        return jsonify(newUser), 200
+    except ValidationError as err:
+        raise werkzeug.exceptions.BadRequest(err.messages)
+
+
 @app.route('/trylah', methods=['GET'])
 @token_required
 def trylah(user_id):
