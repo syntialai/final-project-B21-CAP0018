@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify
 from werkzeug.exceptions import HTTPException
 
 app = Flask(__name__)
-cred = credentials.Certificate('D:/BANGKIT/Capstone Project/final-project-B21-CAP0018/api/cloud-api/test-key.json')
+cred = credentials.Certificate('q-hope-cred.json')
 default_app = initialize_app(cred)
 db = firestore.client()  # this connects to our Firestore database
 collection = db.collection('hospital_data/1000030/room_data')  # opens 'places' collection
@@ -28,28 +28,22 @@ def mapToDictionary(documents):
 @app.errorhandler(werkzeug.exceptions.BadRequest)
 def handle_bad_request(error):
     return jsonify(
-        code=error.code,
-        status="BAD_REQUEST",
         message=error.description
-    )
+    ), error.code
 
 
 @app.errorhandler(werkzeug.exceptions.Unauthorized)
 def handle_unauthorized(error):
     return jsonify(
-        code=error.code,
-        status="UNAUTHORIZED",
         message=error.description
-    )
+    ), error.code
 
 
 @app.errorhandler(werkzeug.exceptions.NotFound)
 def handle_not_found(error):
     return jsonify(
-        code=error.code,
-        status="NOT_FOUND",
         message=error.description
-    )
+    ), error.code
 
 
 # ===================== End of Error handling ============================
