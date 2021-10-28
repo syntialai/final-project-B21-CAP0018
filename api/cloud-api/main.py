@@ -1,3 +1,4 @@
+import enum
 import werkzeug
 from firebase_admin import credentials, firestore, initialize_app, auth
 from flask import Flask, request, jsonify
@@ -12,16 +13,31 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'cdf1791e499190767ec7267f2a1b1f8e'
 cred = credentials.Certificate('q-hope-cred.json')
 default_app = initialize_app(cred)
-db = firestore.client()  # this connects to our Firestore database
-collection = db.collection('hospital_data/1000030/room_data')  # opens 'places' collection
-doc = collection.document('1000030_business')  # specifies the 'rome' document
+db = firestore.client()
 
-COLLECTION_TRANSACTIONS = 'transaction'
+COLLECTION_TRANSACTIONS = 'transactions'
 COLLECTION_HOSPITALS = 'hospitals'
+COLLECTION_HOSPITAL_ROOM = 'hospital_room'
+COLLECTION_USERS = 'users'
+
+
+class TransactionStatus(enum.Enum):
+    ONGOING = 1
+    CONFIRMED = 2
+    FINISHED = 3
+    CANCELED = 4
+
+    @classmethod
+    def hasKey(cls, name):
+        return name in cls.__members__
 
 
 def getSuccessResponse(response):
     return jsonify(response), 200
+
+
+def getSuccessCreateResponse(response):
+    return jsonify(response), 201
 
 
 def mapToDictionary(documents):
@@ -32,32 +48,51 @@ def mapToDictionary(documents):
 
 
 # ===================== Error handling ============================
+
 @app.errorhandler(werkzeug.exceptions.BadRequest)
 def handle_bad_request(error):
     return jsonify(
-        code=error.code,
-        status="BAD_REQUEST",
         message=error.description
-    )
+    ), error.code
+
+
+@app.errorhandler(ValidationError)
+def handle_validation_error(error):
+    return jsonify(
+        message=error.messages
+    ), werkzeug.exceptions.BadRequest.code
 
 
 @app.errorhandler(werkzeug.exceptions.Unauthorized)
 def handle_unauthorized(error):
     return jsonify(
-        code=error.code,
-        status="UNAUTHORIZED",
         message=error.description
-    )
+    ), error.code
 
 
 @app.errorhandler(werkzeug.exceptions.NotFound)
 def handle_not_found(error):
     return jsonify(
         message=error.description
-    ), 404
+    ), error.code
+
+
+@app.errorhandler(Exception)
+def handle_exception(error):
+    return jsonify(
+        message=error.__str__()
+    ), 500
+
+
+def validateDataExists(document):
+    if not document.exists:
+        raise werkzeug.exceptions.NotFound()
 
 
 # ===================== End of Error handling ============================
+
+
+# ========================== Hospital API ================================
 
 @app.route('/hospitals', methods=['GET'])
 def get_all_hospitals():
@@ -129,6 +164,20 @@ def get_hospitals_by_id(id):
     # return getSuccessResponse(hospital.to_dict())
 
 
+# ====================== End of Hospital API =============================
+
+
+# ======================== Transactions API ==============================
+
+class CreateTransactionSchema(Schema):
+    hospital_id = fields.String(required=True)
+    user_id = fields.String(required=True)
+    room_type_id = fields.String(required=True)
+    referral_letter_url = fields.URL(required=True)
+    referral_letter_name = fields.String(required=True)
+    payment_type = fields.String(required=True)
+
+
 @app.route('/transactions', methods=['GET'])
 def getAllTransactions():
     userId = request.args.get('user_id')
@@ -147,15 +196,85 @@ def getAllTransactions():
     raise werkzeug.exceptions.BadRequest()
 
 
+@app.route('/transactions', methods=['POST'])
+def createTransaction():
+    createTransactionSchema = CreateTransactionSchema()
+    transactionRequest = createTransactionSchema.load(request.json)
+
+    hospitalId = transactionRequest.get('hospital_id')
+    userId = transactionRequest.get('user_id')
+    roomTypeId = transactionRequest.get('room_type_id')
+
+    hospitalDoc = db.collection(COLLECTION_HOSPITALS).document(hospitalId).get()
+    userDoc = db.collection(COLLECTION_USERS).document(userId).get()
+    hospitalRoomDoc = db.collection(COLLECTION_HOSPITAL_ROOM).document(roomTypeId).get()
+    transactionDoc = db.collection(COLLECTION_TRANSACTIONS)
+
+    validateDataExists(hospitalDoc)
+    validateDataExists(userDoc)
+    validateDataExists(hospitalRoomDoc)
+
+    hospital = hospitalDoc.to_dict()
+    user = userDoc.to_dict()
+    hospitalRoom = hospitalRoomDoc.to_dict()
+    transactionDoc.add({
+        'hospital': {
+            'id': hospitalId,
+            'name': hospital['name'],
+            'image': hospital['image'],
+            'address': hospital['address']['description']
+        },
+        'user': {
+            'id': userId,
+            'name': user['name'],
+            'birthDate': user['birthDate'],
+            'email': user['email'],
+            'nik': user['nik']
+        },
+        'total': hospitalRoom['price'],
+        'createdAt': int(datetime.now().timestamp()),
+        'updatedAt': int(datetime.now().timestamp()),
+        'status': TransactionStatus.ONGOING.name,
+        'payment': transactionRequest.get('payment_type'),
+        'referralLetter': {
+            'name': transactionRequest.get('referral_letter_name'),
+            'url': transactionRequest.get('referral_letter_url'),
+        }
+    })
+    return getSuccessCreateResponse({})
+
+
 @app.route('/transactions/<id>', methods=['GET'])
 def getTransactionsById(id):
     transactionDoc = db.collection(COLLECTION_TRANSACTIONS).document(id).get()
-
-    if not transactionDoc.exists:
-        raise werkzeug.exceptions.NotFound()
-
+    validateDataExists(transactionDoc)
     return getSuccessResponse(transactionDoc.to_dict())
 
+
+@app.route('/transactions/<id>', methods=['PUT'])
+def updateTransactionStatusById(id):
+    status = request.args.get('status').upper()
+    if status is None:
+        raise werkzeug.exceptions.NotFound()
+
+    if not TransactionStatus.hasKey(status):
+        raise werkzeug.exceptions.BadRequest()
+
+    transactionDoc = db.collection(COLLECTION_TRANSACTIONS).document(id)
+    transactionValue = transactionDoc.get()
+
+    validateDataExists(transactionValue)
+
+    transactionDoc.update({
+        'status': status
+    })
+    return getSuccessResponse({})
+
+
+# ====================== End of Transactions API =========================
+
+
+# ============================ Payment API ===============================
 
 @app.route('/payment', methods=['GET'])
 def get_payment():
@@ -207,35 +326,10 @@ def get_payment_by_id(id):
     raise werkzeug.exceptions.BadRequest()
 
 
-@app.route('/hospital_data/1000030/room_data', methods=['POST'])
-def create():
-    """
-        create() : Add document to Firestore collection with request body
-        Ensure you pass a custom ID as part of json body in post request
-        e.g. json={'id': '1', 'title': 'Write a blog post'}
-    """
-    try:
-        available_room = request.json['available_room']
-        collection.document("1000030_business").set(request.json)
-        return jsonify({"success": True}), 200
-    except Exception as e:
-        return f"An Error Occured: {e}"
+# ======================== End of Payment API ============================
 
 
-@app.route('/hospital_data/1000030/room_data', methods=['PUT'])
-def update():
-    """
-        update() : Update document in Firestore collection with request body
-        Ensure you pass a custom ID as part of json body in post request
-        e.g. json={'id': '1', 'title': 'Write a blog post today'}
-    """
-    try:
-        available_room = request.json['available_room']
-        collection.document("1000030_economy").update(request.json)
-        return jsonify({"success": True}), 200
-    except Exception as e:
-        return f"An Error Occured: {e}"
-
+# ============================ Auth API ==================================
 
 @app.route('/hospitals/<id>/generate-token', methods=['POST'])
 def generate_hospital_token(id):
