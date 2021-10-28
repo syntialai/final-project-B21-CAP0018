@@ -52,10 +52,8 @@ def handle_unauthorized(error):
 @app.errorhandler(werkzeug.exceptions.NotFound)
 def handle_not_found(error):
     return jsonify(
-        code=error.code,
-        status="NOT_FOUND",
         message=error.description
-    )
+    ), 404
 
 
 # ===================== End of Error handling ============================
@@ -188,6 +186,29 @@ def update():
         return f"An Error Occured: {e}"
 
 
+@app.route('/hospitals/<id>/generate-token', methods=['POST'])
+def generate_hospital_token(id):
+    hospital_ref = db.collection('hospitals').document(id)
+    hospital = hospital_ref.get()
+    if hospital.exists:
+        hospital_data = hospital.to_dict()
+
+        if 'token' in hospital_data:
+            db.collection('blacklisted_token').document(hospital_data['token']).set({})
+
+        iat = int(datetime.now().timestamp())
+        encoded_jwt = jwt.encode({
+            'hospital_id': id,
+            'iat': iat
+        }, app.config['SECRET_KEY'])
+        token = encoded_jwt.decode('UTF-8')
+        hospital_ref.update({'token': token})
+
+        return jsonify(token=token, iat=iat), 200
+
+    raise werkzeug.exceptions.NotFound()
+
+
 def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
@@ -203,6 +224,30 @@ def token_required(f):
             return jsonify({'message': 'token is invalid'}), 401
 
         return f(current_user['user_id'], *args, **kwargs)
+
+    return decorator
+
+
+def hospital_token_required(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        token = None
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+
+        if not token:
+            raise werkzeug.exceptions.NotFound('A valid token is missing.')
+
+        blacklisted = db.collection('blacklisted_token').document(token).get()
+        if blacklisted.exists:
+            raise werkzeug.exceptions.NotFound('Token is invalid.')
+
+        try:
+            current_user = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        except:
+            raise werkzeug.exceptions.NotFound('Token is invalid.')
+
+        return f(current_user['hospital_id'], *args, **kwargs)
 
     return decorator
 
@@ -245,11 +290,11 @@ def login():
 
 
 @app.route('/trylah', methods=['GET'])
-@token_required
+@hospital_token_required
 def trylah(user_id):
     return jsonify({"Success": user_id}), 200
 
 
 # port = int(os.environ.get('PORT', 80))
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6543)
+    app.run(host='0.0.0.0', port=6543, debug=True)
