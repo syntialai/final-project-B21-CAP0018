@@ -155,6 +155,53 @@ def getTransactionsById(id):
 
     return getSuccessResponse(transactionDoc.to_dict())
 
+@app.route('/payment', methods = ['GET'])
+def get_payment():
+    '''
+    Gets payment id and description from database.
+    Returns a json containing payment info
+    if request is successful
+    '''
+    response = [] # List to save payment info dictionaries
+    payment_collection = db.collection(u'payment')
+    payment_collection_stream = payment_collection.stream()
+    for doc in payment_collection_stream :
+        payment_dict = {}
+        payment_dict['id'] = doc.id
+        doc_dict = doc.to_dict()
+        payment_dict['name'] = doc_dict['name']
+        payment_dict['paidAt'] = datetime.datetime.fromtimestamp(doc_dict['paidAt']/1e3).strftime('%Y/%m/%d %H:%M:%S')
+        payment_dict['total'] = doc_dict['total']
+        payment_dict['transactionId'] = doc_dict['transactionId']
+        response.append(payment_dict)
+    return jsonify(response), 200
+
+    raise werkzeug.exceptions.BadRequest()
+
+@app.route('/payment/<id>', methods = ['GET'])
+def get_payment_by_id(id):
+    '''
+    Gets payment by id from request route
+    '''
+    response = [] # List to save payment info dictionaries
+    payment_id = id
+    payment_collection = db.collection(u'payment')
+    payment_doc = payment_collection.document(payment_id).get()
+    if not payment_doc.exists :
+        raise werkzeug.exceptions.NotFound()
+
+    doc_id = payment_doc.id
+    payment_dict = {}
+    payment_dict['id'] = payment_doc.id
+    doc_dict = payment_doc.to_dict()
+    payment_dict['name'] = doc_dict['name']
+    payment_dict['paidAt'] = datetime.datetime.fromtimestamp(doc_dict['paidAt']/1e3).strftime('%Y/%m/%d %H:%M:%S')
+    payment_dict['total'] = doc_dict['total']
+    payment_dict['transactionId'] = doc_dict['transactionId']
+    response.append(payment_dict)
+    return jsonify(response), 200
+
+    raise werkzeug.exceptions.BadRequest()
 
 @app.route('/hospital_data/1000030/room_data', methods=['POST'])
 def create():
