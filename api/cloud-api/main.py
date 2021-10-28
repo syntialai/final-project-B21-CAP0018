@@ -6,6 +6,7 @@ from marshmallow import Schema, fields, ValidationError
 from functools import wraps
 import jwt
 from datetime import datetime, timedelta
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'cdf1791e499190767ec7267f2a1b1f8e'
@@ -16,7 +17,7 @@ collection = db.collection('hospital_data/1000030/room_data')  # opens 'places' 
 doc = collection.document('1000030_business')  # specifies the 'rome' document
 
 COLLECTION_TRANSACTIONS = 'transaction'
-
+COLLECTION_HOSPITALS = 'hospitals'
 
 def getSuccessResponse(response):
     return jsonify(response), 200
@@ -58,6 +59,76 @@ def handle_not_found(error):
 
 
 # ===================== End of Error handling ============================
+
+@app.route('/hospitals', methods=['GET'])
+def get_all_hospitals():
+    all_hospitals = db.collection(u'hospital_data')
+
+    docs = all_hospitals.stream()
+
+    for doc in docs:
+        # hospitals id need to be included in field
+        name = u'{}'.format(doc.to_dict()['nama_rumah_sakit'])
+        print(name)
+        type = u'{}'.format(doc.to_dict()['jenis_rumah_sakit'])
+        print(type)
+        image = u'{}'.format(doc.to_dict()['foto_rumah_sakit'])
+        print(image)
+        address = u'{}'.format(doc.to_dict()['alamat_rumah_sakit'])
+        print(address)
+        description = u'{}'.format(docs.to_dict()['alamat_str'])
+        print(description)
+        available_room_count = u'{}'.format(doc.to_dict()['total_kamar_kosong'])
+        print(available_room_count)
+        print("===")
+
+    raise werkzeug.exceptions.BadRequest()
+
+
+@app.route('/hospitals/<id>', methods=['GET'])
+def get_hospitals_by_id(id):
+    hospital = db.collection(u'hospital_data').document(id).get()
+    room_types = db.collection(u'hospital_room').document(id).get()
+
+    name = u'{}'.format(hospital.to_dict()['nama_rumah_sakit'])
+    print(name)
+    email = u'{}'.format(hospital.to_dict()['email'])
+    print(email)
+    type = u'{}'.format(hospital.to_dict()['jenis_rumah_sakit'])
+    print(type)
+    image = u'{}'.format(hospital.to_dict()['foto_rumah_sakit'])
+    print(image)
+    telephone = u'{}'.format(hospital.to_dict()['nomor_telepon'])
+    print(telephone)
+    website = u'{}'.format(hospital.to_dict()['website'])
+    print(website)
+    address = u'{}'.format(hospital.to_dict()['alamat_rumah_sakit'])
+    print(address)
+    description = u'{}'.format(hospital.to_dict()['alamat_str'])
+    print(description)
+    state = u'{}'.format(hospital.to_dict()['provinsi'])
+    print(state)
+    district = u'{}'.format(hospital.to_dict()['kecamatan'])
+    print(district)
+    city = u'{}'.format(hospital.to_dict()['kota_administrasi'])
+    print(city)
+    village = u'{}'.format(hospital.to_dict()['kelurahan'])
+    print(village)
+    postal_code = u'{}'.format(hospital.to_dict()['kode_pos'])
+    print(postal_code)
+    print("===")
+    type = u'{}'.format(room_types.to_dict()['type'])
+    print(type)
+    price = u'{}'.format(room_types.to_dict()['price'])
+    print(price)
+    available_room_count = u'{}'.format(room_types.to_dict()['available_room_count'])
+    print(available_room_count)
+    total_room = u'{}'.format(room_types.to_dict()['total_room'])
+    print(total_room)
+
+    raise werkzeug.exceptions.BadRequest()
+    # return getSuccessResponse(hospital.to_dict())
+
 
 @app.route('/transactions', methods=['GET'])
 def getAllTransactions():
