@@ -258,10 +258,9 @@ def updateTransactionStatusById(id):
 
     validateDataExists(transactionValue)
 
-    statusRequest = {
+    transactionDoc.update({
         'status': status
-    }
-    transactionDoc.update(statusRequest)
+    })
     return getSuccessResponse({})
 
 
