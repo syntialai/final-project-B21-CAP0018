@@ -1,26 +1,47 @@
-import werkzeug
-from firebase_admin import credentials, firestore, initialize_app
-from flask import Flask, request, jsonify
-from werkzeug.exceptions import HTTPException
-from marshmallow import Schema, fields, ValidationError
+import enum
+from datetime import datetime
 from functools import wraps
+
 import jwt
-from datetime import datetime, timedelta
-import os
+import werkzeug
+from firebase_admin import credentials, firestore, initialize_app, auth, storage
+from flask import Flask, request, jsonify
+from marshmallow import Schema, fields, ValidationError
+from werkzeug.exceptions import HTTPException
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'cdf1791e499190767ec7267f2a1b1f8e'
-cred = credentials.Certificate('q-hope-cred.json')
-default_app = initialize_app(cred)
-db = firestore.client()  # this connects to our Firestore database
-collection = db.collection('hospital_data/1000030/room_data')  # opens 'places' collection
-doc = collection.document('1000030_business')  # specifies the 'rome' document
+app.config['BUCKET_NAME'] = 'q-hope.appspot.com'
+cred = credentials.Certificate('D:/BANGKIT/Capstone Project/final-project-B21-CAP0018/api/cloud-api/q-hope-cred.json')
+default_app = initialize_app(cred, {
+    'storageBucket': app.config['BUCKET_NAME']
+})
+db = firestore.client()
+bucket = storage.bucket(app.config['BUCKET_NAME'])
 
-COLLECTION_TRANSACTIONS = 'transaction'
+COLLECTION_TRANSACTIONS = 'transactions'
 COLLECTION_HOSPITALS = 'hospitals'
+COLLECTION_HOSPITAL_ROOM = 'hospital_room'
+COLLECTION_USERS = 'users'
+
+
+class TransactionStatus(enum.Enum):
+    ONGOING = 1
+    CONFIRMED = 2
+    FINISHED = 3
+    CANCELED = 4
+
+    @classmethod
+    def hasKey(cls, name):
+        return name in cls.__members__
+
 
 def getSuccessResponse(response):
     return jsonify(response), 200
+
+
+def getSuccessCreateResponse(response):
+    return jsonify(response), 201
 
 
 def mapToDictionary(documents):
@@ -31,34 +52,56 @@ def mapToDictionary(documents):
 
 
 # ===================== Error handling ============================
+
 @app.errorhandler(werkzeug.exceptions.BadRequest)
 def handle_bad_request(error):
     return jsonify(
-        code=error.code,
-        status="BAD_REQUEST",
         message=error.description
-    )
+    ), error.code
+
+
+@app.errorhandler(ValidationError)
+def handle_validation_error(error):
+    return jsonify(
+        message=error.messages
+    ), werkzeug.exceptions.BadRequest.code
 
 
 @app.errorhandler(werkzeug.exceptions.Unauthorized)
 def handle_unauthorized(error):
     return jsonify(
-        code=error.code,
-        status="UNAUTHORIZED",
         message=error.description
-    )
+    ), error.code
 
 
 @app.errorhandler(werkzeug.exceptions.NotFound)
 def handle_not_found(error):
     return jsonify(
-        code=error.code,
-        status="NOT_FOUND",
         message=error.description
-    )
+    ), error.code
+
+
+@app.errorhandler(Exception)
+def handle_exception(error):
+    return jsonify(
+        message=error.__str__()
+    ), 500
+
+
+def validateDataExists(document):
+    if not document.exists:
+        raise werkzeug.exceptions.NotFound()
+
+
+def validateDataNotNone(data):
+    if data is None:
+        raise werkzeug.exceptions.BadRequest()
 
 
 # ===================== End of Error handling ============================
+
+
+# ========================== Hospital API ================================
 
 @app.route('/hospitals', methods=['GET'])
 def get_all_hospitals():
@@ -116,6 +159,20 @@ def get_hospitals_by_id(id):
     return jsonify(hospital_data, room_data), 200
 
 
+# ====================== End of Hospital API =============================
+
+
+# ======================== Transactions API ==============================
+
+class CreateTransactionSchema(Schema):
+    hospital_id = fields.String(required=True)
+    user_id = fields.String(required=True)
+    room_type_id = fields.String(required=True)
+    referral_letter_url = fields.URL(required=True)
+    referral_letter_name = fields.String(required=True)
+    payment_type = fields.String(required=True)
+
+
 @app.route('/transactions', methods=['GET'])
 def getAllTransactions():
     userId = request.args.get('user_id')
@@ -134,44 +191,198 @@ def getAllTransactions():
     raise werkzeug.exceptions.BadRequest()
 
 
+@app.route('/transactions', methods=['POST'])
+def createTransaction():
+    createTransactionSchema = CreateTransactionSchema()
+    transactionRequest = createTransactionSchema.load(request.json)
+
+    hospitalId = transactionRequest.get('hospital_id')
+    userId = transactionRequest.get('user_id')
+    roomTypeId = transactionRequest.get('room_type_id')
+
+    hospitalDoc = db.collection(COLLECTION_HOSPITALS).document(hospitalId).get()
+    userDoc = db.collection(COLLECTION_USERS).document(userId).get()
+    hospitalRoomDoc = db.collection(COLLECTION_HOSPITAL_ROOM).document(roomTypeId).get()
+    transactionDoc = db.collection(COLLECTION_TRANSACTIONS)
+
+    validateDataExists(hospitalDoc)
+    validateDataExists(userDoc)
+    validateDataExists(hospitalRoomDoc)
+
+    hospital = hospitalDoc.to_dict()
+    user = userDoc.to_dict()
+    hospitalRoom = hospitalRoomDoc.to_dict()
+    transactionDoc.add({
+        'hospital': {
+            'id': hospitalId,
+            'name': hospital['name'],
+            'image': hospital['image'],
+            'address': hospital['address']['description']
+        },
+        'user': {
+            'id': userId,
+            'name': user['name'],
+            'birthDate': user['birthDate'],
+            'email': user['email'],
+            'nik': user['nik']
+        },
+        'total': hospitalRoom['price'],
+        'createdAt': int(datetime.now().timestamp()),
+        'updatedAt': int(datetime.now().timestamp()),
+        'status': TransactionStatus.ONGOING.name,
+        'payment': transactionRequest.get('payment_type'),
+        'referralLetter': {
+            'name': transactionRequest.get('referral_letter_name'),
+            'url': transactionRequest.get('referral_letter_url'),
+        }
+    })
+    return getSuccessCreateResponse({})
+
+
 @app.route('/transactions/<id>', methods=['GET'])
 def getTransactionsById(id):
     transactionDoc = db.collection(COLLECTION_TRANSACTIONS).document(id).get()
-
-    if not transactionDoc.exists:
-        raise werkzeug.exceptions.NotFound()
-
+    validateDataExists(transactionDoc)
     return getSuccessResponse(transactionDoc.to_dict())
 
 
-@app.route('/hospital_data/1000030/room_data', methods=['POST'])
-def create():
-    """
-        create() : Add document to Firestore collection with request body
-        Ensure you pass a custom ID as part of json body in post request
-        e.g. json={'id': '1', 'title': 'Write a blog post'}
-    """
-    try:
-        available_room = request.json['available_room']
-        collection.document("1000030_business").set(request.json)
-        return jsonify({"success": True}), 200
-    except Exception as e:
-        return f"An Error Occured: {e}"
+@app.route('/transactions/<id>', methods=['PUT'])
+def updateTransactionStatusById(id):
+    status = request.args.get('status').upper()
+    validateDataNotNone(status)
+
+    if not TransactionStatus.hasKey(status):
+        raise werkzeug.exceptions.BadRequest()
+
+    transactionDoc = db.collection(COLLECTION_TRANSACTIONS).document(id)
+    transactionValue = transactionDoc.get()
+
+    validateDataExists(transactionValue)
+
+    transactionDoc.update({
+        'status': status
+    })
+    return getSuccessResponse({})
 
 
-@app.route('/hospital_data/1000030/room_data', methods=['PUT'])
-def update():
-    """
-        update() : Update document in Firestore collection with request body
-        Ensure you pass a custom ID as part of json body in post request
-        e.g. json={'id': '1', 'title': 'Write a blog post today'}
-    """
-    try:
-        available_room = request.json['available_room']
-        collection.document("1000030_economy").update(request.json)
-        return jsonify({"success": True}), 200
-    except Exception as e:
-        return f"An Error Occured: {e}"
+# ====================== End of Transactions API =========================
+
+
+# ========================== Upload File API =============================
+
+@app.route('/upload/referral_letter', methods=['POST'])
+def uploadReferralLetterByUserId():
+    userId = request.args.get('user_id')
+    validateDataNotNone(userId)
+
+    if 'file' not in request.files:
+        raise werkzeug.exceptions.BadRequest('File is not exist!')
+
+    file = request.files['file']
+    blob = bucket.blob(f'referral_letters/{userId}/{file.filename}')
+    blob.upload_from_file(file)
+    blob.make_public()
+
+    return getSuccessCreateResponse({
+        'url': blob.public_url
+    })
+
+
+@app.route('/upload/image', methods=['POST'])
+def uploadImageByUserId():
+    userId = request.args.get('user_id')
+    validateDataNotNone(userId)
+
+    if 'image' not in request.files:
+        raise werkzeug.exceptions.BadRequest('Image is not exist!')
+
+    file = request.files['image']
+    blob = bucket.blob(f'images/{userId}/{file.filename}')
+    blob.upload_from_file(file)
+    blob.make_public()
+
+    return getSuccessCreateResponse({
+        'url': blob.public_url
+    })
+
+
+# ====================== End of Upload File API ==========================
+
+
+# ============================ Payment API ===============================
+
+@app.route('/payment', methods=['GET'])
+def get_payment():
+    '''
+    Gets payment id and description from database.
+    Returns a json containing payment info
+    if request is successful
+    '''
+    response = []  # List to save payment info dictionaries
+    payment_collection = db.collection(u'payment')
+    payment_collection_stream = payment_collection.stream()
+    for doc in payment_collection_stream:
+        payment_dict = {}
+        payment_dict['id'] = doc.id
+        doc_dict = doc.to_dict()
+        payment_dict['name'] = doc_dict['name']
+        payment_dict['paidAt'] = datetime.datetime.fromtimestamp(doc_dict['paidAt'] / 1e3).strftime('%Y/%m/%d %H:%M:%S')
+        payment_dict['total'] = doc_dict['total']
+        payment_dict['transactionId'] = doc_dict['transactionId']
+        response.append(payment_dict)
+    return jsonify(response), 200
+
+
+@app.route('/payment/<id>', methods=['GET'])
+def get_payment_by_id(id):
+    '''
+    Gets payment by id from request route
+    '''
+    response = []  # List to save payment info dictionaries
+    payment_id = id
+    payment_collection = db.collection(u'payment')
+    payment_doc = payment_collection.document(payment_id).get()
+    if not payment_doc.exists:
+        raise werkzeug.exceptions.NotFound()
+
+    doc_id = payment_doc.id
+    payment_dict = {}
+    payment_dict['id'] = payment_doc.id
+    doc_dict = payment_doc.to_dict()
+    payment_dict['name'] = doc_dict['name']
+    payment_dict['paidAt'] = datetime.datetime.fromtimestamp(doc_dict['paidAt'] / 1e3).strftime('%Y/%m/%d %H:%M:%S')
+    payment_dict['total'] = doc_dict['total']
+    payment_dict['transactionId'] = doc_dict['transactionId']
+    response.append(payment_dict)
+    return jsonify(response), 200
+
+
+# ======================== End of Payment API ============================
+
+
+# ============================ Auth API ==================================
+
+@app.route('/hospitals/<id>/generate-token', methods=['POST'])
+def generate_hospital_token(id):
+    hospital_ref = db.collection('hospitals').document(id)
+    hospital = hospital_ref.get()
+    if hospital.exists:
+        hospital_data = hospital.to_dict()
+
+        if 'token' in hospital_data:
+            db.collection('blacklisted_token').document(hospital_data['token']).set({})
+
+        iat = int(datetime.now().timestamp())
+        encoded_jwt = jwt.encode({
+            'hospital_id': id,
+            'iat': iat
+        }, app.config['SECRET_KEY'])
+        token = encoded_jwt.decode('UTF-8')
+        hospital_ref.update({'token': token})
+
+        return jsonify(token=token, iat=iat), 200
+
+    raise werkzeug.exceptions.NotFound()
 
 
 def token_required(f):
@@ -182,52 +393,62 @@ def token_required(f):
             token = request.headers['x-access-token']
 
         if not token:
-            return jsonify({'message': 'a valid token is missing'}), 401
+            raise werkzeug.exceptions.NotFound('A valid token is missing.')
         try:
-            current_user = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            decoded_token = auth.verify_id_token(token)
         except:
-            return jsonify({'message': 'token is invalid'}), 401
+            raise werkzeug.exceptions.NotFound('Token is invalid.')
 
-        return f(current_user['user_id'], *args, **kwargs)
+        return f(decoded_token['uid'], *args, **kwargs)
 
     return decorator
 
 
-class LoginSchema(Schema):
+def hospital_token_required(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        token = None
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+
+        if not token:
+            raise werkzeug.exceptions.NotFound('A valid token is missing.')
+
+        blacklisted = db.collection('blacklisted_token').document(token).get()
+        if blacklisted.exists:
+            raise werkzeug.exceptions.NotFound('Token is invalid.')
+
+        try:
+            current_user = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        except:
+            raise werkzeug.exceptions.NotFound('Token is invalid.')
+
+        return f(current_user['hospital_id'], *args, **kwargs)
+
+    return decorator
+
+
+class AddUserSchema(Schema):
     phone_number = fields.String(required=True)
 
 
-@app.route('/login', methods=['POST'])
-def login():
+@app.route('/user', methods=['POST'])
+@token_required
+def addUser(uid):
     request_data = request.json
-    schema = LoginSchema()
+    schema = AddUserSchema()
     try:
         result = schema.load(request_data)
         phone_number = result.get('phone_number')
-        docs = db.collection('users').where('phone_number', '==', phone_number).limit(1).stream()
-        user_id = None
-        for document in docs:
-            user_id = document.id
+        user = db.collection('users').document(uid).get()
+        if user.exists:
+            raise werkzeug.exceptions.BadRequest("User already exists.")
+        newUser = {'phone_number': phone_number, 'verification_status': False}
+        db.collection('users').document(uid).set(newUser)
 
-        if user_id is None:
-            doc_ref = db.collection('users').document()
-            doc_ref.set({'phone_number': phone_number, 'verification_status': False})
-            user_id = doc_ref.id
-
-        now = datetime.now()
-        exp = now + timedelta(minutes=30)
-        token = jwt.encode({
-            'user_id': user_id,
-            'exp': exp
-        }, app.config['SECRET_KEY'])
-
-        return jsonify({
-            'token': token.decode('UTF-8'),
-            'exp': int(exp.timestamp()),
-            'iat': int(now.timestamp())
-        }), 201
+        return jsonify(newUser), 200
     except ValidationError as err:
-        return jsonify(err.messages), 400
+        raise werkzeug.exceptions.BadRequest(err.messages)
 
 
 @app.route('/trylah', methods=['GET'])
@@ -238,4 +459,4 @@ def trylah(user_id):
 
 # port = int(os.environ.get('PORT', 80))
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6543)
+    app.run(host='0.0.0.0', port=6543, debug=True)
