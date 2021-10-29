@@ -1,19 +1,23 @@
 import enum
-import werkzeug
-from firebase_admin import credentials, firestore, initialize_app, auth
-from flask import Flask, request, jsonify
-from werkzeug.exceptions import HTTPException
-from marshmallow import Schema, fields, ValidationError
+from datetime import datetime
 from functools import wraps
+
 import jwt
-from datetime import datetime, timedelta
-import os
+import werkzeug
+from firebase_admin import credentials, firestore, initialize_app, auth, storage
+from flask import Flask, request, jsonify
+from marshmallow import Schema, fields, ValidationError
+from werkzeug.exceptions import HTTPException
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'cdf1791e499190767ec7267f2a1b1f8e'
-cred = credentials.Certificate('q-hope-cred.json')
-default_app = initialize_app(cred)
+app.config['BUCKET_NAME'] = 'q-hope.appspot.com'
+cred = credentials.Certificate('D:/BANGKIT/Capstone Project/final-project-B21-CAP0018/api/cloud-api/q-hope-cred.json')
+default_app = initialize_app(cred, {
+    'storageBucket': app.config['BUCKET_NAME']
+})
 db = firestore.client()
+bucket = storage.bucket(app.config['BUCKET_NAME'])
 
 COLLECTION_TRANSACTIONS = 'transactions'
 COLLECTION_HOSPITALS = 'hospitals'
@@ -87,6 +91,11 @@ def handle_exception(error):
 def validateDataExists(document):
     if not document.exists:
         raise werkzeug.exceptions.NotFound()
+
+
+def validateDataNotNone(data):
+    if data is None:
+        raise werkzeug.exceptions.BadRequest()
 
 
 # ===================== End of Error handling ============================
@@ -254,8 +263,7 @@ def getTransactionsById(id):
 @app.route('/transactions/<id>', methods=['PUT'])
 def updateTransactionStatusById(id):
     status = request.args.get('status').upper()
-    if status is None:
-        raise werkzeug.exceptions.NotFound()
+    validateDataNotNone(status)
 
     if not TransactionStatus.hasKey(status):
         raise werkzeug.exceptions.BadRequest()
@@ -272,6 +280,47 @@ def updateTransactionStatusById(id):
 
 
 # ====================== End of Transactions API =========================
+
+
+# ========================== Upload File API =============================
+
+@app.route('/upload/referral_letter', methods=['POST'])
+def uploadReferralLetterByUserId():
+    userId = request.args.get('user_id')
+    validateDataNotNone(userId)
+
+    if 'file' not in request.files:
+        raise werkzeug.exceptions.BadRequest('File is not exist!')
+
+    file = request.files['file']
+    blob = bucket.blob(f'referral_letters/{userId}/{file.filename}')
+    blob.upload_from_file(file)
+    blob.make_public()
+
+    return getSuccessCreateResponse({
+        'url': blob.public_url
+    })
+
+
+@app.route('/upload/image', methods=['POST'])
+def uploadImageByUserId():
+    userId = request.args.get('user_id')
+    validateDataNotNone(userId)
+
+    if 'image' not in request.files:
+        raise werkzeug.exceptions.BadRequest('Image is not exist!')
+
+    file = request.files['image']
+    blob = bucket.blob(f'images/{userId}/{file.filename}')
+    blob.upload_from_file(file)
+    blob.make_public()
+
+    return getSuccessCreateResponse({
+        'url': blob.public_url
+    })
+
+
+# ====================== End of Upload File API ==========================
 
 
 # ============================ Payment API ===============================
@@ -297,8 +346,6 @@ def get_payment():
         response.append(payment_dict)
     return jsonify(response), 200
 
-    raise werkzeug.exceptions.BadRequest()
-
 
 @app.route('/payment/<id>', methods=['GET'])
 def get_payment_by_id(id):
@@ -322,8 +369,6 @@ def get_payment_by_id(id):
     payment_dict['transactionId'] = doc_dict['transactionId']
     response.append(payment_dict)
     return jsonify(response), 200
-
-    raise werkzeug.exceptions.BadRequest()
 
 
 # ======================== End of Payment API ============================
