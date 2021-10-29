@@ -66,67 +66,53 @@ def get_all_hospitals():
     docs = all_hospitals.stream()
 
     for doc in docs:
-        # hospitals id need to be included in field
+        id = u'{}'.format(doc.id)
         name = u'{}'.format(doc.to_dict()['nama_rumah_sakit'])
-        print(name)
         type = u'{}'.format(doc.to_dict()['jenis_rumah_sakit'])
-        print(type)
         image = u'{}'.format(doc.to_dict()['foto_rumah_sakit'])
-        print(image)
         address = u'{}'.format(doc.to_dict()['alamat_rumah_sakit'])
-        print(address)
-        description = u'{}'.format(docs.to_dict()['alamat_str'])
-        print(description)
+        description = u'{}'.format(doc.to_dict()['alamat_str'])
         available_room_count = u'{}'.format(doc.to_dict()['total_kamar_kosong'])
-        print(available_room_count)
-        print("===")
+
+        body = {'id':id, 'name':name, 'type':type, 'image':image, 'address':address, 'description':description, 'available_room_count':available_room_count}
+        return jsonify(body), 200
 
     raise werkzeug.exceptions.BadRequest()
 
 
 @app.route('/hospitals/<id>', methods=['GET'])
 def get_hospitals_by_id(id):
+
     hospital = db.collection(u'hospital_data').document(id).get()
-    room_types = db.collection(u'hospital_room').document(id).get()
+    room_types = db.collection(u'hospital_room').where('hospital_id', '==', id).stream()
 
     name = u'{}'.format(hospital.to_dict()['nama_rumah_sakit'])
-    print(name)
     email = u'{}'.format(hospital.to_dict()['email'])
-    print(email)
     type = u'{}'.format(hospital.to_dict()['jenis_rumah_sakit'])
-    print(type)
     image = u'{}'.format(hospital.to_dict()['foto_rumah_sakit'])
-    print(image)
     telephone = u'{}'.format(hospital.to_dict()['nomor_telepon'])
-    print(telephone)
     website = u'{}'.format(hospital.to_dict()['website'])
-    print(website)
     address = u'{}'.format(hospital.to_dict()['alamat_rumah_sakit'])
-    print(address)
     description = u'{}'.format(hospital.to_dict()['alamat_str'])
-    print(description)
     state = u'{}'.format(hospital.to_dict()['provinsi'])
-    print(state)
     district = u'{}'.format(hospital.to_dict()['kecamatan'])
-    print(district)
     city = u'{}'.format(hospital.to_dict()['kota_administrasi'])
-    print(city)
     village = u'{}'.format(hospital.to_dict()['kelurahan'])
-    print(village)
     postal_code = u'{}'.format(hospital.to_dict()['kode_pos'])
-    print(postal_code)
-    print("===")
-    type = u'{}'.format(room_types.to_dict()['type'])
-    print(type)
-    price = u'{}'.format(room_types.to_dict()['price'])
-    print(price)
-    available_room_count = u'{}'.format(room_types.to_dict()['available_room_count'])
-    print(available_room_count)
-    total_room = u'{}'.format(room_types.to_dict()['total_room'])
-    print(total_room)
 
-    raise werkzeug.exceptions.BadRequest()
-    # return getSuccessResponse(hospital.to_dict())
+    for doc in room_types:
+        # print(f'{doc.id} => {doc.to_dict()}')
+        room_type = u'{}'.format(doc.to_dict()['type'])
+        price = u'{}'.format(doc.to_dict()['price'])
+        available_room_count = u'{}'.format(doc.to_dict()['available_room_count'])
+        total_room = u'{}'.format(doc.to_dict()['total_room'])
+
+    hospital_data = {'name': name, 'email': email, 'type': type, 'image': image, 'telephone': telephone,
+                     'website': website, 'address': address, 'description': description, 'state': state,
+                     'district': district, 'city': city, 'village': village, 'postal_code': postal_code}
+
+    room_data = {'type': room_type, 'price': price, 'available_room_count': available_room_count, 'total_room': total_room}
+    return jsonify(hospital_data, room_data), 200
 
 
 @app.route('/transactions', methods=['GET'])
