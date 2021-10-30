@@ -1,23 +1,23 @@
 import enum
 from datetime import datetime
 from functools import wraps
-
 import jwt
 import werkzeug
 from firebase_admin import credentials, firestore, initialize_app, auth, storage
 from flask import Flask, request, jsonify
-from marshmallow import Schema, fields, ValidationError
+from marshmallow import Schema, fields, ValidationError, EXCLUDE
 from werkzeug.exceptions import HTTPException
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'cdf1791e499190767ec7267f2a1b1f8e'
 app.config['BUCKET_NAME'] = 'q-hope.appspot.com'
-cred = credentials.Certificate('D:/BANGKIT/Capstone Project/final-project-B21-CAP0018/api/cloud-api/q-hope-cred.json')
+cred = credentials.Certificate('q-hope-cred.json')
 default_app = initialize_app(cred, {
     'storageBucket': app.config['BUCKET_NAME']
 })
 db = firestore.client()
-bucket = storage.bucket(app.config['BUCKET_NAME'])
+bucket = storage.bucket()
 
 COLLECTION_TRANSACTIONS = 'transactions'
 COLLECTION_HOSPITALS = 'hospitals'
@@ -110,20 +110,17 @@ def get_all_hospitals():
     docs = all_hospitals.stream()
 
     for doc in docs:
-        # hospitals id need to be included in field
+        id = u'{}'.format(doc.id)
         name = u'{}'.format(doc.to_dict()['nama_rumah_sakit'])
-        print(name)
         type = u'{}'.format(doc.to_dict()['jenis_rumah_sakit'])
-        print(type)
         image = u'{}'.format(doc.to_dict()['foto_rumah_sakit'])
-        print(image)
         address = u'{}'.format(doc.to_dict()['alamat_rumah_sakit'])
-        print(address)
-        description = u'{}'.format(docs.to_dict()['alamat_str'])
-        print(description)
+        description = u'{}'.format(doc.to_dict()['alamat_str'])
         available_room_count = u'{}'.format(doc.to_dict()['total_kamar_kosong'])
-        print(available_room_count)
-        print("===")
+
+        body = {'id': id, 'name': name, 'type': type, 'image': image, 'address': address, 'description': description,
+                'available_room_count': available_room_count}
+        return jsonify(body), 200
 
     raise werkzeug.exceptions.BadRequest()
 
@@ -131,46 +128,36 @@ def get_all_hospitals():
 @app.route('/hospitals/<id>', methods=['GET'])
 def get_hospitals_by_id(id):
     hospital = db.collection(u'hospital_data').document(id).get()
-    room_types = db.collection(u'hospital_room').document(id).get()
+    room_types = db.collection(u'hospital_room').where('hospital_id', '==', id).stream()
 
     name = u'{}'.format(hospital.to_dict()['nama_rumah_sakit'])
-    print(name)
     email = u'{}'.format(hospital.to_dict()['email'])
-    print(email)
     type = u'{}'.format(hospital.to_dict()['jenis_rumah_sakit'])
-    print(type)
     image = u'{}'.format(hospital.to_dict()['foto_rumah_sakit'])
-    print(image)
     telephone = u'{}'.format(hospital.to_dict()['nomor_telepon'])
-    print(telephone)
     website = u'{}'.format(hospital.to_dict()['website'])
-    print(website)
     address = u'{}'.format(hospital.to_dict()['alamat_rumah_sakit'])
-    print(address)
     description = u'{}'.format(hospital.to_dict()['alamat_str'])
-    print(description)
     state = u'{}'.format(hospital.to_dict()['provinsi'])
-    print(state)
     district = u'{}'.format(hospital.to_dict()['kecamatan'])
-    print(district)
     city = u'{}'.format(hospital.to_dict()['kota_administrasi'])
-    print(city)
     village = u'{}'.format(hospital.to_dict()['kelurahan'])
-    print(village)
     postal_code = u'{}'.format(hospital.to_dict()['kode_pos'])
-    print(postal_code)
-    print("===")
-    type = u'{}'.format(room_types.to_dict()['type'])
-    print(type)
-    price = u'{}'.format(room_types.to_dict()['price'])
-    print(price)
-    available_room_count = u'{}'.format(room_types.to_dict()['available_room_count'])
-    print(available_room_count)
-    total_room = u'{}'.format(room_types.to_dict()['total_room'])
-    print(total_room)
 
-    raise werkzeug.exceptions.BadRequest()
-    # return getSuccessResponse(hospital.to_dict())
+    for doc in room_types:
+        # print(f'{doc.id} => {doc.to_dict()}')
+        room_type = u'{}'.format(doc.to_dict()['type'])
+        price = u'{}'.format(doc.to_dict()['price'])
+        available_room_count = u'{}'.format(doc.to_dict()['available_room_count'])
+        total_room = u'{}'.format(doc.to_dict()['total_room'])
+
+    hospital_data = {'name': name, 'email': email, 'type': type, 'image': image, 'telephone': telephone,
+                     'website': website, 'address': address, 'description': description, 'state': state,
+                     'district': district, 'city': city, 'village': village, 'postal_code': postal_code}
+
+    room_data = {'type': room_type, 'price': price, 'available_room_count': available_room_count,
+                 'total_room': total_room}
+    return jsonify(hospital_data, room_data), 200
 
 
 # ====================== End of Hospital API =============================
@@ -336,11 +323,10 @@ def get_payment():
     payment_collection = db.collection(u'payment')
     payment_collection_stream = payment_collection.stream()
     for doc in payment_collection_stream:
-        payment_dict = {}
-        payment_dict['id'] = doc.id
+        payment_dict = {'id': doc.id}
         doc_dict = doc.to_dict()
         payment_dict['name'] = doc_dict['name']
-        payment_dict['paidAt'] = datetime.datetime.fromtimestamp(doc_dict['paidAt'] / 1e3).strftime('%Y/%m/%d %H:%M:%S')
+        payment_dict['paidAt'] = datetime.fromtimestamp(doc_dict['paidAt'] / 1e3).strftime('%Y/%m/%d %H:%M:%S')
         payment_dict['total'] = doc_dict['total']
         payment_dict['transactionId'] = doc_dict['transactionId']
         response.append(payment_dict)
@@ -360,11 +346,10 @@ def get_payment_by_id(id):
         raise werkzeug.exceptions.NotFound()
 
     doc_id = payment_doc.id
-    payment_dict = {}
-    payment_dict['id'] = payment_doc.id
+    payment_dict = {'id': payment_doc.id}
     doc_dict = payment_doc.to_dict()
     payment_dict['name'] = doc_dict['name']
-    payment_dict['paidAt'] = datetime.datetime.fromtimestamp(doc_dict['paidAt'] / 1e3).strftime('%Y/%m/%d %H:%M:%S')
+    payment_dict['paidAt'] = datetime.fromtimestamp(doc_dict['paidAt'] / 1e3).strftime('%Y/%m/%d %H:%M:%S')
     payment_dict['total'] = doc_dict['total']
     payment_dict['transactionId'] = doc_dict['transactionId']
     response.append(payment_dict)
@@ -443,6 +428,9 @@ def hospital_token_required(f):
 
 
 class AddUserSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
+
     phone_number = fields.String(required=True)
 
 
@@ -457,12 +445,47 @@ def addUser(uid):
         user = db.collection('users').document(uid).get()
         if user.exists:
             raise werkzeug.exceptions.BadRequest("User already exists.")
-        newUser = {'phone_number': phone_number, 'verification_status': False}
-        db.collection('users').document(uid).set(newUser)
+        new_user = {'phone_number': phone_number, 'verification_status': False}
+        db.collection('users').document(uid).set(new_user)
 
-        return jsonify(newUser), 200
+        return jsonify(new_user), 200
     except ValidationError as err:
         raise werkzeug.exceptions.BadRequest(err.messages)
+
+
+class UpdateUserSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
+
+    photo = fields.Raw(type='file')
+    name = fields.String()
+    date_of_birth = fields.Integer()
+
+
+@app.route('/user', methods=['PATCH'])
+@token_required
+def updateUser(uid):
+    schema = UpdateUserSchema()
+    file_schema = schema.load(request.files)
+    request_data = schema.load(request.form)
+
+    photo = file_schema.get('photo')
+    name = request_data.get('name')
+    date_of_birth = request_data.get('date_of_birth')
+    user = {}
+    if photo:
+        blob = bucket.blob(f'user_data/{uid}/{photo.filename}')
+        blob.upload_from_file(photo)
+        blob.make_public()
+        user['photo_url'] = blob.public_url
+    if name:
+        user['name'] = name
+    if date_of_birth:
+        user['date_of_birth'] = date_of_birth
+    user_ref = db.collection('users').document(uid)
+    user_ref.update(user)
+    user = user_ref.get().to_dict()
+    return jsonify(user), 200
 
 
 @app.route('/trylah', methods=['GET'])
