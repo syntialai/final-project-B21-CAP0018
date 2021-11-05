@@ -115,6 +115,23 @@ def get_hospitals_by_id(id):
     room_data = {'type': room_type, 'price': price, 'available_room_count': available_room_count, 'total_room': total_room}
     return jsonify(hospital_data, room_data), 200
 
+@app.route('/hospitals/<id>', methods=['PUT'])
+def update_hospitals_by_id(id):
+
+    hospital = db.collection(u'hospital_data').document(id).get()
+    room_types = db.collection(u'hospital_room').where('hospital_id', '==', id).stream()
+
+    for doc in room_types:
+        try:
+            available_room = request.json['available_room_count'].update(request.json)
+            # collection.document("1000030_economy").update(request.json)
+            return jsonify({"success": True}), 200
+        except Exception as e:
+            return f"An Error Occured: {e}"
+
+    # room_data = {'type': room_type, 'price': price, 'available_room_count': available_room_count, 'total_room': total_room}
+    # return jsonify(hospital_data, room_data), 200
+
 
 @app.route('/transactions', methods=['GET'])
 def getAllTransactions():
