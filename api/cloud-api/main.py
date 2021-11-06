@@ -1,12 +1,13 @@
 import werkzeug
 from firebase_admin import credentials, firestore, initialize_app
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from werkzeug.exceptions import HTTPException
 from marshmallow import Schema, fields, ValidationError
 from functools import wraps
 import jwt
 from datetime import datetime, timedelta
 import os
+import json
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'cdf1791e499190767ec7267f2a1b1f8e'
@@ -66,6 +67,7 @@ def get_all_hospitals():
 
     docs = all_hospitals.stream()
 
+    array = []
     for doc in docs:
         id = u'{}'.format(doc.id)
         name = u'{}'.format(doc.to_dict()['nama_rumah_sakit'])
@@ -75,8 +77,10 @@ def get_all_hospitals():
         description = u'{}'.format(doc.to_dict()['alamat_str'])
         available_room_count = u'{}'.format(doc.to_dict()['total_kamar_kosong'])
 
-        body = {'id':id, 'name':name, 'type':type, 'image':image, 'address':address, 'description':description, 'available_room_count':available_room_count}
-        return jsonify(body), 200
+        data = {'id':id, 'name':name, 'type':type, 'image':image, 'address':address, 'description':description, 'available_room_count':available_room_count}
+
+        array.append(data)
+    return jsonify(array), 200
 
     raise werkzeug.exceptions.BadRequest()
 
@@ -115,23 +119,40 @@ def get_hospitals_by_id(id):
     room_data = {'type': room_type, 'price': price, 'available_room_count': available_room_count, 'total_room': total_room}
     return jsonify(hospital_data, room_data), 200
 
-@app.route('/hospitals/<id>', methods=['PUT'])
-def update_hospitals_by_id(id):
+@app.route('/hospitals/<id>/<type>', methods=['PUT'])
+def update_hospitals_by_id(id,type):
 
-    hospital = db.collection(u'hospital_data').document(id).get()
-    room_types = db.collection(u'hospital_room').where('hospital_id', '==', id).stream()
+    # hospital = db.collection(u'hospital_data').document(id).get()
+    # getType = request.json['type']
+    # availableRoom = request.json['available_room_count']
+    rooms = db.collection(u'hospital_room').where('hospital_id', '==', id).stream()
+    # roomType = db.collection(u'hospital_room').where('type', '==', type).stream()
+    # rooms = db.collection(u'hospital_room').where('hospital_id', '==', id).stream()
+    # types = db.collection(u'hospital_room').where('type', '==', type).stream()
 
-    for doc in room_types:
+    for doc in rooms:
+        print(f'{doc.id} => {doc.to_dict()}')
+        print(id)
+        print(type)
+        # room_type = u'{}'.format(doc.to_dict()['type'])
+        # price = u'{}'.format(doc.to_dict()['price'])
+        # available_room_count = u'{}'.format(doc.to_dict()['available_room_count'])
+        # total_room = u'{}'.format(doc.to_dict()['total_room'])
+
         try:
-            available_room = request.json['available_room_count'].update(request.json)
-            # collection.document("1000030_economy").update(request.json)
+            # getType = request.json['type']
+            availableRoom = request.json['available_room_count']
+            rooms.update(request.json)
+            print("test")
+
+            print(availableRoom)
+            print(rooms)
             return jsonify({"success": True}), 200
         except Exception as e:
             return f"An Error Occured: {e}"
 
     # room_data = {'type': room_type, 'price': price, 'available_room_count': available_room_count, 'total_room': total_room}
     # return jsonify(hospital_data, room_data), 200
-
 
 @app.route('/transactions', methods=['GET'])
 def getAllTransactions():
