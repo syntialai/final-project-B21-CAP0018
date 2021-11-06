@@ -1,23 +1,23 @@
 import enum
 from datetime import datetime
 from functools import wraps
-
 import jwt
 import werkzeug
 from firebase_admin import credentials, firestore, initialize_app, auth, storage
 from flask import Flask, request, jsonify
-from marshmallow import Schema, fields, ValidationError
+from marshmallow import Schema, fields, ValidationError, EXCLUDE
 from werkzeug.exceptions import HTTPException
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'cdf1791e499190767ec7267f2a1b1f8e'
 app.config['BUCKET_NAME'] = 'q-hope.appspot.com'
-cred = credentials.Certificate('D:/BANGKIT/Capstone Project/final-project-B21-CAP0018/api/cloud-api/q-hope-cred.json')
+cred = credentials.Certificate('q-hope-cred.json')
 default_app = initialize_app(cred, {
     'storageBucket': app.config['BUCKET_NAME']
 })
 db = firestore.client()
-bucket = storage.bucket(app.config['BUCKET_NAME'])
+bucket = storage.bucket()
 
 COLLECTION_TRANSACTIONS = 'transactions'
 COLLECTION_PAYMENTS = 'payments'
@@ -208,7 +208,6 @@ class AddHospitalSchema(Schema):
 @token_required
 def get_all_hospitals():
     hospital_docs = db.collection(COLLECTION_HOSPITALS).stream()
-
     hospital_responses = []
     for hospital_doc in hospital_docs:
         hospital = hospital_doc.to_dict()
@@ -265,6 +264,27 @@ def add_hospital():
     return get_success_create_response({
         'id': hospital_doc.id
     })
+
+
+@app.route('/hospitals/<id>/generate-token', methods=['POST'])
+def generate_hospital_token(id):
+    hospital_ref = db.collection('hospitals').document(id)
+    hospital = hospital_ref.get()
+    if hospital.exists:
+        hospital_data = hospital.to_dict()
+
+        if 'token' in hospital_data:
+            db.collection('blacklisted_token').document(hospital_data['token']).set({})
+
+        iat = int(datetime.now().timestamp())
+        encoded_jwt = jwt.encode({
+            'hospital_id': id,
+            'iat': iat
+        }, app.config['SECRET_KEY'])
+        token = encoded_jwt.decode('UTF-8')
+        hospital_ref.update({'token': token})
+
+        return jsonify(token=token, iat=iat), 200
 
 # ====================== End of Hospital API =============================
 
@@ -463,7 +483,7 @@ def get_payment():
         payment_responses.append(payment_dict)
     return get_success_response(payment_responses)
 
-
+  
 @app.route('/payment/<id>', methods=['GET'])
 def get_payment_by_id(id):
     '''
@@ -514,6 +534,9 @@ def update_payment_status_by_id(id):
 # ============================= User API =================================
 
 class AddUserSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
+
     phone_number = fields.String(required=True)
 
 
@@ -528,14 +551,49 @@ def addUser(uid):
         user = db.collection('users').document(uid).get()
         if user.exists:
             raise werkzeug.exceptions.BadRequest("User already exists.")
-        newUser = {'phone_number': phone_number, 'verification_status': False}
-        db.collection('users').document(uid).set(newUser)
+        new_user = {'phone_number': phone_number, 'verification_status': False}
+        db.collection('users').document(uid).set(new_user)
 
-        return jsonify(newUser), 200
+        return jsonify(new_user), 200
     except ValidationError as err:
         raise werkzeug.exceptions.BadRequest(err.messages)
 
 # ========================= End of User API ==============================
+
+
+class UpdateUserSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
+
+    photo = fields.Raw(type='file')
+    name = fields.String()
+    date_of_birth = fields.Integer()
+
+
+@app.route('/user', methods=['PATCH'])
+@token_required
+def updateUser(uid):
+    schema = UpdateUserSchema()
+    file_schema = schema.load(request.files)
+    request_data = schema.load(request.form)
+
+    photo = file_schema.get('photo')
+    name = request_data.get('name')
+    date_of_birth = request_data.get('date_of_birth')
+    user = {}
+    if photo:
+        blob = bucket.blob(f'user_data/{uid}/{photo.filename}')
+        blob.upload_from_file(photo)
+        blob.make_public()
+        user['photo_url'] = blob.public_url
+    if name:
+        user['name'] = name
+    if date_of_birth:
+        user['date_of_birth'] = date_of_birth
+    user_ref = db.collection('users').document(uid)
+    user_ref.update(user)
+    user = user_ref.get().to_dict()
+    return jsonify(user), 200
 
 
 @app.route('/trylah', methods=['GET'])
