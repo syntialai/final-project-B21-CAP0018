@@ -608,7 +608,7 @@ def update_user(uid):
         if selfie.content_type.split('/')[0] != 'image':
             raise werkzeug.exceptions.UnsupportedMediaType("Selfie should be an image.")
 
-        user = {'verification_status': VerificationStatus.UPLOADED.name}
+        user['verification_status'] = VerificationStatus.UPLOADED.name
         filename, ktp_file_extension = os.path.splitext(ktp.filename)
         blob = bucket.blob(f'user_data/{uid}/ktp{ktp_file_extension}')
         blob.upload_from_file(ktp)
