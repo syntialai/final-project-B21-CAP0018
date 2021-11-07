@@ -1,13 +1,13 @@
 import enum
-from datetime import datetime
-from functools import wraps
 import jwt
 import werkzeug
+import os
+from datetime import datetime
+from functools import wraps
 from firebase_admin import credentials, firestore, initialize_app, auth, storage
 from flask import Flask, request, jsonify
-from marshmallow import Schema, fields, ValidationError, EXCLUDE
+from marshmallow import Schema, fields, ValidationError, EXCLUDE, validates_schema
 from werkzeug.exceptions import HTTPException
-
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'cdf1791e499190767ec7267f2a1b1f8e'
@@ -31,6 +31,17 @@ class TransactionStatus(enum.Enum):
     CONFIRMED = 2
     FINISHED = 3
     CANCELED = 4
+
+    @classmethod
+    def has_key(cls, name):
+        return name in cls.__members__
+
+
+class VerificationStatus(enum.Enum):
+    NOT_UPLOAD = 0
+    UPLOADED = 1
+    VERIFIED = 2
+    REJECTED = 3
 
     @classmethod
     def has_key(cls, name):
@@ -173,6 +184,7 @@ def hospital_token_required(f):
 
     return decorator
 
+
 # ======================== End of Auth API ===============================
 
 
@@ -265,26 +277,6 @@ def add_hospital():
         'id': hospital_doc.id
     })
 
-
-@app.route('/hospitals/<id>/generate-token', methods=['POST'])
-def generate_hospital_token(id):
-    hospital_ref = db.collection('hospitals').document(id)
-    hospital = hospital_ref.get()
-    if hospital.exists:
-        hospital_data = hospital.to_dict()
-
-        if 'token' in hospital_data:
-            db.collection('blacklisted_token').document(hospital_data['token']).set({})
-
-        iat = int(datetime.now().timestamp())
-        encoded_jwt = jwt.encode({
-            'hospital_id': id,
-            'iat': iat
-        }, app.config['SECRET_KEY'])
-        token = encoded_jwt.decode('UTF-8')
-        hospital_ref.update({'token': token})
-
-        return jsonify(token=token, iat=iat), 200
 
 # ====================== End of Hospital API =============================
 
@@ -453,6 +445,7 @@ def upload_image_by_user_id(user_id):
         'url': blob.public_url
     })
 
+
 # ====================== End of Upload File API ==========================
 
 
@@ -483,7 +476,7 @@ def get_payment():
         payment_responses.append(payment_dict)
     return get_success_response(payment_responses)
 
-  
+
 @app.route('/payment/<id>', methods=['GET'])
 def get_payment_by_id(id):
     '''
@@ -528,6 +521,7 @@ def update_payment_status_by_id(id):
     payment_doc.update(status_update)
     return get_success_response(status_update)
 
+
 # ======================== End of Payment API ============================
 
 
@@ -542,21 +536,22 @@ class AddUserSchema(Schema):
 
 @app.route('/user', methods=['POST'])
 @token_required
-def addUser(uid):
+def add_user(uid):
     request_data = request.json
     schema = AddUserSchema()
     try:
         result = schema.load(request_data)
         phone_number = result.get('phone_number')
-        user = db.collection('users').document(uid).get()
+        user = db.collection(COLLECTION_USERS).document(uid).get()
         if user.exists:
             raise werkzeug.exceptions.BadRequest("User already exists.")
-        new_user = {'phone_number': phone_number, 'verification_status': False}
-        db.collection('users').document(uid).set(new_user)
+        new_user = {'phone_number': phone_number, 'verification_status': VerificationStatus.NOT_UPLOAD.name}
+        db.collection(COLLECTION_USERS).document(uid).set(new_user)
 
         return jsonify(new_user), 200
     except ValidationError as err:
         raise werkzeug.exceptions.BadRequest(err.messages)
+
 
 # ========================= End of User API ==============================
 
@@ -566,22 +561,34 @@ class UpdateUserSchema(Schema):
         unknown = EXCLUDE
 
     photo = fields.Raw(type='file')
+    ktp = fields.Raw(type='file')
+    selfie = fields.Raw(type='file')
     name = fields.String()
     date_of_birth = fields.Integer()
+
+    @validates_schema
+    def validate_ktp_and_selfie_present(self, data, **kwargs):
+        if ('ktp' in data and 'selfie' not in data) or ('ktp' not in data and 'selfie' in data):
+            raise ValidationError('KTP and Selfie file is required when any is set.')
 
 
 @app.route('/user', methods=['PATCH'])
 @token_required
-def updateUser(uid):
+def update_user(uid):
     schema = UpdateUserSchema()
     file_schema = schema.load(request.files)
     request_data = schema.load(request.form)
+    user_ref = db.collection(COLLECTION_USERS).document(uid)
 
     photo = file_schema.get('photo')
     name = request_data.get('name')
     date_of_birth = request_data.get('date_of_birth')
+    ktp = file_schema.get('ktp')
+    selfie = file_schema.get('selfie')
     user = {}
     if photo:
+        if photo.content_type.split('/')[0] != 'image':
+            raise werkzeug.exceptions.UnsupportedMediaType("Photo should be an image.")
         blob = bucket.blob(f'user_data/{uid}/{photo.filename}')
         blob.upload_from_file(photo)
         blob.make_public()
@@ -590,16 +597,33 @@ def updateUser(uid):
         user['name'] = name
     if date_of_birth:
         user['date_of_birth'] = date_of_birth
-    user_ref = db.collection('users').document(uid)
-    user_ref.update(user)
+    if ktp is not None and selfie is not None:
+        check_user = user_ref.get().to_dict()
+        if check_user['verification_status'] == VerificationStatus.VERIFIED.name:
+            raise werkzeug.exceptions.BadRequest("Your identity has been verified.")
+        if check_user['verification_status'] == VerificationStatus.UPLOADED.name:
+            raise werkzeug.exceptions.BadRequest("Your files has been uploaded.")
+        if ktp.content_type.split('/')[0] != 'image':
+            raise werkzeug.exceptions.UnsupportedMediaType("KTP should be an image.")
+        if selfie.content_type.split('/')[0] != 'image':
+            raise werkzeug.exceptions.UnsupportedMediaType("Selfie should be an image.")
+
+        user = {'verification_status': VerificationStatus.UPLOADED.name}
+        filename, ktp_file_extension = os.path.splitext(ktp.filename)
+        blob = bucket.blob(f'user_data/{uid}/ktp{ktp_file_extension}')
+        blob.upload_from_file(ktp)
+        blob.make_public()
+        user['ktp_url'] = blob.public_url
+        filename, selfie_file_extension = os.path.splitext(selfie.filename)
+        blob = bucket.blob(f'user_data/{uid}/selfie{selfie_file_extension}')
+        blob.upload_from_file(selfie)
+        blob.make_public()
+        user['selfie_url'] = blob.public_url
+
+    if user:
+        user_ref.update(user)
     user = user_ref.get().to_dict()
     return jsonify(user), 200
-
-
-@app.route('/trylah', methods=['GET'])
-@token_required
-def trylah(user_id):
-    return jsonify({"Success": user_id}), 200
 
 
 # port = int(os.environ.get('PORT', 80))
