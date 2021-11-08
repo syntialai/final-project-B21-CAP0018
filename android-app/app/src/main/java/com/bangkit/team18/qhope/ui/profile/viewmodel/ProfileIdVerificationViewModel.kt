@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.domain.model.user.DocumentType
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
@@ -13,10 +14,11 @@ import id.zelory.compressor.Compressor
 import java.io.File
 
 class ProfileIdVerificationViewModel(
+  private val authSharedPrefRepository: AuthSharedPrefRepository,
   private val userUseCase: UserUseCase,
   authUseCase: AuthUseCase
-) :
-  BaseViewModelWithAuth(authUseCase) {
+) : BaseViewModelWithAuth(authSharedPrefRepository, authUseCase) {
+
   private var documentType: DocumentType =
     DocumentType.KTP
   private var ktpFile: File? = null

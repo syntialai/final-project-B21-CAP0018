@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.CountDownTimer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
@@ -12,8 +13,11 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 
-class LoginViewModel(private val authUseCase: AuthUseCase, private val userUseCase: UserUseCase) :
-  BaseViewModelWithAuth(authUseCase) {
+class LoginViewModel(
+  private val authSharedPrefRepository: AuthSharedPrefRepository,
+  private val authUseCase: AuthUseCase,
+  private val userUseCase: UserUseCase) : BaseViewModelWithAuth(authSharedPrefRepository, authUseCase) {
+
   private val _countDown = MutableLiveData<Int>()
   val countDown: LiveData<Int> get() = _countDown
   private val _detectedToken = MutableLiveData<String>()
@@ -21,8 +25,12 @@ class LoginViewModel(private val authUseCase: AuthUseCase, private val userUseCa
   private var timer: CountDownTimer? = null
   private var resendToken: PhoneAuthProvider.ForceResendingToken? = null
   private var storedVerificationId = ""
+
   private val _userDoc = MutableLiveData<User>()
   val userDoc: LiveData<User> get() = _userDoc
+
+  private var _phoneNumber: String? = null
+
   private var authCallbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
     override fun onVerificationCompleted(credential: PhoneAuthCredential) {
       credential.smsCode?.let {
@@ -72,6 +80,10 @@ class LoginViewModel(private val authUseCase: AuthUseCase, private val userUseCa
     timer = null
   }
 
+  fun setPhoneNumber(phoneNumber: String) {
+    _phoneNumber = phoneNumber
+  }
+
   fun resendOtp(activity: Activity, phoneNumber: String) {
     authUseCase.requestToken(activity, phoneNumber, resendToken, authCallbacks)
     startCountDown()
@@ -96,11 +108,13 @@ class LoginViewModel(private val authUseCase: AuthUseCase, private val userUseCa
     }
   }
 
-  fun getUser(userId: String) {
+  fun registerUser() {
     launchViewModelScope({
-      userUseCase.getUser(userId).runFlow({
-        _userDoc.value = it
-      })
+      _phoneNumber?.let { phoneNumber ->
+        authUseCase.registerUser(phoneNumber).runFlow({
+          _userDoc.value = it
+        })
+      }
     })
   }
 }

@@ -98,7 +98,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
         }
         personalDataProfilePicture.loadImage(mContext, user.imageUrl, R.drawable.ic_person)
         val isEditable = getIsEditable(mode)
-        user.birthDate?.toDate()?.time?.let {
+        user.birthDate?.let {
           birthDatePicker = getDatePicker(R.string.birth_date_hint, it)
         }
         personalDataName.apply {
@@ -127,7 +127,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
         personalDataGenderFemale.isChecked = user.gender == GenderType.FEMALE
         personalDataProfilePicture.isClickable = isEditable
 
-        user.birthDate?.toDate()?.time?.let {
+        user.birthDate?.let {
           viewModel.setBirthDate(it / 1000)
         }
       }

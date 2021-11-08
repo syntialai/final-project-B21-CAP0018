@@ -2,12 +2,15 @@ package com.bangkit.team18.qhope.ui.base.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-abstract class BaseViewModelWithAuth(private val authUseCase: AuthUseCase) : BaseViewModel(),
-  FirebaseAuth.AuthStateListener {
+abstract class BaseViewModelWithAuth(
+  private val authSharedPrefRepository: AuthSharedPrefRepository,
+  private val authUseCase: AuthUseCase
+) : BaseViewModel(), FirebaseAuth.AuthStateListener {
 
   private var _user = MutableLiveData<FirebaseUser?>()
   val user: LiveData<FirebaseUser?>
@@ -21,8 +24,17 @@ abstract class BaseViewModelWithAuth(private val authUseCase: AuthUseCase) : Bas
     _user.value = auth.currentUser
   }
 
+  fun saveIdToken() {
+    _user.value?.let { safeUser ->
+      safeUser.getIdToken(true).addOnSuccessListener { tokenResult ->
+        authSharedPrefRepository.idToken = tokenResult.token.orEmpty()
+      }
+    }
+  }
+
   fun logOut() {
     authUseCase.logout()
+    authSharedPrefRepository.clearSharedPrefs()
   }
 
   protected fun initAuthStateListener() {

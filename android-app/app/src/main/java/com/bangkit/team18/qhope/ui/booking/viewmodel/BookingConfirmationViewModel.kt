@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.bangkit.team18.core.data.mapper.DataMapper
+import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.domain.model.booking.BookedHospital
 import com.bangkit.team18.core.domain.model.booking.BookingDetail
 import com.bangkit.team18.core.domain.model.hospital.RoomType
@@ -17,13 +18,14 @@ import com.bangkit.team18.core.utils.view.DataUtils.areNotEmpty
 import com.bangkit.team18.core.utils.view.DataUtils.orFalse
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import com.google.firebase.Timestamp
-import java.util.*
+import java.util.Calendar
 
 class BookingConfirmationViewModel(
+  private val authSharedPrefRepository: AuthSharedPrefRepository,
   private val roomBookingUseCase: RoomBookingUseCase,
   private val userUseCase: UserUseCase,
   authUseCase: AuthUseCase
-) : BaseViewModelWithAuth(authUseCase) {
+) : BaseViewModelWithAuth(authSharedPrefRepository, authUseCase) {
 
   private var _bookingDetail = MutableLiveData<BookingDetail>()
   val bookingDetail: LiveData<BookingDetail>

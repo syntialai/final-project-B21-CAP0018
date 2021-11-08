@@ -14,6 +14,7 @@ class LoginActivity : BaseActivityViewModel<ActivityLoginBinding, LoginViewModel
   ActivityLoginBinding::inflate,
   LoginViewModel::class
 ) {
+
   companion object {
     private const val TAG = "login.LoginFragment"
   }
@@ -29,9 +30,15 @@ class LoginActivity : BaseActivityViewModel<ActivityLoginBinding, LoginViewModel
       }
       loginContinue.setOnClickListener(this@LoginActivity)
     }
-    viewModel.user.observe(this, {
-      if (it != null) {
-        viewModel.getUser(it.uid)
+  }
+
+  override fun setupObserver() {
+    super.setupObserver()
+
+    viewModel.user.observe(this, { user ->
+      user?.let { safeUser ->
+        viewModel.saveIdToken()
+        viewModel.registerUser()
       }
     })
     viewModel.userDoc.observe(this, {
@@ -57,6 +64,7 @@ class LoginActivity : BaseActivityViewModel<ActivityLoginBinding, LoginViewModel
             binding.loginPhoneNumber.text.toString()
           )
         )
+        viewModel.setPhoneNumber(phoneNumber)
         viewModel.requestOtp(this, phoneNumber)
         otpBottomSheet = OtpFragment.newInstance(
           phoneNumber,

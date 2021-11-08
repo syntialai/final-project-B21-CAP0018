@@ -4,18 +4,20 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.domain.model.user.DocumentType
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
-import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import id.zelory.compressor.Compressor
 import java.io.File
 
 class IdVerificationViewModel(
+  private val authSharedPrefRepository: AuthSharedPrefRepository,
   private val userUseCase: UserUseCase,
   authUseCase: AuthUseCase
-) : BaseViewModelWithAuth(authUseCase) {
+) : BaseViewModelWithAuth(authSharedPrefRepository, authUseCase) {
+
   private var documentType: DocumentType = DocumentType.KTP
   private var ktpFile: File? = null
   private var selfieFile: File? = null

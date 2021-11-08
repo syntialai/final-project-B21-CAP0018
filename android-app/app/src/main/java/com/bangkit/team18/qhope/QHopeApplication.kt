@@ -23,8 +23,15 @@ class QHopeApplication : Application() {
       androidContext(this@QHopeApplication)
       modules(
         listOf(
-          dispatcherModule, firebaseModule, remoteDataSourceModule, repositoryModule,
-          useCaseModule, viewModelModule
+          dispatcherModule,
+          firebaseModule,
+          sharedPrefRepositoryModule,
+          networkModule,
+          serviceModule,
+          remoteDataSourceModule,
+          repositoryModule,
+          useCaseModule,
+          viewModelModule
         )
       )
     }

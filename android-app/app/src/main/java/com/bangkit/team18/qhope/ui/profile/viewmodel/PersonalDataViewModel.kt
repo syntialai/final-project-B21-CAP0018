@@ -3,17 +3,21 @@ package com.bangkit.team18.qhope.ui.profile.viewmodel
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.domain.model.user.GenderType
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
-import com.google.firebase.Timestamp
 import java.io.File
 
-class PersonalDataViewModel(private val userUseCase: UserUseCase, authUseCase: AuthUseCase) :
-  BaseViewModelWithAuth(authUseCase) {
+class PersonalDataViewModel(
+  authSharedPrefRepository: AuthSharedPrefRepository,
+  private val userUseCase: UserUseCase,
+  authUseCase: AuthUseCase
+) : BaseViewModelWithAuth(authSharedPrefRepository, authUseCase) {
+
   private var _profilePicture = MutableLiveData<File>()
   val profilePicture: LiveData<File> get() = _profilePicture
   private val _userDoc = MutableLiveData<User>()
@@ -68,7 +72,7 @@ class PersonalDataViewModel(private val userUseCase: UserUseCase, authUseCase: A
               placeOfBirth = placeOfBirth,
               address = address,
               gender = gender,
-              birthDate = Timestamp(birthDate.value as Long, 0)
+              birthDate = _birthDate.value
             )
             launchViewModelScope({
               userUseCase.updatePersonalData(it, user).runFlow({
@@ -85,7 +89,7 @@ class PersonalDataViewModel(private val userUseCase: UserUseCase, authUseCase: A
           placeOfBirth = placeOfBirth,
           address = address,
           gender = gender,
-          birthDate = Timestamp(birthDate.value as Long, 0)
+          birthDate = _birthDate.value
         )
         launchViewModelScope({
           userUseCase.updatePersonalData(it, user).runFlow({

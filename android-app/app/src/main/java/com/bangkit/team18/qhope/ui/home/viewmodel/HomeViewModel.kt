@@ -2,6 +2,7 @@ package com.bangkit.team18.qhope.ui.home.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.domain.model.home.Hospital
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
@@ -11,10 +12,11 @@ import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import com.firebase.geofire.GeoLocation
 
 class HomeViewModel(
+  private val authSharedPrefRepository: AuthSharedPrefRepository,
   private val hospitalUseCase: HospitalUseCase,
   private val authUseCase: AuthUseCase,
   private val userUseCase: UserUseCase
-) : BaseViewModelWithAuth(authUseCase) {
+) : BaseViewModelWithAuth(authSharedPrefRepository, authUseCase) {
 
   private var _nearbyHospitals = MutableLiveData<List<Hospital>>()
   val nearbyHospitals: LiveData<List<Hospital>>
