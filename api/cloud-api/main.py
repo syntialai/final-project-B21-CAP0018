@@ -6,7 +6,7 @@ from datetime import datetime
 from functools import wraps
 from firebase_admin import credentials, firestore, initialize_app, auth, storage
 from flask import Flask, request, jsonify
-from marshmallow import Schema, fields, ValidationError, EXCLUDE, validates_schema
+from marshmallow import Schema, fields, ValidationError, EXCLUDE, validates_schema, validate
 from werkzeug.exceptions import HTTPException
 
 app = Flask(__name__)
@@ -42,6 +42,39 @@ class VerificationStatus(enum.Enum):
     UPLOADED = 1
     VERIFIED = 2
     REJECTED = 3
+
+    @classmethod
+    def has_key(cls, name):
+        return name in cls.__members__
+
+
+class BloodType(enum.Enum):
+    A = 0
+    B = 1
+    AB = 2
+    O = 3
+
+    @classmethod
+    def has_key(cls, name):
+        return name in cls.__members__
+
+
+class Gender(enum.Enum):
+    MALE = 0
+    FEMALE = 1
+
+    @classmethod
+    def has_key(cls, name):
+        return name in cls.__members__
+
+
+class Religion(enum.Enum):
+    ISLAM = 0
+    CHRISTIAN = 1
+    CATHOLIC = 2
+    HINDU = 3
+    BUDDHA = 4
+    CONFUCIANISM = 5
 
     @classmethod
     def has_key(cls, name):
@@ -145,7 +178,6 @@ def generate_hospital_token(id):
 def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
-        return f('j3eCJ0mnJ2QSvPTjHjYjEzBexA43', *args, **kwargs)
         token = None
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
@@ -563,6 +595,17 @@ class UpdateUserSchema(Schema):
     selfie = fields.Raw(type='file')
     name = fields.String()
     date_of_birth = fields.Integer()
+    ktp_address = fields.String()
+    blood_type = fields.String()
+    birth_place = fields.String()
+    district = fields.String()
+    village = fields.String()
+    city = fields.String()
+    neighborhood = fields.String()
+    address = fields.String()
+    hamlet = fields.String(validate=validate.Length(3))
+    gender = fields.String(validate=validate.Length(3))
+    religion = fields.String()
 
     @validates_schema
     def validate_ktp_and_selfie_present(self, data, **kwargs):
@@ -581,9 +624,21 @@ def update_user(uid):
     photo = file_schema.get('photo')
     name = request_data.get('name')
     date_of_birth = request_data.get('date_of_birth')
+    address = request_data.get('address')
+    ktp_address = request_data.get('ktp_address')
+    blood_type = request_data.get('blood_type')
+    birth_place = request_data.get('birth_place')
+    district = request_data.get('district')
+    village = request_data.get('village')
+    city = request_data.get('city')
+    neighborhood = request_data.get('neighborhood')
+    hamlet = request_data.get('hamlet')
+    gender = request_data.get('gender')
+    religion = request_data.get('religion')
     ktp = file_schema.get('ktp')
     selfie = file_schema.get('selfie')
     user = {}
+    check_user = user_ref.get().to_dict()
     if photo:
         if photo.content_type.split('/')[0] != 'image':
             raise werkzeug.exceptions.UnsupportedMediaType("Photo should be an image.")
@@ -591,37 +646,71 @@ def update_user(uid):
         blob.upload_from_file(photo)
         blob.make_public()
         user['photo_url'] = blob.public_url
-    if name:
-        user['name'] = name
-    if date_of_birth:
-        user['date_of_birth'] = date_of_birth
-    if ktp is not None and selfie is not None:
-        check_user = user_ref.get().to_dict()
-        if check_user['verification_status'] == VerificationStatus.VERIFIED.name:
-            raise werkzeug.exceptions.BadRequest("Your identity has been verified.")
-        if check_user['verification_status'] == VerificationStatus.UPLOADED.name:
-            raise werkzeug.exceptions.BadRequest("Your files has been uploaded.")
-        if ktp.content_type.split('/')[0] != 'image':
-            raise werkzeug.exceptions.UnsupportedMediaType("KTP should be an image.")
-        if selfie.content_type.split('/')[0] != 'image':
-            raise werkzeug.exceptions.UnsupportedMediaType("Selfie should be an image.")
+    if address:
+        user['address'] = address
+    if not is_verified(check_user['verification_status']):
+        if name:
+            user['name'] = name
+        if date_of_birth and not is_verified(check_user['verification_status']):
+            user['date_of_birth'] = date_of_birth
+        if ktp is not None and selfie is not None:
+            if is_uploaded(check_user['verification_status']):
+                raise werkzeug.exceptions.BadRequest("Your files has been uploaded.")
+            if ktp.content_type.split('/')[0] != 'image':
+                raise werkzeug.exceptions.UnsupportedMediaType("KTP should be an image.")
+            if selfie.content_type.split('/')[0] != 'image':
+                raise werkzeug.exceptions.UnsupportedMediaType("Selfie should be an image.")
 
-        user['verification_status'] = VerificationStatus.UPLOADED.name
-        filename, ktp_file_extension = os.path.splitext(ktp.filename)
-        blob = bucket.blob(f'user_data/{uid}/ktp{ktp_file_extension}')
-        blob.upload_from_file(ktp)
-        blob.make_public()
-        user['ktp_url'] = blob.public_url
-        filename, selfie_file_extension = os.path.splitext(selfie.filename)
-        blob = bucket.blob(f'user_data/{uid}/selfie{selfie_file_extension}')
-        blob.upload_from_file(selfie)
-        blob.make_public()
-        user['selfie_url'] = blob.public_url
+            user['verification_status'] = VerificationStatus.UPLOADED.name
+            filename, ktp_file_extension = os.path.splitext(ktp.filename)
+            blob = bucket.blob(f'user_data/{uid}/ktp{ktp_file_extension}')
+            blob.upload_from_file(ktp)
+            blob.make_public()
+            user['ktp_url'] = blob.public_url
+            filename, selfie_file_extension = os.path.splitext(selfie.filename)
+            blob = bucket.blob(f'user_data/{uid}/selfie{selfie_file_extension}')
+            blob.upload_from_file(selfie)
+            blob.make_public()
+            user['selfie_url'] = blob.public_url
+        if ktp_address:
+            user['ktp_address'] = ktp_address
+        if blood_type:
+            if not BloodType.has_key(blood_type):
+                raise werkzeug.exceptions.BadRequest('Invalid blood type.')
+            user['blood_type'] = blood_type
+        if gender:
+            if not Gender.has_key(gender):
+                raise werkzeug.exceptions.BadRequest('Invalid gender.')
+            user['gender'] = gender
+        if birth_place:
+            user['birth_place'] = birth_place
+        if district:
+            user['district'] = district
+        if village:
+            user['village'] = village
+        if city:
+            user['city'] = city
+        if neighborhood:
+            user['neighborhood'] = neighborhood
+        if hamlet:
+            user['hamlet'] = hamlet
+        if religion:
+            if not Religion.has_key(religion):
+                raise werkzeug.exceptions.BadRequest('Invalid religion.')
+            user['religion'] = religion
 
     if user:
         user_ref.update(user)
     user = user_ref.get().to_dict()
     return jsonify(user), 200
+
+
+def is_verified(verification_status):
+    return verification_status == VerificationStatus.VERIFIED.name
+
+
+def is_uploaded(verification_status):
+    return verification_status == VerificationStatus.UPLOADED.name
 
 
 # ========================= End of User API ==============================
