@@ -1,7 +1,7 @@
 package com.bangkit.team18.core.di
 
-import com.bangkit.team18.core.BuildConfig
 import com.bangkit.team18.core.config.Constants
+import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -31,10 +31,10 @@ val networkModule = module {
     }
   }
 
-  fun provideAuthInterceptor(): Interceptor {
+  fun provideAuthInterceptor(authSharedPrefRepository: AuthSharedPrefRepository): Interceptor {
     return Interceptor { chain ->
       val requestWithHeader = chain.request().newBuilder()
-        .addHeader(Constants.X_ACCESS_TOKEN_HEADER, "")
+        .addHeader(Constants.X_ACCESS_TOKEN_HEADER, authSharedPrefRepository.idToken)
         .build()
       chain.proceed(requestWithHeader)
     }
@@ -54,16 +54,15 @@ val networkModule = module {
 
   fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
-      .baseUrl(BuildConfig.QHOPE_API_URL)
+//      .baseUrl(BuildConfig.QHOPE_API_URL)
+      .baseUrl("http://192.168.100.70/")
       .addConverterFactory(GsonConverterFactory.create())
       .client(okHttpClient)
       .build()
   }
 
-  single {
-    provideLoggingInterceptor()
-    provideAuthInterceptor()
-    provideOkHttpClient(get(), get())
-    provideRetrofit(get())
-  }
+  single { provideLoggingInterceptor() }
+  single { provideAuthInterceptor(get()) }
+  single { provideOkHttpClient(get(), get()) }
+  single { provideRetrofit(get()) }
 }

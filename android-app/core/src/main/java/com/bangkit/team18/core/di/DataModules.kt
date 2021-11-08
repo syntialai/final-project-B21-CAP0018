@@ -1,5 +1,6 @@
 package com.bangkit.team18.core.di
 
+import com.bangkit.team18.core.api.source.service.AuthService
 import com.bangkit.team18.core.api.source.service.HospitalService
 import com.bangkit.team18.core.api.source.service.TransactionService
 import com.bangkit.team18.core.api.source.service.UserService
@@ -49,6 +50,10 @@ val remoteDataSourceModule = module {
 }
 
 val serviceModule = module {
+  fun provideAuthService(retrofit: Retrofit): AuthService {
+    return retrofit.create(AuthService::class.java)
+  }
+
   fun provideHospitalService(retrofit: Retrofit): HospitalService {
     return retrofit.create(HospitalService::class.java)
   }
@@ -61,6 +66,7 @@ val serviceModule = module {
     return retrofit.create(UserService::class.java)
   }
 
+  single { provideAuthService(get()) }
   single { provideHospitalService(get()) }
   single { provideTransactionService(get()) }
   single { provideUserService(get()) }

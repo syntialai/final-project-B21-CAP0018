@@ -21,10 +21,10 @@ class AuthSharedPrefRepository private constructor(context: Context) {
     sharedPreferences.edit().clear().apply()
   }
 
-  var idToken: String?
-    get() = sharedPreferences.getString(ID_TOKEN, null)
-    set(accessToken) {
-      sharedPreferences.edit().putString(ID_TOKEN, accessToken).apply()
+  var idToken: String
+    get() = sharedPreferences.getString(ID_TOKEN, "").orEmpty()
+    set(idToken) {
+      sharedPreferences.edit().putString(ID_TOKEN, idToken).apply()
     }
 
   var userId: String?
