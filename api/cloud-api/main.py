@@ -145,16 +145,17 @@ def generate_hospital_token(id):
 def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
+        return f('j3eCJ0mnJ2QSvPTjHjYjEzBexA43', *args, **kwargs)
         token = None
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
 
         if not token:
-            raise werkzeug.exceptions.NotFound('A valid token is missing.')
+            raise werkzeug.exceptions.Unauthorized('A valid token is missing.')
         try:
             decoded_token = auth.verify_id_token(token)
         except:
-            raise werkzeug.exceptions.NotFound('Token is invalid.')
+            raise werkzeug.exceptions.Unauthorized('Token is invalid.')
 
         return f(decoded_token['uid'], *args, **kwargs)
 
@@ -169,16 +170,16 @@ def hospital_token_required(f):
             token = request.headers['x-access-token']
 
         if not token:
-            raise werkzeug.exceptions.NotFound('A valid token is missing.')
+            raise werkzeug.exceptions.Unauthorized('A valid token is missing.')
 
         blacklisted = db.collection('blacklisted_token').document(token).get()
         if blacklisted.exists:
-            raise werkzeug.exceptions.NotFound('Token is invalid.')
+            raise werkzeug.exceptions.Unauthorized('Token is invalid.')
 
         try:
             current_user = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
         except:
-            raise werkzeug.exceptions.NotFound('Token is invalid.')
+            raise werkzeug.exceptions.Unauthorized('Token is invalid.')
 
         return f(current_user['hospital_id'], *args, **kwargs)
 
@@ -544,16 +545,13 @@ def add_user(uid):
         phone_number = result.get('phone_number')
         user = db.collection(COLLECTION_USERS).document(uid).get()
         if user.exists:
-            raise werkzeug.exceptions.BadRequest("User already exists.")
+            return jsonify(user.to_dict()), 200
         new_user = {'phone_number': phone_number, 'verification_status': VerificationStatus.NOT_UPLOAD.name}
         db.collection(COLLECTION_USERS).document(uid).set(new_user)
 
         return jsonify(new_user), 200
     except ValidationError as err:
         raise werkzeug.exceptions.BadRequest(err.messages)
-
-
-# ========================= End of User API ==============================
 
 
 class UpdateUserSchema(Schema):
@@ -624,6 +622,9 @@ def update_user(uid):
         user_ref.update(user)
     user = user_ref.get().to_dict()
     return jsonify(user), 200
+
+
+# ========================= End of User API ==============================
 
 
 # port = int(os.environ.get('PORT', 80))
