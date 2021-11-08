@@ -560,6 +560,13 @@ def update_payment_status_by_id(id):
 
 # ============================= User API =================================
 
+@app.route('/user', methods=['GET'])
+@token_required
+def get_user(uid):
+    user = db.collection(COLLECTION_USERS).document(uid).get()
+    return jsonify(user.to_dict()), 200
+
+
 class AddUserSchema(Schema):
     class Meta:
         unknown = EXCLUDE
