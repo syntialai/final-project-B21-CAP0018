@@ -46,7 +46,7 @@ val remoteDataSourceModule = module {
   single { HospitalRemoteDataSourceImpl(get()) } bind HospitalRemoteDataSource::class
   single { RoomBookingRemoteDataSourceImpl(get(), get()) } bind RoomBookingRemoteDataSource::class
   single { AuthRemoteDataSourceImpl(get(), get()) } bind AuthRemoteDataSource::class
-  single { UserRemoteDataSourceImpl(get(), get()) } bind UserRemoteDataSource::class
+  single { UserRemoteDataSourceImpl(get(), get(), get()) } bind UserRemoteDataSource::class
 }
 
 val serviceModule = module {
