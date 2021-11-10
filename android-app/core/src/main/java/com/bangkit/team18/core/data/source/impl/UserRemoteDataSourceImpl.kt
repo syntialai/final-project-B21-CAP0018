@@ -1,6 +1,8 @@
 package com.bangkit.team18.core.data.source.impl
 
 import android.net.Uri
+import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
+import com.bangkit.team18.core.api.source.service.UserService
 import com.bangkit.team18.core.data.source.UserRemoteDataSource
 import com.bangkit.team18.core.data.source.base.BaseRemoteDataSource
 import com.bangkit.team18.core.data.source.config.CollectionConstants
@@ -10,11 +12,17 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
+
 
 @ExperimentalCoroutinesApi
 class UserRemoteDataSourceImpl(
   database: FirebaseFirestore,
-  firebaseStorage: FirebaseStorage
+  firebaseStorage: FirebaseStorage,
+  private val userService: UserService
 ) : UserRemoteDataSource, BaseRemoteDataSource() {
   private val storageReference = firebaseStorage.reference
   private val usersCollection = database.collection(CollectionConstants.USERS_COLLECTION)
@@ -27,6 +35,17 @@ class UserRemoteDataSourceImpl(
 
   override suspend fun updateUser(userId: String, data: HashMap<String, Any?>) {
     usersCollection.updateData(userId, data)
+  }
+
+  override suspend fun updateUser(
+    userProfileRequest: UpdateUserProfileRequest,
+    image: File?
+  ): com.bangkit.team18.core.api.source.response.user.UserResponse {
+    val fileBody = image?.asRequestBody("image/*".toMediaTypeOrNull())
+    val filePart = fileBody?.let {
+      MultipartBody.Part.createFormData("image", image.name.orEmpty(), it)
+    }
+    return userService.updateUserProfile(userProfileRequest, filePart)
   }
 
   override suspend fun getUser(userId: String): Flow<UserResponse?> {

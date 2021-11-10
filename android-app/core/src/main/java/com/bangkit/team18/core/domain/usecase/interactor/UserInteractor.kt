@@ -1,11 +1,13 @@
 package com.bangkit.team18.core.domain.usecase.interactor
 
 import android.net.Uri
+import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.repository.UserRepository
 import com.bangkit.team18.core.domain.usecase.UserUseCase
 import kotlinx.coroutines.flow.Flow
+import java.io.File
 
 class UserInteractor(private val userRepository: UserRepository) : UserUseCase {
   override suspend fun uploadUserImage(userId: String, imageUri: Uri): Flow<ResponseWrapper<Uri>> =
@@ -16,6 +18,11 @@ class UserInteractor(private val userRepository: UserRepository) : UserUseCase {
 
   override suspend fun getUser(userId: String): Flow<ResponseWrapper<User?>> =
     userRepository.getUser(userId)
+
+  override suspend fun updateUser(
+    updateUserProfileRequest: UpdateUserProfileRequest,
+    image: File?
+  ) = userRepository.updateUser(updateUserProfileRequest, image)
 
   override suspend fun uploadUserKtp(userId: String, uri: Uri): Flow<ResponseWrapper<Uri>> =
     userRepository.uploadUserKtp(userId, uri)

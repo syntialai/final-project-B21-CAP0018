@@ -1,6 +1,7 @@
 package com.bangkit.team18.core.data.repository
 
 import android.net.Uri
+import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
 import com.bangkit.team18.core.data.mapper.UserMapper
 import com.bangkit.team18.core.data.mapper.UserMapper.mapToUser
 import com.bangkit.team18.core.data.repository.base.FetchNullableDataWrapper
@@ -15,6 +16,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
+import java.io.File
 
 @ExperimentalCoroutinesApi
 class UserRepositoryImpl(
@@ -50,6 +52,18 @@ class UserRepositoryImpl(
         return response?.mapToUser()
       }
     }.getData().flowOn(ioDispatcher)
+  }
+
+  override suspend fun updateUser(
+    updateUserProfileRequest: UpdateUserProfileRequest,
+    image: File?
+  ): Flow<ResponseWrapper<Boolean>> {
+    return object :
+      UpdateDataWrapper<com.bangkit.team18.core.api.source.response.user.UserResponse>() {
+      override suspend fun doUpdate(): com.bangkit.team18.core.api.source.response.user.UserResponse {
+        return userRemoteDataSource.updateUser(updateUserProfileRequest, image)
+      }
+    }.updateData().flowOn(ioDispatcher)
   }
 
   override suspend fun uploadUserKtp(userId: String, uri: Uri): Flow<ResponseWrapper<Uri>> =
