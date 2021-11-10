@@ -1,7 +1,6 @@
 package com.bangkit.team18.core.api.source.service
 
 import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
-import com.bangkit.team18.core.api.source.response.user.UploadVerificationResponse
 import com.bangkit.team18.core.api.source.response.user.UserResponse
 import com.bangkit.team18.core.config.ApiConstants
 import okhttp3.MultipartBody
@@ -24,11 +23,12 @@ interface UserService {
   ): UserResponse
 
   @Multipart
-  @POST(ApiConstants.UPLOAD_VERIFICATION_ATTACHMENTS)
-  suspend fun uploadVerificationAttachments(
+  @PATCH(ApiConstants.USER_PROFILE_UPDATE)
+  suspend fun updateUserProfile(
+    updateUserProfileRequest: UpdateUserProfileRequest,
     @Part ktp: MultipartBody.Part,
     @Part selfie: MultipartBody.Part
-  ): UploadVerificationResponse
+  ): UserResponse
 
   @POST(ApiConstants.USER_SIGN_OUT)
   suspend fun signOut()

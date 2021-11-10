@@ -1,6 +1,5 @@
 package com.bangkit.team18.core.domain.usecase.interactor
 
-import android.net.Uri
 import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.domain.model.user.User
@@ -10,8 +9,6 @@ import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 class UserInteractor(private val userRepository: UserRepository) : UserUseCase {
-  override suspend fun uploadUserImage(userId: String, imageUri: Uri): Flow<ResponseWrapper<Uri>> =
-    userRepository.uploadUserImage(userId, imageUri)
 
   override suspend fun addUser(userId: String, user: User): Flow<ResponseWrapper<Boolean>> =
     userRepository.addUser(userId, user)
@@ -24,23 +21,10 @@ class UserInteractor(private val userRepository: UserRepository) : UserUseCase {
     image: File?
   ) = userRepository.updateUser(updateUserProfileRequest, image)
 
-  override suspend fun uploadUserKtp(userId: String, uri: Uri): Flow<ResponseWrapper<Uri>> =
-    userRepository.uploadUserKtp(userId, uri)
-
-  override suspend fun uploadUserSelfie(
-    userId: String,
-    uri: Uri
-  ): Flow<ResponseWrapper<Uri>> = userRepository.uploadUserSelfie(userId, uri)
-
-  override suspend fun updateUserVerification(
-    userId: String,
-    ktpUrl: String,
-    selfieUrl: String
-  ): Flow<ResponseWrapper<Boolean>> =
-    userRepository.updateUserVerification(userId, ktpUrl, selfieUrl)
-
-  override suspend fun updatePersonalData(
-    userId: String,
-    user: User
-  ): Flow<ResponseWrapper<Boolean>> = userRepository.updatePersonalData(userId, user)
+  override suspend fun uploadUserVerification(
+    ktp: File,
+    selfie: File
+  ): Flow<ResponseWrapper<Boolean>> {
+    return userRepository.uploadUserVerification(ktp, selfie)
+  }
 }

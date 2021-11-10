@@ -1,7 +1,6 @@
 package com.bangkit.team18.qhope.ui.profile.viewmodel
 
 import android.content.Context
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
@@ -93,21 +92,12 @@ class ProfileIdVerificationViewModel(
   }
 
   fun upload() {
-    val ktp = Uri.fromFile(ktpPicture.value)
-    val selfie = Uri.fromFile(selfiePicture.value)
-    getUserId()?.let { id ->
+    val ktp = _ktpPicture.value
+    val selfie = _selfiePicture.value
+    if (ktp != null && selfie != null) {
       launchViewModelScope({
-        userUseCase.uploadUserKtp(id, ktp).runFlow({ ktpUri ->
-          launchViewModelScope({
-            userUseCase.uploadUserSelfie(id, selfie).runFlow({ selfieUri ->
-              launchViewModelScope({
-                userUseCase.updateUserVerification(id, ktpUri.toString(), selfieUri.toString())
-                  .runFlow({
-                    _isSubmitted.value = it
-                  })
-              })
-            })
-          })
+        userUseCase.uploadUserVerification(ktp, selfie).runFlow({ success ->
+          _isSubmitted.value = success
         })
       })
     }

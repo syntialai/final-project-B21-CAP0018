@@ -197,7 +197,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
         val placeOfBirth = personalDataPlaceOfBirth.text.toString()
         val address = personalDataAddress.text.toString()
         val gender = if (personalDataGenderMale.isChecked) GenderType.MALE else GenderType.FEMALE
-        viewModel.update(name, ktpNumber, placeOfBirth, address, gender)
+        viewModel.update(name, placeOfBirth, address, gender)
       }
     }
   }
