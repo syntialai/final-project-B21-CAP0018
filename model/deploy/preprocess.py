@@ -11,8 +11,12 @@ output_layers = [layer_names[i[0]-1] for i in net.getUnconnectedOutLayers()] # g
 
 # standardize input ( (-mean)/std)
 def preprocess_standardize(img_path, resize_size = (160,160), confidence_threshold = 0.5, nms_threshold = 0.6) :
+    '''
+    Reads image from img_path (a file from request) and returns a standardized image (subtracted mean and divided by std)
+    '''
     # read image
-    img = cv.imread(img_path)
+    # img = cv.imread(img_path)
+    img = cv.imdecode(np.fromstring(img_path, np.uint8), cv.IMREAD_UNCHANGED)
     # convert image for the yolov3 inputs
     blob = cv.dnn.blobFromImage(img, 1.0/255.0, (416,416), swapRB= True,crop = False)
     # Feed the input to yolov3
@@ -63,7 +67,8 @@ def preprocess_standardize(img_path, resize_size = (160,160), confidence_thresho
 # preprocess normalize (divides each rgb value by 255)
 def preprocess_normalize(img_path, resize_size = (160,160), confidence_threshold = 0.5, nms_threshold = 0.6) :
     # read image
-    img = cv.imread(img_path)
+    # img = cv.imread(img_path)
+    img = cv.imdecode(np.fromstring(img_path, np.uint8), cv.IMREAD_UNCHANGED)
     print(img.shape)
     # convert image for the yolov3 inputs
     blob = cv.dnn.blobFromImage(img, 1.0/255.0, (416,416), swapRB= True,crop = False)
