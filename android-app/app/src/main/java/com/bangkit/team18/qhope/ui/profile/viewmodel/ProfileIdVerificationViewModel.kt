@@ -20,30 +20,28 @@ class ProfileIdVerificationViewModel(
 
   private var documentType: DocumentType =
     DocumentType.KTP
+
   private var ktpFile: File? = null
+
   private var selfieFile: File? = null
+
   private val _ktpPicture = MutableLiveData<File?>()
   val ktpPicture: LiveData<File?> get() = _ktpPicture
+
   private val _selfiePicture = MutableLiveData<File?>()
   val selfiePicture: LiveData<File?> get() = _selfiePicture
+
   private val _isSubmitted = MutableLiveData<Boolean>()
   val isSubmitted: LiveData<Boolean> get() = _isSubmitted
+
   private val _userDoc = MutableLiveData<User>()
   val userDoc: LiveData<User> get() = _userDoc
 
-  init {
-    initAuthStateListener()
-  }
-
   fun getUserDoc() {
     launchViewModelScope({
-      getUserId()?.let { uid ->
-        userUseCase.getUser(uid).runFlow({
-          it?.let { user ->
-            _userDoc.value = user
-          }
-        })
-      }
+      userUseCase.getUserProfile().runFlow({
+        _userDoc.value = it
+      })
     })
   }
 

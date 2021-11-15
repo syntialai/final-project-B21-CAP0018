@@ -5,7 +5,6 @@ import com.bangkit.team18.core.api.source.service.UserService
 import com.bangkit.team18.core.data.source.UserRemoteDataSource
 import com.bangkit.team18.core.data.source.base.BaseRemoteDataSource
 import com.bangkit.team18.core.data.source.config.CollectionConstants
-import com.bangkit.team18.core.data.source.response.user.UserResponse
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -37,8 +36,8 @@ class UserRemoteDataSourceImpl(
     return userService.updateUserProfile(userProfileRequest, filePart)
   }
 
-  override suspend fun getUser(userId: String): Flow<UserResponse?> {
-    return usersCollection.document(userId).loadData(UserResponse::class.java)
+  override suspend fun getUserProfile(): Flow<com.bangkit.team18.core.api.source.response.user.UserResponse> {
+    return userService.getUserProfile().loadAsFlow()
   }
 
   override suspend fun uploadUserVerification(

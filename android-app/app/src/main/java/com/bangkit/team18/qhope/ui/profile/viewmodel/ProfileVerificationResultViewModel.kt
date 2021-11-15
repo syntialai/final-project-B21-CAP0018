@@ -17,19 +17,11 @@ class ProfileVerificationResultViewModel(
   private val _userDoc = MutableLiveData<User>()
   val userDoc: LiveData<User> get() = _userDoc
 
-  init {
-    initAuthStateListener()
-  }
-
   fun getUserDoc() {
     launchViewModelScope({
-      getUserId()?.let { uid ->
-        userUseCase.getUser(uid).runFlow({
-          it?.let { user ->
-            _userDoc.value = user
-          }
-        })
-      }
+      userUseCase.getUserProfile().runFlow({
+        _userDoc.value = it
+      })
     })
   }
 }

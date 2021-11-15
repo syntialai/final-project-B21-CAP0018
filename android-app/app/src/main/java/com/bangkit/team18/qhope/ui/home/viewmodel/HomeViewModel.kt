@@ -31,15 +31,11 @@ class HomeViewModel(
     get() = _userData
 
   fun fetchUserData() {
-    getUserId()?.let { id ->
-      launchViewModelScope({
-        userUseCase.getUser(id).runFlow({
-          it?.let { user ->
-            _userData.value = user
-          }
-        })
+    launchViewModelScope({
+      userUseCase.getUserProfile().runFlow({
+        _userData.value = it
       })
-    }
+    })
   }
 
   fun fetchNearbyHospitals(latitude: Double, longitude: Double) {

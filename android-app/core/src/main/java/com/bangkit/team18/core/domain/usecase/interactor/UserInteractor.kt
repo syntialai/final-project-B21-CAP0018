@@ -10,11 +10,8 @@ import java.io.File
 
 class UserInteractor(private val userRepository: UserRepository) : UserUseCase {
 
-  override suspend fun addUser(userId: String, user: User): Flow<ResponseWrapper<Boolean>> =
-    userRepository.addUser(userId, user)
-
-  override suspend fun getUser(userId: String): Flow<ResponseWrapper<User?>> =
-    userRepository.getUser(userId)
+  override suspend fun getUserProfile(): Flow<ResponseWrapper<User>> =
+    userRepository.getUserProfile()
 
   override suspend fun updateUser(
     updateUserProfileRequest: UpdateUserProfileRequest,

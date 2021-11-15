@@ -29,18 +29,12 @@ class PersonalDataViewModel(
   private var _birthDate = MutableLiveData<Long>()
   val birthDate: LiveData<Long> get() = _birthDate
 
-  init {
-    initAuthStateListener()
-  }
-
   fun getUserDoc() {
-    getUserId()?.let {
-      launchViewModelScope({
-        userUseCase.getUser(it).runFlow({
-          _userDoc.value = it
-        })
+    launchViewModelScope({
+      userUseCase.getUserProfile().runFlow({
+        _userDoc.value = it
       })
-    }
+    })
   }
 
   fun changeMode() {

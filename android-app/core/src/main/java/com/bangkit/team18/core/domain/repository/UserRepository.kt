@@ -8,9 +8,7 @@ import java.io.File
 
 interface UserRepository {
 
-  suspend fun addUser(userId: String, user: User): Flow<ResponseWrapper<Boolean>>
-
-  suspend fun getUser(userId: String): Flow<ResponseWrapper<User?>>
+  suspend fun getUserProfile(): Flow<ResponseWrapper<User>>
 
   suspend fun updateUser(
     updateUserProfileRequest: UpdateUserProfileRequest,

@@ -17,17 +17,11 @@ class ProfileViewModel(
   private val _userDoc = MutableLiveData<User>()
   val userDoc: LiveData<User> get() = _userDoc
 
-  init {
-    initAuthStateListener()
-  }
-
   fun getUserDoc() {
-    getUserId()?.let {
-      launchViewModelScope({
-        userUseCase.getUser(it).runFlow({
-          _userDoc.value = it
-        })
+    launchViewModelScope({
+      userUseCase.getUserProfile().runFlow({
+        _userDoc.value = it
       })
-    }
+    })
   }
 }

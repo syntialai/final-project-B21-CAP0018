@@ -47,11 +47,7 @@ class BookingConfirmationFragment :
     super.setupObserver()
 
     viewModel.setBookingDetail(args.bookedHospital, args.roomType)
-    viewModel.user.observe(viewLifecycleOwner, {
-      it?.let { user ->
-        viewModel.fetchUserDetails(user.uid, user.phoneNumber.orEmpty())
-      }
-    })
+    viewModel.fetchUserDetails()
     viewModel.bookingDetail.observe(viewLifecycleOwner, {
       it?.let { bookingDetail ->
         setRoomData(bookingDetail.hospital.name, bookingDetail.selectedRoomType)
