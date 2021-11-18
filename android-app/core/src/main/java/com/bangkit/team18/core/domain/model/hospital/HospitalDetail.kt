@@ -20,5 +20,7 @@ data class HospitalDetail(
 
   val telephone: String,
 
-  val availableRoomCount: Int
+  val availableRoomCount: Int,
+
+  val roomTypes: List<RoomType>
 )

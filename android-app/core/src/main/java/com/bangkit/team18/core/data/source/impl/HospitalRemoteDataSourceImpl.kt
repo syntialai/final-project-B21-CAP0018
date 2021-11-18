@@ -1,5 +1,7 @@
 package com.bangkit.team18.core.data.source.impl
 
+import com.bangkit.team18.core.api.source.response.hospital.HospitalDetailResponse
+import com.bangkit.team18.core.api.source.service.HospitalService
 import com.bangkit.team18.core.data.mapper.HospitalMapper
 import com.bangkit.team18.core.data.source.HospitalRemoteDataSource
 import com.bangkit.team18.core.data.source.base.BaseRemoteDataSource
@@ -12,8 +14,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
-class HospitalRemoteDataSourceImpl(db: FirebaseFirestore) : BaseRemoteDataSource(),
-  HospitalRemoteDataSource {
+class HospitalRemoteDataSourceImpl(
+  db: FirebaseFirestore,
+  private val hospitalService: HospitalService
+) : BaseRemoteDataSource(), HospitalRemoteDataSource {
 
   private val hospitalCollections = db.collection(CollectionConstants.HOSPITAL_COLLECTION)
 
@@ -21,8 +25,8 @@ class HospitalRemoteDataSourceImpl(db: FirebaseFirestore) : BaseRemoteDataSource
     return hospitalCollections.loadData(HospitalResponse::class.java)
   }
 
-  override suspend fun getHospitalDetail(id: String): Flow<HospitalResponse?> {
-    return hospitalCollections.document(id).loadData(HospitalResponse::class.java)
+  override suspend fun getHospitalDetail(id: String): Flow<HospitalDetailResponse> {
+    return hospitalService.getHospitalDetail(id).loadAsFlow()
   }
 
   override suspend fun getHospitalRoomTypes(id: String): Flow<List<RoomTypeResponse>> {

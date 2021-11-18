@@ -7,12 +7,12 @@ import androidx.navigation.fragment.navArgs
 import com.bangkit.team18.core.domain.model.hospital.HospitalDetail
 import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
-import com.bangkit.team18.core.utils.view.ViewUtils.loadImageFromStorage
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentHospitalDetailBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.booking.viewmodel.HospitalDetailViewModel
+import com.bumptech.glide.Glide
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -20,8 +20,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.chip.Chip
-import com.google.firebase.storage.FirebaseStorage
-import org.koin.android.ext.android.inject
 
 class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, HospitalDetailViewModel>(
   FragmentHospitalDetailBinding::inflate, HospitalDetailViewModel::class
@@ -30,8 +28,6 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
   companion object {
     private const val DEFAULT_ZOOM = 16f
   }
-
-  private val storage: FirebaseStorage by inject()
 
   private val args: HospitalDetailFragmentArgs by navArgs()
 
@@ -54,12 +50,8 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
     viewModel.hospital.observe(viewLifecycleOwner, {
       it?.let { data ->
         setHospitalData(data)
-      }
-    })
-    viewModel.hospitalRoomTypes.observe(viewLifecycleOwner, {
-      it?.let { roomTypes ->
-        setupRoomAvailability(roomTypes.size)
-        setupTypeData(roomTypes)
+        setupRoomAvailability(data.availableRoomCount)
+        setupTypeData(data.roomTypes)
       }
     })
   }
@@ -137,10 +129,12 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
   }
 
   private fun setHospitalImage(imagePath: String) {
-    binding.imageViewHospitalDetail.loadImageFromStorage(
-      mContext, storage.getReference(imagePath),
-      R.drawable.drawable_hospital_placeholder
-    )
+    context?.let { context ->
+      Glide.with(context)
+        .load(imagePath)
+        .placeholder(R.drawable.drawable_hospital_placeholder)
+        .into(binding.imageViewHospitalDetail)
+    }
   }
 
   private fun setupPriceByType(roomType: RoomType) {
@@ -175,5 +169,10 @@ class HospitalDetailFragment : BaseFragment<FragmentHospitalDetailBinding, Hospi
       map.addMarker(MarkerOptions().position(location).title(hospitalName))
       map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM))
     }
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    googleMap = null
   }
 }

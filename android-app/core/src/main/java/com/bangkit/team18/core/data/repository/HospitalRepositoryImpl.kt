@@ -1,14 +1,13 @@
 package com.bangkit.team18.core.data.repository
 
+import com.bangkit.team18.core.api.source.response.hospital.HospitalDetailResponse
 import com.bangkit.team18.core.data.mapper.HospitalMapper
 import com.bangkit.team18.core.data.repository.base.FetchDataWrapper
 import com.bangkit.team18.core.data.source.HospitalRemoteDataSource
 import com.bangkit.team18.core.data.source.response.hospital.HospitalResponse
-import com.bangkit.team18.core.data.source.response.hospital.RoomTypeResponse
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.domain.model.home.Hospital
 import com.bangkit.team18.core.domain.model.hospital.HospitalDetail
-import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.domain.repository.HospitalRepository
 import com.firebase.geofire.GeoLocation
 import kotlinx.coroutines.CoroutineDispatcher
@@ -35,25 +34,13 @@ class HospitalRepositoryImpl(
   }
 
   override suspend fun getHospitalDetail(id: String): Flow<ResponseWrapper<HospitalDetail>> {
-    return object : FetchDataWrapper<HospitalResponse, HospitalDetail>() {
-      override suspend fun fetchData(): Flow<HospitalResponse?> {
+    return object : FetchDataWrapper<HospitalDetailResponse, HospitalDetail>() {
+      override suspend fun fetchData(): Flow<HospitalDetailResponse> {
         return hospitalRemoteDataSource.getHospitalDetail(id)
       }
 
-      override suspend fun mapData(response: HospitalResponse): HospitalDetail {
+      override suspend fun mapData(response: HospitalDetailResponse): HospitalDetail {
         return HospitalMapper.mapToHospitalDetail(response)
-      }
-    }.getData().flowOn(ioDispatcher)
-  }
-
-  override suspend fun getHospitalRoomTypes(id: String): Flow<ResponseWrapper<List<RoomType>>> {
-    return object : FetchDataWrapper<List<RoomTypeResponse>, List<RoomType>>() {
-      override suspend fun fetchData(): Flow<List<RoomTypeResponse>> {
-        return hospitalRemoteDataSource.getHospitalRoomTypes(id)
-      }
-
-      override suspend fun mapData(response: List<RoomTypeResponse>): List<RoomType> {
-        return HospitalMapper.mapToRoomTypes(response)
       }
     }.getData().flowOn(ioDispatcher)
   }
