@@ -78,12 +78,14 @@ def crop_image(imgpath, bounding_box):
   startX, endX = bounding_box[1], bounding_box[3]
   startY, endY = bounding_box[0], bounding_box[2]
 
-  startX = int(startX * w)
-  startY = int(startY * h)
+  startX = int(startX * w) if startX >= 0 else 0
+  startY = int(startY * h) if startY >= 0 else 0
   endX = int(endX * w)
   endY = int(endY * h)
 
+
   cropped_image = image[startY:endY, startX:endX]
+  # print("cropped_image = {}".format(cropped_image))
 
   return cropped_image
 
@@ -107,7 +109,12 @@ def get_text(content, path_json):
     else:
       break
 
-  return df['description'].str.split('\n')[0]
+  try :
+      a = df['description'].str.split('\n')[0]
+      return a
+  except :
+      print('no text detected (cloud vision)')
+      return None
 
 def get_text_1(extract):
 
@@ -116,21 +123,24 @@ def get_text_1(extract):
   df = pd.DataFrame(columns = keys)
   dict_ktp = {key: None for key in keys}
 
-  for word in extract:
+  try :
+      for word in extract:
 
-    word = word.replace(')', '1')
-    word = word.replace('l', '1')
+        word = word.replace(')', '1')
+        word = word.replace('l', '1')
 
-    if re.search(r'\b\d{16}\b', word):
-      array = re.findall(r'\b\d{16}\b', word)
-      for arr in array:
-        if len(arr) == 16:
-          dict_ktp['no_ktp'] = str(arr)
+        if re.search(r'\b\d{16}\b', word):
+          array = re.findall(r'\b\d{16}\b', word)
+          for arr in array:
+            if len(arr) == 16:
+              dict_ktp['no_ktp'] = str(arr)
 
-    if re.search(r'^[A-Z \d\W]+$', word):
-      dict_ktp['name'] = re.sub(r'[^\w]', ' ', word).strip()
+        if re.search(r'^[A-Z \d\W]+$', word):
+          dict_ktp['name'] = re.sub(r'[^\w]', ' ', word).strip()
 
-  return df.append(dict_ktp, ignore_index=True)
+      return df.append(dict_ktp, ignore_index=True)
+  except :
+      return df
 
 def get_text_2(extract):
 
@@ -139,48 +149,50 @@ def get_text_2(extract):
   df = pd.DataFrame(columns = keys)
   dict_ktp = {key: None for key in keys}
 
-  for idx, word in enumerate(extract):
+  try :
+      for idx, word in enumerate(extract):
 
-    word = word.replace(')', '1')
-    word = word.replace('l', '1')
+        word = word.replace(')', '1')
+        word = word.replace('l', '1')
 
-    if re.search(r'\b\d{16}\b', word):
-      array = re.findall(r'\b\d{16}\b', word)
-      for arr in array:
-        if len(arr) == 16:
-          dict_ktp['no_ktp'] = str(arr)
+        if re.search(r'\b\d{16}\b', word):
+          array = re.findall(r'\b\d{16}\b', word)
+          for arr in array:
+            if len(arr) == 16:
+              dict_ktp['no_ktp'] = str(arr)
 
-    if re.search(r'Nama', word):
-      index = idx + 1
-    try:
+        if re.search(r'Nama', word):
+          index = idx + 1
+        try:
 
-      if index == idx:
-        if re.search(r'^[A-Z \d\W]+$', word):
-          dict_ktp['name'] = re.sub(r'[^\w]', ' ', word).strip()
-      if idx == index+1:
-        if re.search(r'^[A-Z \d\W]+$', word):
-          dict_ktp['name'] = dict_ktp.get('name') + ' ' + re.sub(r'[^\w]', ' ', word).strip()
+          if index == idx:
+            if re.search(r'^[A-Z \d\W]+$', word):
+              dict_ktp['name'] = re.sub(r'[^\w]', ' ', word).strip()
+          if idx == index+1:
+            if re.search(r'^[A-Z \d\W]+$', word):
+              dict_ktp['name'] = dict_ktp.get('name') + ' ' + re.sub(r'[^\w]', ' ', word).strip()
 
-    except:
+        except:
 
-      None
+          None
 
-    if re.search(r'\d{2}\W\d{2}\W\d{4}', word):
-      if re.search(r'[A-Z]+[A-Z]+', word):
+        if re.search(r'\d{2}\W\d{2}\W\d{4}', word):
+          if re.search(r'[A-Z]+[A-Z]+', word):
 
-        array = re.findall(r'[A-Z]+[A-Z]+', word)
-        arr   = re.findall(r'\d{2}\W\d{2}\W\d{4}', word)
-        dict_ktp['place_of_birth'] = ' '.join([str(elem) for elem in array])
-        dict_ktp['birth_date'] = '/'.join([str(v) for elem in arr for v in re.findall(r"[\w']+", elem)])
-        dict_ktp['birth_date'] = time.mktime(time.strptime(dict_ktp['birth_date'], "%d/%m/%Y"))
+            array = re.findall(r'[A-Z]+[A-Z]+', word)
+            arr   = re.findall(r'\d{2}\W\d{2}\W\d{4}', word)
+            dict_ktp['place_of_birth'] = ' '.join([str(elem) for elem in array])
+            dict_ktp['birth_date'] = '/'.join([str(v) for elem in arr for v in re.findall(r"[\w']+", elem)])
+            dict_ktp['birth_date'] = time.mktime(time.strptime(dict_ktp['birth_date'], "%d/%m/%Y"))
 
-    if re.search("^PEREM|.*PUAN", word):
-      dict_ktp['gender'] = 'FEMALE'
+        if re.search("^PEREM|.*PUAN", word):
+          dict_ktp['gender'] = 'FEMALE'
 
-    if re.search("LAKI", word):
-      dict_ktp['gender'] = 'MALE'
-
-  return df.append(dict_ktp, ignore_index=True)
+        if re.search("LAKI", word):
+          dict_ktp['gender'] = 'MALE'
+      return df.append(dict_ktp, ignore_index=True)
+  except :
+      return df
 
 def dataframe1(imgpath, pathJSON):
   content = read_image(imgpath)
@@ -208,16 +220,19 @@ def dataframe2(imgpath, pathJSON):
 def get_extract(pathimage, pathjson):
   df = dataframe2(pathimage, pathjson)
 
-  if df['name'][0] != None or df['no_ktp'][0] != None:
-    df1 = dataframe1(pathimage, pathjson)
-    if df['name'][0] == None:
-      df['name'] = df1['name']
-    if df['no_ktp'][0] == None:
-      df['no_ktp'] = df1['no_ktp']
+  try :
+      if df['name'][0] != None or df['no_ktp'][0] != None:
+        df1 = dataframe1(pathimage, pathjson)
+        if df['name'][0] == None:
+          df['name'] = df1['name']
+        if df['no_ktp'][0] == None:
+          df['no_ktp'] = df1['no_ktp']
 
-    return df
-  else:
-    return df
+        return df
+      else:
+        return df
+  except :
+      return df
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="q-hope-dd17dc6b88bb.json"
 os.environ["PROJECT_ID"]="613609637569"

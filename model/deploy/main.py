@@ -54,14 +54,25 @@ def register() :
     response = {}
 
     # Try to detect face in photo
+    # try :
     try :
         ktp_standard = preprocess_standardize(ktp_file)
+    except :
+        print('no face detected in KTP')
+        response['face_verification'] = 'REJECTED'
+        # print(type(ktp_standard))
+    try :
         selfie_standard = preprocess_standardize(selfie_file)
         selfie_normalize = preprocess_normalize(selfie_file)
     except :
-        print('no face detected')
-        # face verificatino rejected since no face is detected
+        print('no face detected in selfie')
         response['face_verification'] = 'REJECTED'
+        # print(type(selfie_standard))
+        # print(type(selfie_normalize))
+    # except :
+        # print('no face detected')
+        # face verification rejected since no face is detected
+        # response['face_verification'] = 'REJECTED'
 
     # Check if face is classified as real/fake
     real_fake = xception.predict(selfie_normalize)[0]
@@ -74,27 +85,37 @@ def register() :
         print('Face classified as real')
 
     # Get face embedding for images in KTP and selfie
-    ktp_face = facenet.predict(ktp_standard)[0]
-    selfie_face = facenet.predict(selfie_standard)[0]
-    cos_sim = np.dot(ktp_face,selfie_face)
-    print('cos_sim = {}'.format(cos_sim))
+    try :
+        ktp_face = facenet.predict(ktp_standard)[0]
+        selfie_face = facenet.predict(selfie_standard)[0]
+        cos_sim = np.dot(ktp_face,selfie_face)
+        print('cos_sim = {}'.format(cos_sim))
 
-    # Determine if faces match
-    cos_sim_threshold = 0.55
-    if cos_sim > cos_sim_threshold :
-        ## EDIT THIS AFTER OCR IS DONE
+        # Determine if faces match
+        cos_sim_threshold = 0.55
+        if cos_sim > cos_sim_threshold :
+            ## EDIT THIS AFTER OCR IS DONE
 
-        # face is verified to be real and similar
-        response['face_verification'] = 'VERIFIED'
+            # face is verified to be real and similar
+            response['face_verification'] = 'VERIFIED'
 
-    else :
-        # Update verification status
+        else :
+            # Update verification status
+            response['face_verification'] = 'REJECTED'
+    except :
+        print('No face detected somewhere')
         response['face_verification'] = 'REJECTED'
 
     # Extract KTP data
     ktp_df = get_extract(ktp_file, pathJson)
-    ktp_dict = ktp_df.to_dict('records')[0]
-    response['ktp_data'] = ktp_dict
+    try :
+        ktp_dict = ktp_df.to_dict('records')[0]
+        response['ktp_data'] = ktp_dict
+    except :
+        ktp_dict = ktp_df.to_dict()
+        # print(ktp_dict)
+        print('Failed to extract KTP data')
+        response['ktp_data'] = ktp_dict
 
     # print(response)
 
