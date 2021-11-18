@@ -6,7 +6,7 @@ data class CreateTransactionRequest(
 
   var room_type_id: String? = null,
 
-  var selectedDateTime: Long? = null,
+  var selected_date_time: Long? = null,
 
   var referral_letter_url: String? = null,
 

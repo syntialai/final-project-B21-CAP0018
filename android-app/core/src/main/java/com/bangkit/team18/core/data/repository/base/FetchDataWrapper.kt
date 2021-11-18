@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.transform
+import retrofit2.HttpException
 import java.io.IOException
 
 abstract class FetchDataWrapper<Response, Model> {
@@ -23,10 +24,13 @@ abstract class FetchDataWrapper<Response, Model> {
       emit(ResponseWrapper.Loading())
     }.catch { exception ->
       emit(
-        if (isNetworkError(exception)) {
-          ResponseWrapper.NetworkError()
-        } else {
-          ResponseWrapper.Error(exception.message)
+        when {
+          isNetworkError(exception) -> ResponseWrapper.NetworkError()
+          isHttpError(exception) -> {
+            val httpException = exception as HttpException
+            ResponseWrapper.HttpError(httpException.code(), httpException.message())
+          }
+          else -> ResponseWrapper.Error(exception.message)
         }
       )
     }
@@ -41,14 +45,19 @@ abstract class FetchDataWrapper<Response, Model> {
       emit(ResponseWrapper.Loading())
     }.catch { exception ->
       emit(
-        if (isNetworkError(exception)) {
-          ResponseWrapper.NetworkError()
-        } else {
-          ResponseWrapper.Error(exception.message)
+        when {
+          isNetworkError(exception) -> ResponseWrapper.NetworkError()
+          isHttpError(exception) -> {
+            val httpException = exception as HttpException
+            ResponseWrapper.HttpError(httpException.code(), httpException.message())
+          }
+          else -> ResponseWrapper.Error(exception.message)
         }
       )
     }
   }
 
   private fun isNetworkError(throwable: Throwable) = throwable is IOException
+
+  private fun isHttpError(throwable: Throwable) = throwable is HttpException
 }

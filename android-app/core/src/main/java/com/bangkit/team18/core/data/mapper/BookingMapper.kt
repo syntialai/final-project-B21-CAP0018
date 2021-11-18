@@ -1,11 +1,17 @@
 package com.bangkit.team18.core.data.mapper
 
+import com.bangkit.team18.core.api.source.response.transaction.UploadReferralLetterResponse
 import com.bangkit.team18.core.data.source.response.history.HistoryDetailResponse
 import com.bangkit.team18.core.data.source.response.history.HistoryResponse
 import com.bangkit.team18.core.data.source.response.history.RoomTypeHistoryResponse
 import com.bangkit.team18.core.data.source.response.history.UserHistoryResponse
 import com.bangkit.team18.core.domain.model.booking.BookingDetail
-import com.bangkit.team18.core.domain.model.history.*
+import com.bangkit.team18.core.domain.model.booking.ReferralLetter
+import com.bangkit.team18.core.domain.model.history.History
+import com.bangkit.team18.core.domain.model.history.HistoryDetail
+import com.bangkit.team18.core.domain.model.history.HistoryStatus
+import com.bangkit.team18.core.domain.model.history.RoomTypeHistory
+import com.bangkit.team18.core.domain.model.history.UserHistory
 import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.utils.view.DataUtils
@@ -29,6 +35,12 @@ object BookingMapper {
   const val REFERRAL_LETTER_URL = "referral_letter_url"
   const val USER_ID_FIELD = "user_id"
   const val USER_DATA_FIELD = "user_data"
+
+  fun mapToReferralLetter(uploadReferralLetterResponse: UploadReferralLetterResponse) =
+    ReferralLetter(
+      name = uploadReferralLetterResponse.name.orEmpty(),
+      url = uploadReferralLetterResponse.url.orEmpty()
+    )
 
   fun mapToBookingHashmap(bookingDetail: BookingDetail): HashMap<String, Any> {
     return hashMapOf(

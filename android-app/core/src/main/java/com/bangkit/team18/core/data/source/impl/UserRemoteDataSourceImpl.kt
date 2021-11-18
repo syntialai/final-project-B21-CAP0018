@@ -4,8 +4,6 @@ import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
 import com.bangkit.team18.core.api.source.service.UserService
 import com.bangkit.team18.core.data.source.UserRemoteDataSource
 import com.bangkit.team18.core.data.source.base.BaseRemoteDataSource
-import com.bangkit.team18.core.data.source.config.CollectionConstants
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -15,15 +13,8 @@ import java.io.File
 
 @ExperimentalCoroutinesApi
 class UserRemoteDataSourceImpl(
-  database: FirebaseFirestore,
   private val userService: UserService
 ) : UserRemoteDataSource, BaseRemoteDataSource() {
-
-  private val usersCollection = database.collection(CollectionConstants.USERS_COLLECTION)
-
-  override suspend fun updateUser(userId: String, data: HashMap<String, Any?>) {
-    usersCollection.updateData(userId, data)
-  }
 
   override suspend fun updateUser(
     userProfileRequest: UpdateUserProfileRequest,

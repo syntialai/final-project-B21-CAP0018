@@ -1,9 +1,12 @@
 package com.bangkit.team18.core.domain.usecase.interactor
 
-import android.net.Uri
-import com.bangkit.team18.core.domain.model.booking.BookingDetail
+import com.bangkit.team18.core.api.source.request.transaction.CreateTransactionRequest
+import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
+import com.bangkit.team18.core.domain.model.booking.ReferralLetter
 import com.bangkit.team18.core.domain.repository.RoomBookingRepository
 import com.bangkit.team18.core.domain.usecase.RoomBookingUseCase
+import kotlinx.coroutines.flow.Flow
+import java.io.File
 
 class RoomBookingInteractor(private val roomBookingRepository: RoomBookingRepository) :
   RoomBookingUseCase {
@@ -17,12 +20,10 @@ class RoomBookingInteractor(private val roomBookingRepository: RoomBookingReposi
   ) = roomBookingRepository.getUserBookingDetail(id)
 
   override suspend fun createBooking(
-    bookingDetail: BookingDetail
-  ) = roomBookingRepository.createBooking(bookingDetail)
+    createTransactionRequest: CreateTransactionRequest): Flow<ResponseWrapper<Boolean>> {
+    return roomBookingRepository.createBooking(createTransactionRequest)
+  }
 
-  override suspend fun uploadReferralLetter(
-    userId: String,
-    fileUri: Uri,
-    fileName: String
-  ) = roomBookingRepository.uploadReferralLetter(userId, fileUri, fileName)
+  override suspend fun uploadReferralLetter(file: File): Flow<ResponseWrapper<ReferralLetter>> =
+    roomBookingRepository.uploadReferralLetter(file)
 }

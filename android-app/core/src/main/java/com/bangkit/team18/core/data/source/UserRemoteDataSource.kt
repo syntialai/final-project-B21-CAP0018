@@ -7,8 +7,6 @@ import java.io.File
 
 interface UserRemoteDataSource {
 
-  suspend fun updateUser(userId: String, data: HashMap<String, Any?>)
-
   suspend fun updateUser(
     userProfileRequest: UpdateUserProfileRequest,
     image: File? = null

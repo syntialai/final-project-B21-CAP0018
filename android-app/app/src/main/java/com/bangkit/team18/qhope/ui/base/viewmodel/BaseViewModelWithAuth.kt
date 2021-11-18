@@ -16,6 +16,10 @@ abstract class BaseViewModelWithAuth(
   val user: LiveData<FirebaseUser?>
     get() = _user
 
+  private var _loggedOut = MutableLiveData<Boolean>()
+  val loggedOut: LiveData<Boolean>
+    get() = _loggedOut
+
   override fun onCleared() {
     authUseCase.removeAuthStateListener(this)
   }
@@ -35,11 +39,14 @@ abstract class BaseViewModelWithAuth(
   fun logOut() {
     authUseCase.logout()
     authSharedPrefRepository.clearSharedPrefs()
+    _loggedOut.value = true
+  }
+
+  fun resetLogOutValue() {
+    _loggedOut.value = false
   }
 
   protected fun initAuthStateListener() {
     authUseCase.addAuthStateListener(this)
   }
-
-  protected fun getUserId() = _user.value?.uid
 }

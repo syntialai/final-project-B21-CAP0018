@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
-import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.PhoneAuthCredential
@@ -15,8 +14,8 @@ import com.google.firebase.auth.PhoneAuthProvider
 
 class LoginViewModel(
   private val authSharedPrefRepository: AuthSharedPrefRepository,
-  private val authUseCase: AuthUseCase,
-  private val userUseCase: UserUseCase) : BaseViewModelWithAuth(authSharedPrefRepository, authUseCase) {
+  private val authUseCase: AuthUseCase
+) : BaseViewModelWithAuth(authSharedPrefRepository, authUseCase) {
 
   private val _countDown = MutableLiveData<Int>()
   val countDown: LiveData<Int> get() = _countDown

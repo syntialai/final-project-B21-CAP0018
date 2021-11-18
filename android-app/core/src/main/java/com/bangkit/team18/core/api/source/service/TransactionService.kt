@@ -28,6 +28,6 @@ interface TransactionService {
   @Multipart
   @POST(ApiConstants.UPLOAD_REFERRAL_LETTER)
   suspend fun uploadReferralLetter(
-    @Part referral_letter: MultipartBody.Part
+    @Part file: MultipartBody.Part
   ): UploadReferralLetterResponse
 }
