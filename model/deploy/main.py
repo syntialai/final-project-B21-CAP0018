@@ -96,7 +96,7 @@ def register() :
     ktp_dict = ktp_df.to_dict('records')[0]
     response['ktp_data'] = ktp_dict
 
-    print(response)
+    # print(response)
 
     return jsonify(response),200
 

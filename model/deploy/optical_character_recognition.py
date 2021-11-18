@@ -24,9 +24,19 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 
 import numpy as np
+import tensorflow as tf
 import time
 import sys
-from google.cloud import automl
+# from google.cloud import automl
+
+# AutoML - bbox model path
+bbox_model_path = './automl-bbox/tflite/tflite_model.tflite'
+bbox = tf.lite.Interpreter(bbox_model_path)
+bbox.allocate_tensors()
+input_details = bbox.get_input_details()
+output_details = bbox.get_output_details()
+input_index = input_details[0]['index']
+
 
 def read_image(imgpath):
   img = cv2.imdecode(np.fromstring(imgpath, np.uint8), cv2.IMREAD_UNCHANGED)
@@ -36,27 +46,37 @@ def read_image(imgpath):
   return content
 
 # 'content' is base-64-encoded image data.
-def get_prediction(content, project_id, model_id):
-  prediction_client = automl.PredictionServiceClient()
+def get_prediction(imgpath, model):
+  # prediction_client = automl.PredictionServiceClient() # Ganti jadi modelnya kalo udah jdi format lain
 
-  name = 'projects/{}/locations/us-central1/models/{}'.format(project_id, model_id)
-  payload = {'image': {'image_bytes': content }}
-  params = {}
-  request = prediction_client.predict(name=name, payload=payload, params=params)
+  # name = 'projects/{}/locations/us-central1/models/{}'.format(project_id, model_id)
 
-  for result in request.payload:
-    bounding_boxes = result.image_object_detection.bounding_box
+  # payload = {'image': {'image_bytes': content }}
+  # params = {}
+  # request = prediction_client.predict(name=name, payload=payload, params=params)
+  img = cv2.imdecode(np.fromstring(imgpath, np.uint8), cv2.IMREAD_UNCHANGED)
+  img = cv2.resize(img, (512,512))
+  img_array = np.expand_dims(np.asarray(img), axis = 0)
 
-  return bounding_boxes
+  model.set_tensor(input_index, img_array)
+  model.invoke()
+  detection_boxes = model.get_tensor(output_details[0]['index'])
+  return detection_boxes[0][0]
+  # for result in request.payload:
+  #   bounding_boxes = result.image_object_detection.bounding_box
+  #
+  # return bounding_boxes
 
 def crop_image(imgpath, bounding_box):
   image = cv2.imdecode(np.fromstring(imgpath, np.uint8), cv2.IMREAD_UNCHANGED)
   (h, w) = image.shape[:2]
 
-  startX = bounding_box.normalized_vertices[0].x
-  startY = bounding_box.normalized_vertices[0].y
-  endX = bounding_box.normalized_vertices[1].x
-  endY = bounding_box.normalized_vertices[1].y
+  # startX = bounding_box.normalized_vertices[0].x
+  # startY = bounding_box.normalized_vertices[0].y
+  # endX = bounding_box.normalized_vertices[1].x
+  # endY = bounding_box.normalized_vertices[1].y
+  startX, endX = bounding_box[1], bounding_box[3]
+  startY, endY = bounding_box[0], bounding_box[2]
 
   startX = int(startX * w)
   startY = int(startY * h)
@@ -164,7 +184,8 @@ def get_text_2(extract):
 
 def dataframe1(imgpath, pathJSON):
   content = read_image(imgpath)
-  response = get_prediction(content, '613609637569', 'IOD1451511479315464192')
+  # response = get_prediction(content, '613609637569', 'IOD1451511479315464192')
+  response = get_prediction(imgpath, bbox)
   cropped_image = crop_image(imgpath, response)
 
   is_success, im_buf_arr = cv2.imencode(".jpg", cropped_image)
