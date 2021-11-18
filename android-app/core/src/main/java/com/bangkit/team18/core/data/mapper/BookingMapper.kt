@@ -18,22 +18,6 @@ import java.util.concurrent.TimeUnit
 
 object BookingMapper {
 
-  const val BOOKED_AT_FIELD = "booked_at"
-  const val STATUS_FIELD = "status"
-  const val HOSPITAL_ID_FIELD = "hospital_id"
-  const val HOSPITAL_NAME_FIELD = "hospital_name"
-  const val HOSPITAL_IMAGE_PATH_FIELD = "hospital_image_path"
-  const val HOSPITAL_ADDRESS_FIELD = "hospital_address"
-  const val HOSPITAL_TYPE_FIELD = "hospital_type"
-  const val CHECK_IN_AT_FIELD = "check_in_at"
-  const val CHECK_OUT_AT_FIELD = "check_out_at"
-  const val ROOM_TYPE_FIELD = "room_type"
-  const val ROOM_COST_PER_DAY_FIELD = "room_cost_per_day"
-  const val REFERRAL_LETTER_NAME = "referral_letter_name"
-  const val REFERRAL_LETTER_URL = "referral_letter_url"
-  const val USER_ID_FIELD = "user_id"
-  const val USER_DATA_FIELD = "user_data"
-
   fun mapToReferralLetter(uploadReferralLetterResponse: UploadReferralLetterResponse) =
     ReferralLetter(
       name = uploadReferralLetterResponse.name.orEmpty(),
