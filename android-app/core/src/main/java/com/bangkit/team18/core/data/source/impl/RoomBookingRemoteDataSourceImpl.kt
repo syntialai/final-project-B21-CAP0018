@@ -2,14 +2,13 @@ package com.bangkit.team18.core.data.source.impl
 
 import com.bangkit.team18.core.api.source.request.transaction.CreateTransactionRequest
 import com.bangkit.team18.core.api.source.response.transaction.CreateTransactionResponse
+import com.bangkit.team18.core.api.source.response.transaction.TransactionResponse
 import com.bangkit.team18.core.api.source.response.transaction.UploadReferralLetterResponse
 import com.bangkit.team18.core.api.source.service.TransactionService
-import com.bangkit.team18.core.data.mapper.BookingMapper
 import com.bangkit.team18.core.data.source.RoomBookingRemoteDataSource
 import com.bangkit.team18.core.data.source.base.BaseRemoteDataSource
 import com.bangkit.team18.core.data.source.config.CollectionConstants
 import com.bangkit.team18.core.data.source.response.history.HistoryDetailResponse
-import com.bangkit.team18.core.data.source.response.history.HistoryResponse
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -26,10 +25,8 @@ class RoomBookingRemoteDataSourceImpl(
 
   private val transactionCollection = db.collection(CollectionConstants.TRANSACTION_COLLECTION)
 
-  override suspend fun getUserBookings(userId: String): Flow<List<HistoryResponse>> {
-    return transactionCollection.whereEqualTo(BookingMapper.USER_ID_FIELD, userId).loadData(
-      HistoryResponse::class.java
-    )
+  override suspend fun getUserBookings(): Flow<List<TransactionResponse>> {
+    return transactionService.getTransactions().loadAsFlow()
   }
 
   override suspend fun getUserBookingDetail(id: String): Flow<HistoryDetailResponse?> {

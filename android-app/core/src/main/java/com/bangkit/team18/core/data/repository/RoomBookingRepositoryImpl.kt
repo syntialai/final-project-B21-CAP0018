@@ -1,13 +1,13 @@
 package com.bangkit.team18.core.data.repository
 
 import com.bangkit.team18.core.api.source.request.transaction.CreateTransactionRequest
+import com.bangkit.team18.core.api.source.response.transaction.TransactionResponse
 import com.bangkit.team18.core.api.source.response.transaction.UploadReferralLetterResponse
 import com.bangkit.team18.core.data.mapper.BookingMapper
 import com.bangkit.team18.core.data.repository.base.FetchDataWrapper
 import com.bangkit.team18.core.data.repository.base.UpdateDataWrapper
 import com.bangkit.team18.core.data.source.RoomBookingRemoteDataSource
 import com.bangkit.team18.core.data.source.response.history.HistoryDetailResponse
-import com.bangkit.team18.core.data.source.response.history.HistoryResponse
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.domain.model.booking.ReferralLetter
 import com.bangkit.team18.core.domain.model.history.History
@@ -23,13 +23,13 @@ class RoomBookingRepositoryImpl(
   private val ioDispatcher: CoroutineDispatcher
 ) : RoomBookingRepository {
 
-  override suspend fun getUserBookings(userId: String): Flow<ResponseWrapper<List<History>>> {
-    return object : FetchDataWrapper<List<HistoryResponse>, List<History>>() {
-      override suspend fun fetchData(): Flow<List<HistoryResponse>?> {
-        return roomBookingRemoteDataSource.getUserBookings(userId)
+  override suspend fun getUserBookings(): Flow<ResponseWrapper<List<History>>> {
+    return object : FetchDataWrapper<List<TransactionResponse>, List<History>>() {
+      override suspend fun fetchData(): Flow<List<TransactionResponse>?> {
+        return roomBookingRemoteDataSource.getUserBookings()
       }
 
-      override suspend fun mapData(response: List<HistoryResponse>): List<History> {
+      override suspend fun mapData(response: List<TransactionResponse>): List<History> {
         return BookingMapper.mapToHistories(response)
       }
     }.getData().flowOn(ioDispatcher)

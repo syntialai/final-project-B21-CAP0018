@@ -8,7 +8,7 @@ data class TransactionResponse(
 
   var hospital_image: String? = null,
 
-  var created_at: String? = null,
+  var created_at: Long? = null,
 
   var night_count: Int? = null,
 

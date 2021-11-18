@@ -10,7 +10,7 @@ import java.io.File
 
 interface RoomBookingUseCase {
 
-  suspend fun getUserBookings(userId: String): Flow<ResponseWrapper<List<History>>>
+  suspend fun getUserBookings(): Flow<ResponseWrapper<List<History>>>
 
   suspend fun getUserBookingDetail(id: String): Flow<ResponseWrapper<HistoryDetail>>
 

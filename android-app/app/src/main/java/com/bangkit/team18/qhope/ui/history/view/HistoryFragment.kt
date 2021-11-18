@@ -8,9 +8,6 @@ import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.history.adapter.HistoryAdapter
 import com.bangkit.team18.qhope.ui.history.adapter.HistoryItemCallback
 import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryViewModel
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import org.koin.android.ext.android.inject
 
 class HistoryFragment : BaseFragment<FragmentHistoryBinding, HistoryViewModel>(
   FragmentHistoryBinding::inflate,
@@ -20,8 +17,6 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding, HistoryViewModel>(
   companion object {
     fun newInstance() = HistoryFragment()
   }
-
-  private val storage: FirebaseStorage by inject()
 
   private val historyAdapter by lazy {
     HistoryAdapter(this)
@@ -36,14 +31,8 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding, HistoryViewModel>(
 
   override fun setupObserver() {
     super.setupObserver()
+    viewModel.fetchUserBookingHistories()
 
-    viewModel.user.observe(viewLifecycleOwner, {
-      it?.let { user ->
-        viewModel.fetchUserBookingHistories(user.uid)
-      } ?: run {
-        viewModel.logOut()
-      }
-    })
     viewModel.bookingHistories.observe(viewLifecycleOwner, { histories ->
       showEmptyState(histories.isEmpty())
       historyAdapter.submitList(histories)
@@ -71,9 +60,5 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding, HistoryViewModel>(
         id
       )
     )
-  }
-
-  override fun getStorageRef(imagePath: String): StorageReference {
-    return storage.getReference(imagePath)
   }
 }

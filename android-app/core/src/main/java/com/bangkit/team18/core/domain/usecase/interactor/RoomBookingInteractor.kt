@@ -11,9 +11,7 @@ import java.io.File
 class RoomBookingInteractor(private val roomBookingRepository: RoomBookingRepository) :
   RoomBookingUseCase {
 
-  override suspend fun getUserBookings(userId: String) = roomBookingRepository.getUserBookings(
-    userId
-  )
+  override suspend fun getUserBookings() = roomBookingRepository.getUserBookings()
 
   override suspend fun getUserBookingDetail(
     id: String

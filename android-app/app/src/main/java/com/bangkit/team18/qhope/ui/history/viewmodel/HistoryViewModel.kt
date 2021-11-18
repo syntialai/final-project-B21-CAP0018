@@ -22,9 +22,9 @@ class HistoryViewModel(
     initAuthStateListener()
   }
 
-  fun fetchUserBookingHistories(userId: String) {
+  fun fetchUserBookingHistories() {
     launchViewModelScope({
-      roomBookingUseCase.getUserBookings(userId).runFlow(::setRoomBookingData)
+      roomBookingUseCase.getUserBookings().runFlow(::setRoomBookingData)
     })
   }
 
