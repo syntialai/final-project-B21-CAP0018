@@ -23,7 +23,6 @@ import com.bangkit.team18.qhope.ui.home.viewmodel.HomeViewModel
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import org.koin.android.ext.android.inject
 import java.util.Locale
 
@@ -100,10 +99,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
         id
       )
     )
-  }
-
-  override fun getStorageRef(imagePath: String): StorageReference {
-    return storage.getReference(imagePath)
   }
 
   @SuppressLint("MissingPermission")
