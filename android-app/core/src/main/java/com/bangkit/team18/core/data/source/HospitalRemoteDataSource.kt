@@ -1,13 +1,12 @@
 package com.bangkit.team18.core.data.source
 
 import com.bangkit.team18.core.api.source.response.hospital.HospitalDetailResponse
-import com.bangkit.team18.core.data.source.response.hospital.HospitalResponse
-import com.firebase.geofire.GeoLocation
+import com.bangkit.team18.core.api.source.response.hospital.HospitalResponse
 import kotlinx.coroutines.flow.Flow
 
 interface HospitalRemoteDataSource {
 
-  suspend fun getNearbyHospitals(location: GeoLocation): Flow<List<HospitalResponse>>
+  suspend fun getHospitals(): Flow<List<HospitalResponse>>
 
   suspend fun getHospitalDetail(id: String): Flow<HospitalDetailResponse>
 

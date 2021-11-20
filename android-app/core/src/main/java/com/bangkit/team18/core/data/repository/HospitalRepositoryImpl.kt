@@ -1,15 +1,14 @@
 package com.bangkit.team18.core.data.repository
 
 import com.bangkit.team18.core.api.source.response.hospital.HospitalDetailResponse
+import com.bangkit.team18.core.api.source.response.hospital.HospitalResponse
 import com.bangkit.team18.core.data.mapper.HospitalMapper
 import com.bangkit.team18.core.data.repository.base.FetchDataWrapper
 import com.bangkit.team18.core.data.source.HospitalRemoteDataSource
-import com.bangkit.team18.core.data.source.response.hospital.HospitalResponse
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.domain.model.home.Hospital
 import com.bangkit.team18.core.domain.model.hospital.HospitalDetail
 import com.bangkit.team18.core.domain.repository.HospitalRepository
-import com.firebase.geofire.GeoLocation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -19,12 +18,10 @@ class HospitalRepositoryImpl(
   private val ioDispatcher: CoroutineDispatcher
 ) : HospitalRepository {
 
-  override suspend fun getNearbyHospitals(
-    location: GeoLocation
-  ): Flow<ResponseWrapper<List<Hospital>>> {
+  override suspend fun getHospitals(): Flow<ResponseWrapper<List<Hospital>>> {
     return object : FetchDataWrapper<List<HospitalResponse>, List<Hospital>>() {
       override suspend fun fetchData(): Flow<List<HospitalResponse>> {
-        return hospitalRemoteDataSource.getNearbyHospitals(location)
+        return hospitalRemoteDataSource.getHospitals()
       }
 
       override suspend fun mapData(response: List<HospitalResponse>): List<Hospital> {

@@ -9,7 +9,6 @@ import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.HospitalUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
-import com.firebase.geofire.GeoLocation
 
 class HomeViewModel(
   private val authSharedPrefRepository: AuthSharedPrefRepository,
@@ -38,15 +37,14 @@ class HomeViewModel(
     })
   }
 
-  fun fetchNearbyHospitals(latitude: Double, longitude: Double) {
-    val location = GeoLocation(latitude, longitude)
+  fun fetchHospitals() {
     launchViewModelScope({
-      hospitalUseCase.getNearbyHospitals(location).runFlow(::setHospitalData)
+      hospitalUseCase.getHospitals().runFlow(::setHospitalData)
     })
   }
 
   fun searchHospital(query: String) {
-    if (query.length >= 3) {
+    if (query.length >= 2) {
       launchViewModelScope({
         hospitalUseCase.searchHospitals(query).runFlow(::setSearchResultData)
       })

@@ -25,7 +25,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import org.koin.android.ext.android.inject
-import java.util.*
+import java.util.Locale
 
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   FragmentHomeBinding::inflate,
@@ -61,6 +61,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   override fun setupObserver() {
     super.setupObserver()
 
+    viewModel.fetchHospitals()
     viewModel.fetchUserData()
     viewModel.nearbyHospitals.observe(viewLifecycleOwner, { nearbyHospitals ->
       homeAdapter.submitList(nearbyHospitals)
@@ -152,7 +153,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   })
 
   private fun setLocation(location: Location) {
-    viewModel.fetchNearbyHospitals(location.latitude, location.longitude)
     val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(
       location.latitude,
       location.longitude, 1

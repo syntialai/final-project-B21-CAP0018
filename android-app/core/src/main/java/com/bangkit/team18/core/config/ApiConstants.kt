@@ -6,6 +6,7 @@ object ApiConstants {
 
   const val HOSPITALS = "hospitals"
   const val HOSPITALS_ID = "hospitals/{id}"
+  const val SEARCH_HOSPITALS = "search/hospitals"
 
   const val TRANSACTIONS = "transactions"
   const val TRANSACTIONS_ID = "transactions/{id}"
