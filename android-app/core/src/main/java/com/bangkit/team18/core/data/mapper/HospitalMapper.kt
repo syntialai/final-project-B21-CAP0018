@@ -11,10 +11,6 @@ import com.google.android.gms.maps.model.LatLng
 
 object HospitalMapper {
 
-  const val NAME_FIELD = "nama_rumah_sakit"
-  const val ROOM_DATA_ID_FIELD = "id"
-  const val ROOM_DATA_NAME_FIELD = "name"
-
   fun mapToHospitalDetail(response: HospitalDetailResponse) =
     HospitalDetail(
       id = response.id.orEmpty(),
@@ -49,7 +45,7 @@ object HospitalMapper {
         name = response.name.orEmpty(),
         image = response.image.orEmpty(),
         type = response.type.orEmpty(),
-        address = response.address.orEmpty(),
+        address = response.address?.description.orEmpty(),
         availableRoomCount = response.available_room_count ?: 0
       )
     }

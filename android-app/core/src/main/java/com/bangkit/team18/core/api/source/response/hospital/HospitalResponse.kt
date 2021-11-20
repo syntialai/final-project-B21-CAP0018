@@ -10,7 +10,7 @@ data class HospitalResponse(
 
   var type: String? = null,
 
-  var address: String? = null,
+  var address: HospitalAddressResponse? = null,
 
   var available_room_count: Int? = null
 )
