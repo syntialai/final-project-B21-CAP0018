@@ -17,9 +17,9 @@ class HomeViewModel(
   private val userUseCase: UserUseCase
 ) : BaseViewModelWithAuth(authSharedPrefRepository, authUseCase) {
 
-  private var _nearbyHospitals = MutableLiveData<List<Hospital>>()
-  val nearbyHospitals: LiveData<List<Hospital>>
-    get() = _nearbyHospitals
+  private var _hospitals = MutableLiveData<List<Hospital>>()
+  val hospitals: LiveData<List<Hospital>>
+    get() = _hospitals
 
   private var _searchHospitalResults = MutableLiveData<List<Hospital>>()
   val searchHospitalResults: LiveData<List<Hospital>>
@@ -52,7 +52,7 @@ class HomeViewModel(
   }
 
   private fun setHospitalData(response: List<Hospital>) {
-    _nearbyHospitals.value = response
+    _hospitals.value = response
   }
 
   private fun setSearchResultData(response: List<Hospital>) {

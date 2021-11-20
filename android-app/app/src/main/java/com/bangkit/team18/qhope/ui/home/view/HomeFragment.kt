@@ -63,8 +63,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
 
     viewModel.fetchHospitals()
     viewModel.fetchUserData()
-    viewModel.nearbyHospitals.observe(viewLifecycleOwner, { nearbyHospitals ->
-      homeAdapter.submitList(nearbyHospitals)
+    viewModel.hospitals.observe(viewLifecycleOwner, { hospitals ->
+      homeAdapter.submitList(hospitals)
     })
     viewModel.userData.observe(viewLifecycleOwner, { userData ->
       setUserName(userData.name)
@@ -120,7 +120,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
       spinKitLoadHome.showOrRemove(isLoading)
       layoutVerificationStatus.root.showOrRemove(isLoading.not())
       textViewOurHospitalsLabel.showOrRemove(isLoading.not())
-      recyclerViewRecommendedHospitals.showOrRemove(isLoading.not())
+      recyclerViewHospitals.showOrRemove(isLoading.not())
     }
   }
 
@@ -193,7 +193,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   }
 
   private fun setupRecyclerView() {
-    binding.recyclerViewRecommendedHospitals.apply {
+    binding.recyclerViewHospitals.apply {
       adapter = homeAdapter
       setHasFixedSize(false)
     }
@@ -244,7 +244,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
 
   private fun showSearchResults(show: Boolean) {
     with(binding) {
-      recyclerViewRecommendedHospitals.showOrRemove(show.not())
+      recyclerViewHospitals.showOrRemove(show.not())
       recyclerViewHospitalSearchResults.showOrRemove(show)
     }
   }
