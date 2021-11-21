@@ -36,7 +36,7 @@ class LoginActivity : BaseActivityViewModel<ActivityLoginBinding, LoginViewModel
     super.setupObserver()
 
     viewModel.user.observe(this, { user ->
-      user?.let { safeUser ->
+      user?.let {
         viewModel.saveIdToken()
         viewModel.registerUser()
       }

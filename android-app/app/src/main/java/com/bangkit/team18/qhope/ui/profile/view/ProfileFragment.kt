@@ -5,7 +5,6 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.model.user.VerificationStatus
-import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.core.utils.view.ViewUtils.loadImage
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentProfileBinding
@@ -16,24 +15,22 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(
   FragmentProfileBinding::inflate,
   ProfileViewModel::class
 ) {
-  override fun setupViews() {
-    setupListener()
-    viewModel.user.observe(viewLifecycleOwner, {
-      if (it.isNotNull()) {
-        viewModel.getUserDoc()
-      }
-    })
-    viewModel.userDoc.observe(viewLifecycleOwner, {
-      setupUserProfile(it)
-    })
-  }
 
-  private fun setupListener() {
+  override fun setupViews() {
     binding.apply {
       profileLogOut.setOnClickListener(this@ProfileFragment)
       profileIdVerification.setOnClickListener(this@ProfileFragment)
       profilePersonalData.setOnClickListener(this@ProfileFragment)
     }
+  }
+
+  override fun setupObserver() {
+    super.setupObserver()
+    viewModel.getUserDoc()
+
+    viewModel.userDoc.observe(viewLifecycleOwner, {
+      setupUserProfile(it)
+    })
   }
 
   private fun setupUserProfile(user: User) {

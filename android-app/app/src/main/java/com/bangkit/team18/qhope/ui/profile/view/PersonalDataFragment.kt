@@ -10,7 +10,6 @@ import android.view.View
 import androidx.core.widget.doOnTextChanged
 import com.bangkit.team18.core.domain.model.user.GenderType
 import com.bangkit.team18.core.domain.model.user.User
-import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.core.utils.view.DataUtils.orHyphen
 import com.bangkit.team18.core.utils.view.DateUtils.toDateString
 import com.bangkit.team18.core.utils.view.FileUtil
@@ -50,11 +49,8 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
 
   override fun setupObserver() {
     super.setupObserver()
-    viewModel.user.observe(viewLifecycleOwner, {
-      if (it.isNotNull()) {
-        viewModel.getUserDoc()
-      }
-    })
+    viewModel.getUserDoc()
+
     viewModel.userDoc.observe(viewLifecycleOwner, {
       setupPersonalData(viewModel.mode.value as PersonalDataViewModel.ModeType, it)
     })
