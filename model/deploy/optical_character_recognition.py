@@ -30,7 +30,7 @@ import sys
 # from google.cloud import automl
 
 # AutoML - bbox model path
-bbox_model_path = './automl-bbox/tflite/tflite_model.tflite'
+bbox_model_path = './automl-bbox/tflite_ver2/model.tflite'
 bbox = tf.lite.Interpreter(bbox_model_path)
 bbox.allocate_tensors()
 input_details = bbox.get_input_details()
@@ -109,6 +109,8 @@ def get_text(content, path_json):
     else:
       break
 
+  # print('extracted df : {}'.format(df)) # Debug
+  # print('df["description"] : {}'.format(df['description'].str.split('\n')[0]))
   try :
       a = df['description'].str.split('\n')[0]
       return a
@@ -129,13 +131,15 @@ def get_text_1(extract):
         word = word.replace(')', '1')
         word = word.replace('l', '1')
 
-        if re.search(r'\b\d{16}\b', word):
-          array = re.findall(r'\b\d{16}\b', word)
+        if re.search(r'\b\d(?: ?\d){15}\b', word):
+          array = re.findall(r'\b\d(?: ?\d){15}\b', word)
           for arr in array:
             if len(arr) == 16:
               dict_ktp['no_ktp'] = str(arr)
+            else :
+              dict_ktp['no_ktp'] = str.arr.replace(' ','')
 
-        if re.search(r'^[A-Z \d\W]+$', word):
+        if re.search(r'^[A-Z \W]+$', word):
           dict_ktp['name'] = re.sub(r'[^\w]', ' ', word).strip()
 
       return df.append(dict_ktp, ignore_index=True)
@@ -149,50 +153,59 @@ def get_text_2(extract):
   df = pd.DataFrame(columns = keys)
   dict_ktp = {key: None for key in keys}
 
-  try :
-      for idx, word in enumerate(extract):
-
-        word = word.replace(')', '1')
-        word = word.replace('l', '1')
-
-        if re.search(r'\b\d{16}\b', word):
-          array = re.findall(r'\b\d{16}\b', word)
-          for arr in array:
-            if len(arr) == 16:
-              dict_ktp['no_ktp'] = str(arr)
-
-        if re.search(r'Nama', word):
-          index = idx + 1
-        try:
-
-          if index == idx:
-            if re.search(r'^[A-Z \d\W]+$', word):
-              dict_ktp['name'] = re.sub(r'[^\w]', ' ', word).strip()
-          if idx == index+1:
-            if re.search(r'^[A-Z \d\W]+$', word):
-              dict_ktp['name'] = dict_ktp.get('name') + ' ' + re.sub(r'[^\w]', ' ', word).strip()
-
-        except:
-
-          None
-
-        if re.search(r'\d{2}\W\d{2}\W\d{4}', word):
-          if re.search(r'[A-Z]+[A-Z]+', word):
-
-            array = re.findall(r'[A-Z]+[A-Z]+', word)
-            arr   = re.findall(r'\d{2}\W\d{2}\W\d{4}', word)
-            dict_ktp['place_of_birth'] = ' '.join([str(elem) for elem in array])
-            dict_ktp['birth_date'] = '/'.join([str(v) for elem in arr for v in re.findall(r"[\w']+", elem)])
-            dict_ktp['birth_date'] = time.mktime(time.strptime(dict_ktp['birth_date'], "%d/%m/%Y"))
-
-        if re.search("^PEREM|.*PUAN", word):
-          dict_ktp['gender'] = 'FEMALE'
-
-        if re.search("LAKI", word):
-          dict_ktp['gender'] = 'MALE'
-      return df.append(dict_ktp, ignore_index=True)
-  except :
+  if extract is None :
       return df
+
+  # try :
+  for idx, word in enumerate(extract):
+
+    word = word.replace(')', '1')
+    word = word.replace('l', '1')
+
+    if re.search(r'\b\d(?: ?\d){15}\b', word):
+      array = re.findall(r'\b\d(?: ?\d){15}\b', word)
+      for arr in array:
+        # print('arr = {}'.format(arr)) # Debug
+        # print('len(arr) = {}'.format(len(arr)))
+        if len(arr) == 16:
+          dict_ktp['no_ktp'] = str(arr)
+        else :
+          dict_ktp['no_ktp'] = str(arr).replace(' ','')
+
+    if re.search(r'Nama', word):
+      index = idx + 1
+    try:
+      if index == idx:
+        if re.search(r'^[A-Z \W]+$', word): # For searching names, are digits necessary?
+          dict_ktp['name'] = re.sub(r'[^\w]', ' ', word).strip()
+      if idx == index+1:
+        if re.search(r'^[A-Z \W]+$', word):
+          dict_ktp['name'] = dict_ktp.get('name') + ' ' + re.sub(r'[^\w]', ' ', word).strip()
+
+    except:
+
+      None
+
+    if re.search(r'\d{2}\W\d{2}\W\d{4}', word):
+      if re.search(r'[A-Z]+[A-Z]+', word):
+
+        array = re.findall(r'[A-Z]+[A-Z]+', word)
+        arr   = re.findall(r'\d{2}\W\d{2}\W\d{4}', word)
+        dict_ktp['place_of_birth'] = ' '.join([str(elem) for elem in array])
+        dict_ktp['birth_date'] = '/'.join([str(v) for elem in arr for v in re.findall(r"[\w']+", elem)])
+        try : # Sometimes the systems mktime is limited to some starting year
+            dict_ktp['birth_date'] = time.mktime(time.strptime(dict_ktp['birth_date'], "%d/%m/%Y"))
+        except : # If we fail to recognize the year, set it to 1/1/1970
+            dict_ktp['birth_date'] = time.mktime(time.strptime('1/1/1970', '%d/%m/%Y'))
+
+    if re.search("^PEREM|.*PUAN", word):
+      dict_ktp['gender'] = 'FEMALE'
+
+    if re.search("LAKI", word):
+      dict_ktp['gender'] = 'MALE'
+  return df.append(dict_ktp, ignore_index=True)
+  # except :
+  #     return df
 
 def dataframe1(imgpath, pathJSON):
   content = read_image(imgpath)
@@ -212,13 +225,16 @@ def dataframe2(imgpath, pathJSON):
   content = read_image(imgpath)
 
   text = get_text(content, pathJSON)
+  # print('dataframe2 ; text = {}'.format(text)) # Debug
 
   df = get_text_2(text)
+  # print('dataframe2 ; df = {}'.format(df)) # Debug
 
   return df
 
 def get_extract(pathimage, pathjson):
   df = dataframe2(pathimage, pathjson)
+  # print('df = {}'.format(df)) # Debug
 
   try :
       if df['name'][0] != None or df['no_ktp'][0] != None:

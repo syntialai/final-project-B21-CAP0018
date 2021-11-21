@@ -108,6 +108,7 @@ def register() :
 
     # Extract KTP data
     ktp_df = get_extract(ktp_file, pathJson)
+    # print(ktp_df) # Debug
     try :
         ktp_dict = ktp_df.to_dict('records')[0]
         response['ktp_data'] = ktp_dict
