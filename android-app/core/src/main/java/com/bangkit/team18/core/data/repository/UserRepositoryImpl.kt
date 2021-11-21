@@ -1,6 +1,7 @@
 package com.bangkit.team18.core.data.repository
 
 import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
+import com.bangkit.team18.core.api.source.response.user.UserResponse
 import com.bangkit.team18.core.data.mapper.UserMapper.mapToUser
 import com.bangkit.team18.core.data.repository.base.FetchDataWrapper
 import com.bangkit.team18.core.data.repository.base.UpdateDataWrapper
@@ -21,12 +22,12 @@ class UserRepositoryImpl(
 ) : UserRepository {
 
   override suspend fun getUserProfile(): Flow<ResponseWrapper<User>> {
-    return object : FetchDataWrapper<com.bangkit.team18.core.api.source.response.user.UserResponse, User>() {
-      override suspend fun fetchData(): Flow<com.bangkit.team18.core.api.source.response.user.UserResponse?> {
+    return object : FetchDataWrapper<UserResponse, User>() {
+      override suspend fun fetchData(): UserResponse {
         return userRemoteDataSource.getUserProfile()
       }
 
-      override suspend fun mapData(response: com.bangkit.team18.core.api.source.response.user.UserResponse): User {
+      override suspend fun mapData(response: UserResponse): User {
         return mapToUser(response)
       }
     }.getData().flowOn(ioDispatcher)
@@ -37,8 +38,8 @@ class UserRepositoryImpl(
     image: File?
   ): Flow<ResponseWrapper<Boolean>> {
     return object :
-      UpdateDataWrapper<com.bangkit.team18.core.api.source.response.user.UserResponse>() {
-      override suspend fun doUpdate(): com.bangkit.team18.core.api.source.response.user.UserResponse {
+      UpdateDataWrapper<UserResponse>() {
+      override suspend fun doUpdate(): UserResponse {
         return userRemoteDataSource.updateUser(updateUserProfileRequest, image)
       }
     }.updateData().flowOn(ioDispatcher)
@@ -49,8 +50,8 @@ class UserRepositoryImpl(
     selfie: File
   ): Flow<ResponseWrapper<Boolean>> {
     return object :
-      UpdateDataWrapper<com.bangkit.team18.core.api.source.response.user.UserResponse>() {
-      override suspend fun doUpdate(): com.bangkit.team18.core.api.source.response.user.UserResponse {
+      UpdateDataWrapper<UserResponse>() {
+      override suspend fun doUpdate(): UserResponse {
         return userRemoteDataSource.uploadUserVerification(ktp, selfie)
       }
     }.updateData().flowOn(ioDispatcher)

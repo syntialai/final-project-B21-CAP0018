@@ -3,23 +3,21 @@ package com.bangkit.team18.core.data.repository.base
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.transform
 import retrofit2.HttpException
 import java.io.IOException
 
 abstract class FetchDataWrapper<Response, Model> {
 
-  protected abstract suspend fun fetchData(): Flow<Response?>
+  protected abstract suspend fun fetchData(): Response
 
   protected abstract suspend fun mapData(response: Response): Model
 
   suspend fun getData(): Flow<ResponseWrapper<Model>> {
-    return fetchData().transform<Response?, ResponseWrapper<Model>> { value ->
-      value?.let {
-        val model = mapData(it)
-        emit(ResponseWrapper.Success(model))
-      }
+    return flow<ResponseWrapper<Model>> {
+      val model = mapData(fetchData())
+      emit(ResponseWrapper.Success(model))
     }.onStart {
       emit(ResponseWrapper.Loading())
     }.catch { exception ->
@@ -37,10 +35,9 @@ abstract class FetchDataWrapper<Response, Model> {
   }
 
   suspend fun updateData(): Flow<ResponseWrapper<Model>> {
-    return fetchData().transform<Response?, ResponseWrapper<Model>> { value ->
-      value?.let {
-        emit(ResponseWrapper.Success(mapData(it)))
-      }
+    return flow<ResponseWrapper<Model>> {
+      val result = fetchData()
+      emit(ResponseWrapper.Success(mapData(result)))
     }.onStart {
       emit(ResponseWrapper.Loading())
     }.catch { exception ->

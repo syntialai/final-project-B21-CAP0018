@@ -10,12 +10,12 @@ import java.io.File
 
 interface RoomBookingRemoteDataSource {
 
-  suspend fun getUserBookings(): Flow<List<TransactionResponse>>
+  suspend fun getUserBookings(): List<TransactionResponse>
 
   suspend fun getUserBookingDetail(id: String): Flow<HistoryDetailResponse?>
 
   suspend fun createBooking(
-    createTransactionRequest: CreateTransactionRequest): Flow<CreateTransactionResponse>
+    createTransactionRequest: CreateTransactionRequest): CreateTransactionResponse
 
-  suspend fun uploadReferralLetter(file: File): Flow<UploadReferralLetterResponse>
+  suspend fun uploadReferralLetter(file: File): UploadReferralLetterResponse
 }

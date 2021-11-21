@@ -25,8 +25,8 @@ class RoomBookingRemoteDataSourceImpl(
 
   private val transactionCollection = db.collection(CollectionConstants.TRANSACTION_COLLECTION)
 
-  override suspend fun getUserBookings(): Flow<List<TransactionResponse>> {
-    return transactionService.getTransactions().loadAsFlow()
+  override suspend fun getUserBookings(): List<TransactionResponse> {
+    return transactionService.getTransactions()
   }
 
   override suspend fun getUserBookingDetail(id: String): Flow<HistoryDetailResponse?> {
@@ -34,13 +34,13 @@ class RoomBookingRemoteDataSourceImpl(
   }
 
   override suspend fun createBooking(
-    createTransactionRequest: CreateTransactionRequest): Flow<CreateTransactionResponse> {
-    return transactionService.createTransaction(createTransactionRequest).loadAsFlow()
+    createTransactionRequest: CreateTransactionRequest): CreateTransactionResponse {
+    return transactionService.createTransaction(createTransactionRequest)
   }
 
-  override suspend fun uploadReferralLetter(file: File): Flow<UploadReferralLetterResponse> {
+  override suspend fun uploadReferralLetter(file: File): UploadReferralLetterResponse {
     val fileBody = file.asRequestBody("application/pdf".toMediaTypeOrNull())
     val filePart = MultipartBody.Part.createFormData("file", file.name.orEmpty(), fileBody)
-    return transactionService.uploadReferralLetter(filePart).loadAsFlow()
+    return transactionService.uploadReferralLetter(filePart)
   }
 }

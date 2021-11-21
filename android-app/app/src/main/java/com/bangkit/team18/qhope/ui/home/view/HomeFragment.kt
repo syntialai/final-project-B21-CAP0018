@@ -61,7 +61,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
     super.setupObserver()
 
     viewModel.fetchHospitals()
-    viewModel.fetchUserData()
+//    viewModel.fetchUserData()
     viewModel.hospitals.observe(viewLifecycleOwner, { hospitals ->
       homeAdapter.submitList(hospitals)
     })

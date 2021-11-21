@@ -1,11 +1,11 @@
 package com.bangkit.team18.core.data.source.impl
 
 import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
+import com.bangkit.team18.core.api.source.response.user.UserResponse
 import com.bangkit.team18.core.api.source.service.UserService
 import com.bangkit.team18.core.data.source.UserRemoteDataSource
 import com.bangkit.team18.core.data.source.base.BaseRemoteDataSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -19,7 +19,7 @@ class UserRemoteDataSourceImpl(
   override suspend fun updateUser(
     userProfileRequest: UpdateUserProfileRequest,
     image: File?
-  ): com.bangkit.team18.core.api.source.response.user.UserResponse {
+  ): UserResponse {
     val fileBody = image?.asRequestBody("image/*".toMediaTypeOrNull())
     val filePart = fileBody?.let {
       MultipartBody.Part.createFormData("image", image.name.orEmpty(), it)
@@ -27,14 +27,14 @@ class UserRemoteDataSourceImpl(
     return userService.updateUserProfile(userProfileRequest, filePart)
   }
 
-  override suspend fun getUserProfile(): Flow<com.bangkit.team18.core.api.source.response.user.UserResponse> {
-    return userService.getUserProfile().loadAsFlow()
+  override suspend fun getUserProfile(): UserResponse {
+    return userService.getUserProfile()
   }
 
   override suspend fun uploadUserVerification(
     ktp: File,
     selfie: File
-  ): com.bangkit.team18.core.api.source.response.user.UserResponse {
+  ): UserResponse {
     val ktpFileBody = ktp.asRequestBody("image/*".toMediaTypeOrNull())
     val ktpFilePart = MultipartBody.Part.createFormData("ktp", ktp.name.orEmpty(), ktpFileBody)
 

@@ -57,7 +57,7 @@ class AuthRepositoryImpl(private val authRemoteDataSource: AuthRemoteDataSource)
 
   override suspend fun registerUser(phoneNumber: String): Flow<ResponseWrapper<User>> {
     return object : FetchDataWrapper<UserResponse, User>() {
-      override suspend fun fetchData(): Flow<UserResponse?> {
+      override suspend fun fetchData(): UserResponse {
         return authRemoteDataSource.registerUser(phoneNumber)
       }
 

@@ -19,8 +19,16 @@ class SplashScreenActivity :
   override fun setupViews(savedInstanceState: Bundle?) {
     supportActionBar?.hide()
     lifecycleScope.launch {
+      checkIdToken()
       delay(300)
       Router.goToMain(this@SplashScreenActivity)
+    }
+  }
+
+  private fun checkIdToken() {
+    if (viewModel.isIdTokenEmpty()) {
+      Router.goToLogin(this@SplashScreenActivity)
+      finish()
     }
   }
 

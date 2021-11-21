@@ -7,6 +7,7 @@ import com.bangkit.team18.core.api.source.response.transaction.TransactionRespon
 import com.bangkit.team18.core.api.source.response.transaction.UploadReferralLetterResponse
 import com.bangkit.team18.core.config.ApiConstants
 import okhttp3.MultipartBody
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -22,7 +23,7 @@ interface TransactionService {
 
   @POST(ApiConstants.TRANSACTIONS)
   suspend fun createTransaction(
-    createTransactionRequest: CreateTransactionRequest
+    @Body createTransactionRequest: CreateTransactionRequest
   ): CreateTransactionResponse
 
   @Multipart

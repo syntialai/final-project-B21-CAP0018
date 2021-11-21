@@ -17,11 +17,19 @@ class SplashScreenViewModel(
   private val _userDoc = MutableLiveData<User>()
   val userDoc: LiveData<User> get() = _userDoc
 
+  init {
+    authUseCase.addAuthStateListener(this)
+  }
+
   fun getUserDoc() {
     launchViewModelScope({
       userUseCase.getUserProfile().runFlow({
         _userDoc.value = it
       })
     })
+  }
+
+  fun isIdTokenEmpty(): Boolean {
+    return authSharedPrefRepository.idToken.isBlank()
   }
 }

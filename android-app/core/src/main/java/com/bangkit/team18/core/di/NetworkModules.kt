@@ -27,7 +27,7 @@ val dispatcherModule = module {
 val networkModule = module {
   fun provideLoggingInterceptor(): HttpLoggingInterceptor {
     return HttpLoggingInterceptor().apply {
-      setLevel(HttpLoggingInterceptor.Level.BODY)
+      setLevel(HttpLoggingInterceptor.Level.HEADERS)
     }
   }
 
@@ -55,7 +55,7 @@ val networkModule = module {
   fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
 //      .baseUrl(BuildConfig.QHOPE_API_URL)
-      .baseUrl("http://192.168.100.70/")
+      .baseUrl("http://192.168.0.103:6543/")
       .addConverterFactory(GsonConverterFactory.create())
       .client(okHttpClient)
       .build()

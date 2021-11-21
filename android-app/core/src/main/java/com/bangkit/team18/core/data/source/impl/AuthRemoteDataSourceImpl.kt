@@ -33,8 +33,8 @@ class AuthRemoteDataSourceImpl(
     firebaseAuth.removeAuthStateListener(authStateListener)
   }
 
-  override fun registerUser(phoneNumber: String): Flow<UserResponse> {
+  override suspend fun registerUser(phoneNumber: String): UserResponse {
     val request = RegisterUserRequest(phoneNumber)
-    return authService.registerUser(request).loadAsFlow()
+    return authService.registerUser(request)
   }
 }

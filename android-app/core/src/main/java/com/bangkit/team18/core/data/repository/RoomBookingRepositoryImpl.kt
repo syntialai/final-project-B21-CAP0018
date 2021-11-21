@@ -25,7 +25,7 @@ class RoomBookingRepositoryImpl(
 
   override suspend fun getUserBookings(): Flow<ResponseWrapper<List<History>>> {
     return object : FetchDataWrapper<List<TransactionResponse>, List<History>>() {
-      override suspend fun fetchData(): Flow<List<TransactionResponse>?> {
+      override suspend fun fetchData(): List<TransactionResponse> {
         return roomBookingRemoteDataSource.getUserBookings()
       }
 
@@ -37,7 +37,7 @@ class RoomBookingRepositoryImpl(
 
   override suspend fun getUserBookingDetail(id: String): Flow<ResponseWrapper<HistoryDetail>> {
     return object : FetchDataWrapper<HistoryDetailResponse, HistoryDetail>() {
-      override suspend fun fetchData(): Flow<HistoryDetailResponse?> {
+      override suspend fun fetchData(): HistoryDetailResponse {
         return roomBookingRemoteDataSource.getUserBookingDetail(id)
       }
 
@@ -58,7 +58,7 @@ class RoomBookingRepositoryImpl(
 
   override suspend fun uploadReferralLetter(file: File): Flow<ResponseWrapper<ReferralLetter>> {
     return object : FetchDataWrapper<UploadReferralLetterResponse, ReferralLetter>() {
-      override suspend fun fetchData(): Flow<UploadReferralLetterResponse> {
+      override suspend fun fetchData(): UploadReferralLetterResponse {
         return roomBookingRemoteDataSource.uploadReferralLetter(file)
       }
 

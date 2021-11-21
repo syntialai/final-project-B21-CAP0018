@@ -20,7 +20,7 @@ class HospitalRepositoryImpl(
 
   override suspend fun getHospitals(): Flow<ResponseWrapper<List<Hospital>>> {
     return object : FetchDataWrapper<List<HospitalResponse>, List<Hospital>>() {
-      override suspend fun fetchData(): Flow<List<HospitalResponse>> {
+      override suspend fun fetchData(): List<HospitalResponse> {
         return hospitalRemoteDataSource.getHospitals()
       }
 
@@ -32,7 +32,7 @@ class HospitalRepositoryImpl(
 
   override suspend fun getHospitalDetail(id: String): Flow<ResponseWrapper<HospitalDetail>> {
     return object : FetchDataWrapper<HospitalDetailResponse, HospitalDetail>() {
-      override suspend fun fetchData(): Flow<HospitalDetailResponse> {
+      override suspend fun fetchData(): HospitalDetailResponse {
         return hospitalRemoteDataSource.getHospitalDetail(id)
       }
 
@@ -44,7 +44,7 @@ class HospitalRepositoryImpl(
 
   override suspend fun searchHospitals(query: String): Flow<ResponseWrapper<List<Hospital>>> {
     return object : FetchDataWrapper<List<HospitalResponse>, List<Hospital>>() {
-      override suspend fun fetchData(): Flow<List<HospitalResponse>> {
+      override suspend fun fetchData(): List<HospitalResponse> {
         return hospitalRemoteDataSource.searchHospitals(query)
       }
 

@@ -17,5 +17,5 @@ interface AuthRemoteDataSource {
 
   fun removeAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener)
 
-  fun registerUser(phoneNumber: String): Flow<UserResponse>
+  suspend fun registerUser(phoneNumber: String): UserResponse
 }
