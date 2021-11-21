@@ -15,6 +15,7 @@ import com.bangkit.team18.core.domain.model.history.HistoryDetail
 import com.bangkit.team18.core.domain.repository.RoomBookingRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
 import java.io.File
 
@@ -38,7 +39,8 @@ class RoomBookingRepositoryImpl(
   override suspend fun getUserBookingDetail(id: String): Flow<ResponseWrapper<HistoryDetail>> {
     return object : FetchDataWrapper<HistoryDetailResponse, HistoryDetail>() {
       override suspend fun fetchData(): HistoryDetailResponse {
-        return roomBookingRemoteDataSource.getUserBookingDetail(id)
+        return roomBookingRemoteDataSource.getUserBookingDetail(id).firstOrNull()
+          ?: HistoryDetailResponse()
       }
 
       override suspend fun mapData(response: HistoryDetailResponse): HistoryDetail {
