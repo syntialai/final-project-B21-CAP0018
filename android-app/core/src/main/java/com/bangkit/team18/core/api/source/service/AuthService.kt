@@ -8,6 +8,6 @@ import retrofit2.http.POST
 
 interface AuthService {
 
-  @POST(ApiConstants.USER_REGISTER)
+  @POST(ApiConstants.USER)
   suspend fun registerUser(@Body registerUserRequest: RegisterUserRequest): UserResponse
 }

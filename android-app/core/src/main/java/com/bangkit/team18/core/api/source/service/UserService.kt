@@ -13,20 +13,19 @@ import retrofit2.http.Part
 
 interface UserService {
 
-  @GET(ApiConstants.USER_PROFILE)
+  @GET(ApiConstants.USER)
   suspend fun getUserProfile(): UserResponse
 
   @Multipart
-  @PATCH(ApiConstants.USER_PROFILE_UPDATE)
+  @PATCH(ApiConstants.USER)
   suspend fun updateUserProfile(
     @Body updateUserProfileRequest: UpdateUserProfileRequest,
     @Part image: MultipartBody.Part? = null
   ): UserResponse
 
   @Multipart
-  @PATCH(ApiConstants.USER_PROFILE_UPDATE)
-  suspend fun updateUserProfile(
-    @Body updateUserProfileRequest: UpdateUserProfileRequest,
+  @POST(ApiConstants.USER_IDENTITY_VERIFICATION)
+  suspend fun uploadUserVerification(
     @Part ktp: MultipartBody.Part,
     @Part selfie: MultipartBody.Part
   ): UserResponse

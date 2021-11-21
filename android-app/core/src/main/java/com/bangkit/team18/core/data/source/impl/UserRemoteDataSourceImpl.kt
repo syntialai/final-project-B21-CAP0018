@@ -42,7 +42,7 @@ class UserRemoteDataSourceImpl(
     val selfieFilePart =
       MultipartBody.Part.createFormData("selfie", selfie.name.orEmpty(), selfieFileBody)
 
-    return userService.updateUserProfile(UpdateUserProfileRequest(), ktpFilePart, selfieFilePart)
+    return userService.uploadUserVerification(ktpFilePart, selfieFilePart)
   }
 }
 
