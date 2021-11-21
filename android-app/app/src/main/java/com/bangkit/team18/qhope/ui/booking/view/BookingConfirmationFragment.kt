@@ -6,6 +6,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.utils.view.DataUtils
+import com.bangkit.team18.core.utils.view.FileUtil
 import com.bangkit.team18.core.utils.view.PickerUtils
 import com.bangkit.team18.core.utils.view.ViewUtils.show
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
@@ -18,6 +19,7 @@ import com.bangkit.team18.qhope.ui.history.view.HistoryFragmentDirections
 import com.bangkit.team18.qhope.ui.home.view.HomeFragmentDirections
 import com.bangkit.team18.qhope.ui.widget.callback.OnBannerActionButtonClickListener
 import com.bangkit.team18.qhope.utils.Router
+import java.io.File
 import java.util.*
 
 class BookingConfirmationFragment :
@@ -47,11 +49,7 @@ class BookingConfirmationFragment :
     super.setupObserver()
 
     viewModel.setBookingDetail(args.bookedHospital, args.roomType)
-    viewModel.user.observe(viewLifecycleOwner, {
-      it?.let { user ->
-        viewModel.fetchUserDetails(user.uid, user.phoneNumber.orEmpty())
-      }
-    })
+    viewModel.fetchUserDetails()
     viewModel.bookingDetail.observe(viewLifecycleOwner, {
       it?.let { bookingDetail ->
         setRoomData(bookingDetail.hospital.name, bookingDetail.selectedRoomType)
@@ -79,7 +77,9 @@ class BookingConfirmationFragment :
 
   override fun onIntentResult(data: Intent?) {
     data?.data?.let { fileUri ->
-      viewModel.uploadReferralLetter(fileUri)
+      FileUtil.getFileAbsolutePath(mContext.contentResolver, fileUri)?.let {
+        viewModel.uploadReferralLetter(File(it))
+      }
     }
   }
 

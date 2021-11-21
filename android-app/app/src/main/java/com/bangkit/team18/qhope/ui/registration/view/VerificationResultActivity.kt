@@ -3,7 +3,6 @@ package com.bangkit.team18.qhope.ui.registration.view
 import android.os.Bundle
 import android.view.View
 import com.bangkit.team18.core.domain.model.user.VerificationStatus
-import com.bangkit.team18.core.utils.view.DataUtils.isNull
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityVerificationResultBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseActivityViewModel
@@ -15,17 +14,15 @@ class VerificationResultActivity :
     ActivityVerificationResultBinding::inflate,
     VerificationResultViewModel::class
   ) {
+
   override fun setupViews(savedInstanceState: Bundle?) {
     supportActionBar?.hide()
     setupListener()
-    viewModel.user.observe(this, {
-      if (it.isNull()) {
-        Router.goToLogin(this)
-      } else {
-        viewModel.getUserDoc()
-      }
-    })
+  }
 
+  override fun setupObserver() {
+    super.setupObserver()
+    viewModel.getUserDoc()
     viewModel.userDoc.observe(this, {
       binding.apply {
         when (it.verificationStatus) {

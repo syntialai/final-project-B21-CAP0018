@@ -23,6 +23,7 @@ Bangkit Final Project 2021: Automatic Hospital Registering and Room Booking with
 ### Installation
 
 + Download the released Application
++ Click "Install Anyway" if there's a pop up asking for installation of the application
 + Install and enjoy!
 
 ### Meet Contributors

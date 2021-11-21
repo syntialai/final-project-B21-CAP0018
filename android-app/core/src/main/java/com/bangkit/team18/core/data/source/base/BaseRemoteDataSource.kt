@@ -253,4 +253,10 @@ abstract class BaseRemoteDataSource {
     }
     awaitClose { }
   }
+
+  protected fun <T> T.loadAsFlow(): Flow<T> {
+    return flow {
+      emit(this@loadAsFlow)
+    }
+  }
 }

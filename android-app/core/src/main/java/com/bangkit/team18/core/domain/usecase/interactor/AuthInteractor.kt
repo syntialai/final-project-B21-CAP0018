@@ -2,6 +2,7 @@ package com.bangkit.team18.core.domain.usecase.interactor
 
 import android.app.Activity
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
+import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.repository.AuthRepository
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.google.firebase.auth.FirebaseAuth
@@ -31,4 +32,7 @@ class AuthInteractor(private val authRepository: AuthRepository) : AuthUseCase {
 
   override fun removeAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener) =
     authRepository.removeAuthStateListener(authStateListener)
+
+  override suspend fun registerUser(phoneNumber: String): Flow<ResponseWrapper<User>> =
+    authRepository.registerUser(phoneNumber)
 }
