@@ -27,7 +27,7 @@ val dispatcherModule = module {
 val networkModule = module {
   fun provideLoggingInterceptor(): HttpLoggingInterceptor {
     return HttpLoggingInterceptor().apply {
-      setLevel(HttpLoggingInterceptor.Level.HEADERS)
+      setLevel(HttpLoggingInterceptor.Level.BODY)
     }
   }
 
