@@ -184,7 +184,6 @@ def generate_hospital_token(id):
 def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
-        return f('12345',*args, **kwargs)
         token = None
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
@@ -253,6 +252,9 @@ class AddHospitalRoomSchema(Schema):
     total_room = fields.Integer(required=True)
     price = fields.Integer(required=True)
 
+class UpdateHospitalRoomSchema(Schema):
+    available_room = fields.Integer(required=True)
+
 @app.route('/hospitals', methods=['GET'])
 @token_required
 def get_all_hospitals():
@@ -290,8 +292,8 @@ def get_hospital_by_id(id):
     return get_success_response(hospital_response)
 
 
-@app.route('/hospital', methods=['POST'])
-@token_required
+@app.route('/hospital/rooms', methods=['POST'])
+@hospital_token_required
 def add_hospital_room(hospital_id):
     add_hospital_room_schema = AddHospitalRoomSchema()
     room_request = add_hospital_room_schema.load(request.json)
@@ -305,6 +307,37 @@ def add_hospital_room(hospital_id):
         'available_room': room_request['available_room'],
         'total_room': room_request['total_room'],
         'price': room_request['price'],
+    })
+
+    return get_success_create_response({
+        'id': room_doc.id
+    })
+
+@app.route('/hospital/rooms/<room_id>', methods=['POST'])
+@hospital_token_required
+def update_hospital_room(hospital_id, room_id):
+    update_hospital_room_schema = UpdateHospitalRoomSchema()
+    room_request = update_hospital_room_schema.load(request.json)
+
+    room_doc = db.collection(COLLECTION_HOSPITAL_ROOM).document(room_id)
+
+    print(room_doc.id)
+    print(hospital_id)
+    roomdoctest = room_doc.get()
+    # validate_data_exists(roomdoctest)
+    if not roomdoctest.exists:
+        raise werkzeug.exceptions.NotFound('Data not found')
+    if doc_id != hospital_id:
+        raise werkzeug.exceptions.BadRequest('Access denied')
+    # if roomdoctest['id'] != hospital_id:
+    #     raise werkzeug.exceptions.BadRequest('Access denied')
+
+    room_doc.update({
+        # 'id': hospital_id,
+        # 'type': room_request['type'],
+        # 'total_room': room_request['total_room'],
+        # 'price': room_request['price'],
+        'available_room': room_request['available_room']
     })
 
     return get_success_create_response({
