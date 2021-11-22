@@ -18,12 +18,13 @@
     <string name="verification_status_not_upload_title">Hello!</string>
     <string name="verification_status_uploaded_title">You are…</string>
     <string name="verification_status_not_upload_description">Let’s verify your identity to book a room in a hospital.</string>
+    <string name="verification_status_accepted_description">Let\'s confirm your identity before explore more in Q-Hope.</string>
     <string name="verification_status_verified_description">Now you can book a room in a hospital.</string>
     <string name="verification_status_not_verified_description">We’re sorry. Let’s check what’s wrong in your verification.</string>
     <string name="verification_status_not_upload_button_label">Verify</string>
-    <string name="verification_status_verified_button_label">Done</string>
+    <string name="verification_status_accepted_button_label">Confirm my data</string>
+    <string name="verification_status_verified_button_label">Show hospitals</string>
     <string name="verification_status_not_verified_button_label">Check</string>
-
 
     <!-- Booking -->
     <string name="hospital_detail_description">Hospital Detail</string>
@@ -138,6 +139,7 @@
     <string name="edit_label">Edit</string>
     <string name="gender_field_error">You need to select one.</string>
     <string name="verified_label">Verified</string>
+    <string name="accepted_label">Accepted</string>
     <string name="not_verified_label">Not Verified</string>
     <string name="intent_choose_capturer">Capture with ...</string>
 </resources>

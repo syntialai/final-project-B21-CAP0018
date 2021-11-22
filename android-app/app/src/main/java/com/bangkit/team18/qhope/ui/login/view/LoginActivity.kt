@@ -37,8 +37,7 @@ class LoginActivity : BaseActivityViewModel<ActivityLoginBinding, LoginViewModel
 
     viewModel.user.observe(this, { user ->
       user?.let {
-        viewModel.saveIdToken()
-        viewModel.registerUser()
+        viewModel.saveIdToken(viewModel::registerUser)
       }
     })
     viewModel.userDoc.observe(this, {
