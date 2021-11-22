@@ -257,7 +257,7 @@ class AddHospitalSchema(Schema):
 
 @app.route('/hospitals', methods=['GET'])
 @token_required
-def get_all_hospitals():
+def get_all_hospitals(uid):
     hospital_docs = db.collection(COLLECTION_HOSPITALS).stream()
     hospital_responses = []
     for hospital_doc in hospital_docs:
