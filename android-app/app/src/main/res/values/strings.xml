@@ -50,6 +50,13 @@
     <string name="update_profile_banner_button">Go to Profile</string>
     <string name="booking_confirmation_title">Book a Room</string>
 
+    <!-- Payment -->
+    <string name="payment_method_label">Payment Method</string>
+    <string name="payment_policy_agreement">By continuing you agree to our Terms of Use and Privacy Policy</string>
+    <string name="terms_of_use">Terms of Use</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="pay_label">Pay</string>
+
     <!-- History -->
     <string name="history_label">History</string>
     <string name="history_detail_label">History Details</string>
