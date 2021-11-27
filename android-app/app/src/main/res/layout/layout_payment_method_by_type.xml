@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/dp_16">
+
+    <RadioButton
+        android:id="@+id/rb_payment_method"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/iv_payment_method_logo"
+        android:layout_width="@dimen/dp_64"
+        android:layout_height="@dimen/dp_64"
+        android:scaleType="centerInside"
+        tools:ignore="ContentDescription"
+        tools:srcCompat="@drawable/drawable_image_type" />
+
+    <TextView
+        android:id="@+id/tv_payment_method_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
+        android:textAppearance="?attr/textAppearanceBody1"
+        tools:text="BCA Virtual Account" />
+</LinearLayout>
