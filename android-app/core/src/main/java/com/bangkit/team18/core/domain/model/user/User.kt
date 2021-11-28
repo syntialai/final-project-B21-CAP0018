@@ -5,7 +5,7 @@ data class User(
   val name: String = "",
   val phoneNumber: String = "",
   val imageUrl: String = "",
-  val birthDate: Long? = null,
+  var birthDate: Long? = null,
   val verificationStatus: VerificationStatus? = null,
   val ktpNumber: String = "",
   val gender: GenderType? = null,
