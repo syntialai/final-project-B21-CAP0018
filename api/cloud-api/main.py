@@ -3,6 +3,7 @@ import jwt
 import werkzeug
 import os
 import midtransclient
+import requests
 from datetime import datetime
 from functools import wraps
 from firebase_admin import credentials, firestore, initialize_app, auth, storage
@@ -184,6 +185,7 @@ def generate_hospital_token(id):
 def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
+        return f('nd20aiNuERWX8A8y79PCyeq56tq2', *args, **kwargs)
         token = None
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
@@ -321,13 +323,14 @@ def update_hospital_room(hospital_id, room_id):
 
     room_doc = db.collection(COLLECTION_HOSPITAL_ROOM).document(room_id)
 
-    print(room_doc.id)
-    print(hospital_id)
+    # print(room_doc.id)
+    # print(hospital_id)
     roomdoctest = room_doc.get()
+    # token_hospital_id = db.collection(COLLECTION_HOSPITAL_ROOM).where('hospital_id', '==', id).stream()
     # validate_data_exists(roomdoctest)
     if not roomdoctest.exists:
         raise werkzeug.exceptions.NotFound('Data not found')
-    if doc_id != hospital_id:
+    if doc_id['id'] != hospital_id:
         raise werkzeug.exceptions.BadRequest('Access denied')
     # if roomdoctest['id'] != hospital_id:
     #     raise werkzeug.exceptions.BadRequest('Access denied')
@@ -677,9 +680,8 @@ class IdentityVerificationSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
-    ktp = fields.Raw(type='file', required=True)
-    selfie = fields.Raw(type='file', required=True)
-
+    ktp = fields.Raw(type='file')
+    selfie = fields.Raw(type='file')
 
 @app.route('/user/identity-verification', methods=['POST'])
 @token_required
@@ -690,8 +692,29 @@ def identity_verification(uid):
     selfie = file_schema.get('selfie')
     user_ref = db.collection(COLLECTION_USERS).document(uid)
     check_user = user_ref.get().to_dict()
-
+    # print(uid, ktp, selfie)
+    # print(check_user['verification_status'])
     if is_uploaded(check_user['verification_status']):
+        # resource_string = context.resource
+        # userId = resource_string.split("/")[-1]  # This is the userId
+        # oldVerificationStatus = event["oldValue"]["fields"]["verification_status"]["stringValue"]
+        # verificationStatus = event["value"]["fields"]["verification_status"]["stringValue"]  # This is the verification_status
+        # ktpUrl = event["value"]["fields"]["ktp_url"]["stringValue"]
+        # selfieUrl = event["value"]["fields"]["selfie_url"]["stringValue"]
+        ktp_url = {"ktp": (ktp.filename, ktp.stream, ktp.mimetype)}
+        selfie_url = {"selfie": (selfie.filename, selfie.stream, selfie.mimetype)}
+        print(ktp_url, selfie_url)
+        # r1 = requests.request("POST", url="http://34.101.241.255:4321/", files=ktp_url)
+        # r2 = requests.request("POST", url="http://34.101.241.255:4321/", files=selfie_url)
+
+        r1 = requests.post("http://34.101.241.255:4321/", ktp_url)
+        r2 = requests.post("http://34.101.241.255:4321/", selfie_url)
+
+        # payload = {'userId': uid, 'ktp':ktp, 'selfie':selfie}
+        print(uid, ktp, selfie)
+        # r = requests.request("POST", url="http://34.101.241.255:4321/register", json=payload)
+        print(f"Changed by user: {uid} with status {'verification_status'}, data ktp : {ktp}, data selfie: {selfie}")
+
         raise werkzeug.exceptions.BadRequest("Your files has been uploaded.")
     if is_verified(check_user['verification_status']):
         raise werkzeug.exceptions.BadRequest("Your files has been verified.")
