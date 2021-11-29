@@ -1,6 +1,6 @@
 package com.bangkit.team18.core.domain.model.booking
 
-data class PaymentMethod (
+data class PaymentMethod(
 
   val id: String,
 

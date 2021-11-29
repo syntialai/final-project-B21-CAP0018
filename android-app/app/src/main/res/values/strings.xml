@@ -145,6 +145,7 @@
     <string name="ktp_number_hint">KTP Number</string>
     <string name="place_of_birth_hint">Place of Birth</string>
     <string name="address_hint">Address</string>
+    <string name="ktp_address_hint">KTP Address</string>
     <string name="male_label">Male</string>
     <string name="female_label">Female</string>
     <string name="edit_label">Edit</string>

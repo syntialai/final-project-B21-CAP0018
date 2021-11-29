@@ -61,15 +61,16 @@ class IdentityConfirmationActivity :
 
   private fun saveIdentity() {
     with(binding) {
-      viewModel.constructSaveRequest(
-        etKtpNumber.text.toString(),
+      viewModel.save(
         etName.text.toString(),
         getGenderType(),
         etPlaceOfBirth.text.toString(),
-        etAddress.text.toString()
+        etKtpAddress.text.toString(),
+        etDistrict.text.toString(),
+        etCity.text.toString(),
+        etVillage.text.toString()
       )
     }
-    viewModel.save()
   }
 
   private fun getGenderType(): GenderType {
@@ -91,10 +92,13 @@ class IdentityConfirmationActivity :
       etKtpNumber.setText(user.ktpNumber.orHyphen())
       etName.setText(user.name.orHyphen())
       etBirthDate.setText(user.birthDate?.toDateString("yyyy-MM-dd", true))
-      etAddress.setText(user.address.orHyphen())
+      etKtpAddress.setText(user.address.orHyphen())
       etPlaceOfBirth.setText(user.placeOfBirth.orHyphen())
       rbGenderMale.isChecked = user.gender == GenderType.MALE
       rbGenderFemale.isChecked = user.gender == GenderType.FEMALE
+      etDistrict.setText(user.district)
+      etCity.setText(user.city)
+      etVillage.setText(user.village)
     }
   }
 }
