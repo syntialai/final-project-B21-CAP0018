@@ -18,8 +18,11 @@ import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.utils.view.DialogUtils
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModel
+import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
+import com.bangkit.team18.qhope.utils.Router
 import com.bangkit.team18.qhope.utils.SnackbarUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.net.HttpURLConnection
 import kotlin.reflect.KClass
 
 
@@ -32,6 +35,8 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
   protected val binding get() = _binding as VB
 
   protected val viewModel: VM by viewModel(viewModelClazz)
+
+  private var viewModelWithAuth: BaseViewModelWithAuth? = null
 
   protected lateinit var intentLauncher: ActivityResultLauncher<Intent>
   private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
@@ -69,10 +74,18 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
   abstract fun setupViews(savedInstanceState: Bundle?)
 
   open fun setupObserver() {
+    viewModelWithAuth = viewModel as? BaseViewModelWithAuth
+
     viewModel.fetchStatus.observe(this, {
       it?.let { response ->
         checkErrorState(response)
         showLoadingState(response is ResponseWrapper.Loading)
+      }
+    })
+    viewModelWithAuth?.loggedOut?.observe(this, { loggedOut ->
+      if (loggedOut) {
+        viewModelWithAuth?.resetLogOutValue()
+        Router.goToLogin(this)
       }
     })
   }
@@ -103,9 +116,17 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
   private fun checkErrorState(wrapper: ResponseWrapper<*>) {
     when (wrapper) {
       is ResponseWrapper.Error -> showErrorToast(wrapper.message, R.string.unknown_error_message)
+      is ResponseWrapper.HttpError -> onHttpError(wrapper.code ?: 0, wrapper.message)
       is ResponseWrapper.NetworkError -> showErrorToast(null, R.string.no_connection_message)
       else -> {
       }
+    }
+  }
+
+  private fun onHttpError(code: Int, message: String?) {
+    when (code) {
+      HttpURLConnection.HTTP_UNAUTHORIZED -> (viewModel as? BaseViewModelWithAuth)?.logOut()
+      else -> showErrorToast(message, R.string.unknown_error_message)
     }
   }
 

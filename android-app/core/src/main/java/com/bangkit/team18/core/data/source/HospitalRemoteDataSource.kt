@@ -1,17 +1,13 @@
 package com.bangkit.team18.core.data.source
 
-import com.bangkit.team18.core.data.source.response.hospital.HospitalResponse
-import com.bangkit.team18.core.data.source.response.hospital.RoomTypeResponse
-import com.firebase.geofire.GeoLocation
-import kotlinx.coroutines.flow.Flow
+import com.bangkit.team18.core.api.source.response.hospital.HospitalDetailResponse
+import com.bangkit.team18.core.api.source.response.hospital.HospitalResponse
 
 interface HospitalRemoteDataSource {
 
-  suspend fun getNearbyHospitals(location: GeoLocation): Flow<List<HospitalResponse>>
+  suspend fun getHospitals(): List<HospitalResponse>
 
-  suspend fun getHospitalDetail(id: String): Flow<HospitalResponse?>
+  suspend fun getHospitalDetail(id: String): HospitalDetailResponse
 
-  suspend fun getHospitalRoomTypes(id: String): Flow<List<RoomTypeResponse>>
-
-  suspend fun searchHospitals(query: String): Flow<List<HospitalResponse>>
+  suspend fun searchHospitals(query: String): List<HospitalResponse>
 }

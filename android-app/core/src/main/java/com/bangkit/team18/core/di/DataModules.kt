@@ -1,6 +1,11 @@
 package com.bangkit.team18.core.di
 
+import com.bangkit.team18.core.api.source.service.AuthService
+import com.bangkit.team18.core.api.source.service.HospitalService
+import com.bangkit.team18.core.api.source.service.TransactionService
+import com.bangkit.team18.core.api.source.service.UserService
 import com.bangkit.team18.core.data.repository.AuthRepositoryImpl
+import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.data.repository.HospitalRepositoryImpl
 import com.bangkit.team18.core.data.repository.RoomBookingRepositoryImpl
 import com.bangkit.team18.core.data.repository.UserRepositoryImpl
@@ -17,8 +22,10 @@ import com.bangkit.team18.core.domain.repository.HospitalRepository
 import com.bangkit.team18.core.domain.repository.RoomBookingRepository
 import com.bangkit.team18.core.domain.repository.UserRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import retrofit2.Retrofit
 
 @ExperimentalCoroutinesApi
 val repositoryModule = module {
@@ -28,10 +35,39 @@ val repositoryModule = module {
   single { RoomBookingRepositoryImpl(get(), get()) } bind RoomBookingRepository::class
 }
 
+val sharedPrefRepositoryModule = module {
+  single {
+    AuthSharedPrefRepository.newInstance(androidContext())
+  }
+}
+
 @ExperimentalCoroutinesApi
 val remoteDataSourceModule = module {
   single { HospitalRemoteDataSourceImpl(get()) } bind HospitalRemoteDataSource::class
   single { RoomBookingRemoteDataSourceImpl(get(), get()) } bind RoomBookingRemoteDataSource::class
-  single { AuthRemoteDataSourceImpl(get()) } bind AuthRemoteDataSource::class
-  single { UserRemoteDataSourceImpl(get(), get()) } bind UserRemoteDataSource::class
+  single { AuthRemoteDataSourceImpl(get(), get()) } bind AuthRemoteDataSource::class
+  single { UserRemoteDataSourceImpl(get()) } bind UserRemoteDataSource::class
+}
+
+val serviceModule = module {
+  fun provideAuthService(retrofit: Retrofit): AuthService {
+    return retrofit.create(AuthService::class.java)
+  }
+
+  fun provideHospitalService(retrofit: Retrofit): HospitalService {
+    return retrofit.create(HospitalService::class.java)
+  }
+
+  fun provideTransactionService(retrofit: Retrofit): TransactionService {
+    return retrofit.create(TransactionService::class.java)
+  }
+
+  fun provideUserService(retrofit: Retrofit): UserService {
+    return retrofit.create(UserService::class.java)
+  }
+
+  single { provideAuthService(get()) }
+  single { provideHospitalService(get()) }
+  single { provideTransactionService(get()) }
+  single { provideUserService(get()) }
 }

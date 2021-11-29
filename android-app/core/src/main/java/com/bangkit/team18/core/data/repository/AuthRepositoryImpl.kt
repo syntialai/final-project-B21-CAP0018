@@ -1,10 +1,18 @@
 package com.bangkit.team18.core.data.repository
 
 import android.app.Activity
+import com.bangkit.team18.core.api.source.response.user.UserResponse
+import com.bangkit.team18.core.data.mapper.UserMapper
+import com.bangkit.team18.core.data.repository.base.FetchDataWrapper
 import com.bangkit.team18.core.data.source.AuthRemoteDataSource
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
+import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.repository.AuthRepository
-import com.google.firebase.auth.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -13,6 +21,7 @@ import java.util.concurrent.TimeUnit
 
 @ExperimentalCoroutinesApi
 class AuthRepositoryImpl(private val authRemoteDataSource: AuthRemoteDataSource) : AuthRepository {
+
   override fun signInWithCredential(credential: PhoneAuthCredential): Flow<ResponseWrapper<FirebaseUser>> =
     authRemoteDataSource.signInWithCredential(credential)
 
@@ -45,4 +54,16 @@ class AuthRepositoryImpl(private val authRemoteDataSource: AuthRemoteDataSource)
 
   override fun removeAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener) =
     authRemoteDataSource.removeAuthStateListener(authStateListener)
+
+  override suspend fun registerUser(phoneNumber: String): Flow<ResponseWrapper<User>> {
+    return object : FetchDataWrapper<UserResponse, User>() {
+      override suspend fun fetchData(): UserResponse {
+        return authRemoteDataSource.registerUser(phoneNumber)
+      }
+
+      override suspend fun mapData(response: UserResponse): User {
+        return UserMapper.mapToUser(response)
+      }
+    }.updateData()
+  }
 }

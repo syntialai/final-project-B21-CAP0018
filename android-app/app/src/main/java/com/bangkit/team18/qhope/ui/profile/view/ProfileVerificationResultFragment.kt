@@ -3,7 +3,6 @@ package com.bangkit.team18.qhope.ui.profile.view
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.domain.model.user.VerificationStatus
-import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentProfileVerificationResultBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
@@ -14,13 +13,18 @@ class ProfileVerificationResultFragment :
     FragmentProfileVerificationResultBinding::inflate,
     ProfileVerificationResultViewModel::class
   ) {
+
   override fun setupViews() {
-    setupListener()
-    viewModel.user.observe(viewLifecycleOwner, {
-      if (it.isNotNull()) {
-        viewModel.getUserDoc()
-      }
-    })
+    binding.apply {
+      profileVerificationResultFinish.setOnClickListener(this@ProfileVerificationResultFragment)
+    }
+  }
+
+  override fun setupObserver() {
+    super.setupObserver()
+
+    viewModel.getUserDoc()
+
     viewModel.userDoc.observe(viewLifecycleOwner, {
       binding.apply {
         when (it.verificationStatus) {
@@ -45,12 +49,6 @@ class ProfileVerificationResultFragment :
         }
       }
     })
-  }
-
-  private fun setupListener() {
-    binding.apply {
-      profileVerificationResultFinish.setOnClickListener(this@ProfileVerificationResultFragment)
-    }
   }
 
   override fun onClick(v: View?) {

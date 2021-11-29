@@ -10,7 +10,6 @@ import android.view.View
 import androidx.core.widget.doOnTextChanged
 import com.bangkit.team18.core.domain.model.user.GenderType
 import com.bangkit.team18.core.domain.model.user.User
-import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.core.utils.view.DataUtils.orHyphen
 import com.bangkit.team18.core.utils.view.DateUtils.toDateString
 import com.bangkit.team18.core.utils.view.FileUtil
@@ -50,11 +49,8 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
 
   override fun setupObserver() {
     super.setupObserver()
-    viewModel.user.observe(viewLifecycleOwner, {
-      if (it.isNotNull()) {
-        viewModel.getUserDoc()
-      }
-    })
+    viewModel.getUserDoc()
+
     viewModel.userDoc.observe(viewLifecycleOwner, {
       setupPersonalData(viewModel.mode.value as PersonalDataViewModel.ModeType, it)
     })
@@ -98,7 +94,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
         }
         personalDataProfilePicture.loadImage(mContext, user.imageUrl, R.drawable.ic_person)
         val isEditable = getIsEditable(mode)
-        user.birthDate?.toDate()?.time?.let {
+        user.birthDate?.let {
           birthDatePicker = getDatePicker(R.string.birth_date_hint, it)
         }
         personalDataName.apply {
@@ -127,7 +123,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
         personalDataGenderFemale.isChecked = user.gender == GenderType.FEMALE
         personalDataProfilePicture.isClickable = isEditable
 
-        user.birthDate?.toDate()?.time?.let {
+        user.birthDate?.let {
           viewModel.setBirthDate(it / 1000)
         }
       }
@@ -197,7 +193,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
         val placeOfBirth = personalDataPlaceOfBirth.text.toString()
         val address = personalDataAddress.text.toString()
         val gender = if (personalDataGenderMale.isChecked) GenderType.MALE else GenderType.FEMALE
-        viewModel.update(name, ktpNumber, placeOfBirth, address, gender)
+        viewModel.update(name, placeOfBirth, address, gender)
       }
     }
   }

@@ -9,6 +9,7 @@ import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.LayoutBookingHistoryItemBinding
 import com.bangkit.team18.qhope.ui.base.adapter.BaseAdapter
 import com.bangkit.team18.qhope.ui.base.adapter.BaseDiffCallback
+import com.bumptech.glide.Glide
 
 class HistoryAdapter(private val historyItemCallback: HistoryItemCallback) :
   BaseAdapter<History, LayoutBookingHistoryItemBinding>(diffCallback) {
@@ -37,10 +38,10 @@ class HistoryAdapter(private val historyItemCallback: HistoryItemCallback) :
           historyItemCallback.onClickListener(data.id)
         }
 
-        imageViewHistoryItem.loadImage(
-          historyItemCallback.getStorageRef(data.hospitalImagePath),
-          R.drawable.drawable_hospital_placeholder
-        )
+        Glide.with(mContext)
+          .load(data.hospitalImagePath)
+          .placeholder(R.drawable.drawable_hospital_placeholder)
+          .into(imageViewHistoryItem)
 
         textViewHistoryItemName.text = data.hospitalName
         textViewHistoryItemDate.text = data.createdAt

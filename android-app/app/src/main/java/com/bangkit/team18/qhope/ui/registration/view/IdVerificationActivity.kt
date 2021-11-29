@@ -13,7 +13,6 @@ import androidx.activity.result.ActivityResult
 import androidx.core.view.isVisible
 import com.bangkit.team18.core.domain.model.user.DocumentType
 import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
-import com.bangkit.team18.core.utils.view.DataUtils.isNull
 import com.bangkit.team18.core.utils.view.FileUtil
 import com.bangkit.team18.core.utils.view.FileUtil.getUri
 import com.bangkit.team18.core.utils.view.ViewUtils.loadImage
@@ -48,11 +47,6 @@ class IdVerificationActivity :
         checkSubmitButton()
       })
     }
-    viewModel.user.observe(this, {
-      if (it.isNull()) {
-        Router.goToLogin(this)
-      }
-    })
     viewModel.isSubmitted.observe(this, {
       if (it) {
         Router.goToVerificationResult(this)

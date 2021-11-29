@@ -23,9 +23,8 @@ import com.bangkit.team18.qhope.ui.home.viewmodel.HomeViewModel
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import org.koin.android.ext.android.inject
-import java.util.*
+import java.util.Locale
 
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   FragmentHomeBinding::inflate,
@@ -61,9 +60,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   override fun setupObserver() {
     super.setupObserver()
 
+    viewModel.fetchHospitals()
     viewModel.fetchUserData()
-    viewModel.nearbyHospitals.observe(viewLifecycleOwner, { nearbyHospitals ->
-      homeAdapter.submitList(nearbyHospitals)
+    viewModel.hospitals.observe(viewLifecycleOwner, { hospitals ->
+      homeAdapter.submitList(hospitals)
     })
     viewModel.userData.observe(viewLifecycleOwner, { userData ->
       setUserName(userData.name)
@@ -101,10 +101,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
     )
   }
 
-  override fun getStorageRef(imagePath: String): StorageReference {
-    return storage.getReference(imagePath)
-  }
-
   @SuppressLint("MissingPermission")
   override fun onPermissionGrantedChange(isGranted: Boolean) {
     if (isGranted) {
@@ -119,7 +115,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
       spinKitLoadHome.showOrRemove(isLoading)
       layoutVerificationStatus.root.showOrRemove(isLoading.not())
       textViewOurHospitalsLabel.showOrRemove(isLoading.not())
-      recyclerViewRecommendedHospitals.showOrRemove(isLoading.not())
+      recyclerViewHospitals.showOrRemove(isLoading.not())
     }
   }
 
@@ -152,7 +148,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   })
 
   private fun setLocation(location: Location) {
-    viewModel.fetchNearbyHospitals(location.latitude, location.longitude)
     val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(
       location.latitude,
       location.longitude, 1
@@ -193,7 +188,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   }
 
   private fun setupRecyclerView() {
-    binding.recyclerViewRecommendedHospitals.apply {
+    binding.recyclerViewHospitals.apply {
       adapter = homeAdapter
       setHasFixedSize(false)
     }
@@ -244,7 +239,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
 
   private fun showSearchResults(show: Boolean) {
     with(binding) {
-      recyclerViewRecommendedHospitals.showOrRemove(show.not())
+      recyclerViewHospitals.showOrRemove(show.not())
       recyclerViewHospitalSearchResults.showOrRemove(show)
     }
   }

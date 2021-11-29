@@ -1,34 +1,35 @@
 package com.bangkit.team18.qhope.ui.registration.viewmodel
 
 import android.content.Context
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.domain.model.user.DocumentType
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
-import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import id.zelory.compressor.Compressor
 import java.io.File
 
 class IdVerificationViewModel(
+  private val authSharedPrefRepository: AuthSharedPrefRepository,
   private val userUseCase: UserUseCase,
   authUseCase: AuthUseCase
-) : BaseViewModelWithAuth(authUseCase) {
+) : BaseViewModelWithAuth(authSharedPrefRepository, authUseCase) {
+
   private var documentType: DocumentType = DocumentType.KTP
+
   private var ktpFile: File? = null
   private var selfieFile: File? = null
+
   private val _ktpPicture = MutableLiveData<File?>()
   val ktpPicture: LiveData<File?> get() = _ktpPicture
+
   private val _selfiePicture = MutableLiveData<File?>()
   val selfiePicture: LiveData<File?> get() = _selfiePicture
+
   private val _isSubmitted = MutableLiveData<Boolean>()
   val isSubmitted: LiveData<Boolean> get() = _isSubmitted
-
-  init {
-    initAuthStateListener()
-  }
 
   fun setDocumentType(documentType: DocumentType) {
     this.documentType = documentType
@@ -75,21 +76,12 @@ class IdVerificationViewModel(
   }
 
   fun upload() {
-    val ktp = Uri.fromFile(ktpPicture.value)
-    val selfie = Uri.fromFile(selfiePicture.value)
-    getUserId()?.let { id ->
+    val ktp = _ktpPicture.value
+    val selfie = _selfiePicture.value
+    if (ktp != null && selfie != null) {
       launchViewModelScope({
-        userUseCase.uploadUserKtp(id, ktp).runFlow({ ktpUri ->
-          launchViewModelScope({
-            userUseCase.uploadUserSelfie(id, selfie).runFlow({ selfieUri ->
-              launchViewModelScope({
-                userUseCase.updateUserVerification(id, ktpUri.toString(), selfieUri.toString())
-                  .runFlow({
-                    _isSubmitted.value = it
-                  })
-              })
-            })
-          })
+        userUseCase.uploadUserVerification(ktp, selfie).runFlow({ success ->
+          _isSubmitted.value = success
         })
       })
     }

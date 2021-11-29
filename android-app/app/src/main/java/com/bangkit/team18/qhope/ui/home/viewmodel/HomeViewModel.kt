@@ -2,23 +2,24 @@ package com.bangkit.team18.qhope.ui.home.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.domain.model.home.Hospital
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.HospitalUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
-import com.firebase.geofire.GeoLocation
 
 class HomeViewModel(
+  private val authSharedPrefRepository: AuthSharedPrefRepository,
   private val hospitalUseCase: HospitalUseCase,
   private val authUseCase: AuthUseCase,
   private val userUseCase: UserUseCase
-) : BaseViewModelWithAuth(authUseCase) {
+) : BaseViewModelWithAuth(authSharedPrefRepository, authUseCase) {
 
-  private var _nearbyHospitals = MutableLiveData<List<Hospital>>()
-  val nearbyHospitals: LiveData<List<Hospital>>
-    get() = _nearbyHospitals
+  private var _hospitals = MutableLiveData<List<Hospital>>()
+  val hospitals: LiveData<List<Hospital>>
+    get() = _hospitals
 
   private var _searchHospitalResults = MutableLiveData<List<Hospital>>()
   val searchHospitalResults: LiveData<List<Hospital>>
@@ -29,26 +30,21 @@ class HomeViewModel(
     get() = _userData
 
   fun fetchUserData() {
-    getUserId()?.let { id ->
-      launchViewModelScope({
-        userUseCase.getUser(id).runFlow({
-          it?.let { user ->
-            _userData.value = user
-          }
-        })
+    launchViewModelScope({
+      userUseCase.getUserProfile().runFlow({
+        _userData.value = it
       })
-    }
+    })
   }
 
-  fun fetchNearbyHospitals(latitude: Double, longitude: Double) {
-    val location = GeoLocation(latitude, longitude)
+  fun fetchHospitals() {
     launchViewModelScope({
-      hospitalUseCase.getNearbyHospitals(location).runFlow(::setHospitalData)
+      hospitalUseCase.getHospitals().runFlow(::setHospitalData)
     })
   }
 
   fun searchHospital(query: String) {
-    if (query.length >= 3) {
+    if (query.length >= 2) {
       launchViewModelScope({
         hospitalUseCase.searchHospitals(query).runFlow(::setSearchResultData)
       })
@@ -56,7 +52,7 @@ class HomeViewModel(
   }
 
   private fun setHospitalData(response: List<Hospital>) {
-    _nearbyHospitals.value = response
+    _hospitals.value = response
   }
 
   private fun setSearchResultData(response: List<Hospital>) {

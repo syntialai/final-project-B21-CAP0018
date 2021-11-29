@@ -25,6 +25,7 @@ class ProfileIdVerificationFragment :
     FragmentProfileIdVerificationBinding::inflate,
     ProfileIdVerificationViewModel::class
   ) {
+
   override fun setupViews() {
     setupListener()
     binding.apply {
@@ -42,11 +43,12 @@ class ProfileIdVerificationFragment :
         checkSubmitButton()
       })
     }
-    viewModel.user.observe(viewLifecycleOwner, {
-      if (it.isNotNull()) {
-        viewModel.getUserDoc()
-      }
-    })
+  }
+
+  override fun setupObserver() {
+    super.setupObserver()
+    viewModel.getUserDoc()
+
     viewModel.isSubmitted.observe(viewLifecycleOwner, {
       if (it) {
         findNavController().navigate(ProfileIdVerificationFragmentDirections.actionProfileIdVerificationFragmentToProfileVerificationResultFragment())

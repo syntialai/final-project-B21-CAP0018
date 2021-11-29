@@ -9,6 +9,7 @@ import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.LayoutHospitalItemBinding
 import com.bangkit.team18.qhope.ui.base.adapter.BaseAdapter
 import com.bangkit.team18.qhope.ui.base.adapter.BaseDiffCallback
+import com.bumptech.glide.Glide
 
 class HomeAdapter(private val hospitalItemCallback: HomeHospitalItemCallback) :
   BaseAdapter<Hospital, LayoutHospitalItemBinding>(diffCallback) {
@@ -36,10 +37,10 @@ class HomeAdapter(private val hospitalItemCallback: HomeHospitalItemCallback) :
           hospitalItemCallback.onClickListener(data.id)
         }
 
-        imageViewHospitalItem.loadImage(
-          hospitalItemCallback.getStorageRef(data.image),
-          R.drawable.drawable_hospital_placeholder
-        )
+        Glide.with(root.context)
+          .load(data.image)
+          .placeholder(R.drawable.drawable_hospital_placeholder)
+          .into(imageViewHospitalItem)
 
         textViewHospitalItemName.text = data.name
         textViewHospitalItemAddress.text = data.address
