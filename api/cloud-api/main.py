@@ -255,7 +255,7 @@ def get_all_hospitals(uid):
     for hospital_doc in hospital_docs:
         hospital = hospital_doc.to_dict()
         hospital_response = {
-            'id': hospital['id'],
+            'id': hospital_doc.id,
             'name': hospital['name'],
             'type': hospital['type'],
             'image': hospital['image'],
@@ -282,6 +282,19 @@ def get_hospital_by_id(id):
     hospital_response['room_types'] = map_to_dictionaries(room_type_docs)
 
     return get_success_response(hospital_response)
+
+
+@app.route('/hospital/rooms', methods=['GET'])
+@hospital_token_required
+def get_hospital_room(hospital_id):
+    rooms_collection = db.collection(COLLECTION_HOSPITAL_ROOM).where('hospital_id', '==', hospital_id).stream()
+    rooms = []
+    for room_doc in rooms_collection:
+        room = room_doc.to_dict()
+        room['id'] = room_doc['id']
+        rooms.append(room)
+
+    return get_success_response(rooms)
 
 
 @app.route('/hospital/rooms', methods=['POST'])
