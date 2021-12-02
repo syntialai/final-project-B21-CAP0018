@@ -48,12 +48,16 @@ val networkModule = module {
     val okHttpClientBuilder = OkHttpClient.Builder()
       .addInterceptor(loggingInterceptor)
       .addInterceptor(authInterceptor)
-//      .connectionSpecs(listOf(ConnectionSpec.COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT))
       .connectTimeout(Constants.CONNECTION_TIMEOUT_SECOND, TimeUnit.SECONDS)
       .readTimeout(Constants.CONNECTION_TIMEOUT_SECOND, TimeUnit.SECONDS)
 
     sslContextWithTMF.second?.let {
       okHttpClientBuilder.sslSocketFactory(sslContextWithTMF.first.socketFactory, it)
+    }
+
+    okHttpClientBuilder.hostnameVerifier { hostname, session ->
+//      HttpsURLConnection.getDefaultHostnameVerifier().verify("api.qhope.id", session)
+      true
     }
 
     return okHttpClientBuilder.build()

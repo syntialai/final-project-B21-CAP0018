@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <domain-config>
-        <domain includeSubdomains="true">api.qhope.id</domain>
+    <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
             <certificates src="@raw/certificate" />
+            <certificates src="system" />
         </trust-anchors>
-    </domain-config>
+    </base-config>
+
+<!--    <domain-config cleartextTrafficPermitted="true">-->
+<!--        <domain includeSubdomains="true">api.qhope.id</domain>-->
+<!--        <trust-anchors>-->
+<!--            <certificates src="@raw/certificate" />-->
+<!--        </trust-anchors>-->
+<!--    </domain-config>-->
 </network-security-config>

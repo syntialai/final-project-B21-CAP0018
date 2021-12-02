@@ -12,6 +12,7 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 
 interface TransactionService {
 
@@ -19,7 +20,7 @@ interface TransactionService {
   suspend fun getTransactions(): List<TransactionResponse>
 
   @GET(ApiConstants.TRANSACTIONS_ID)
-  suspend fun getTransactionDetails(id: String): TransactionDetailResponse
+  suspend fun getTransactionDetails(@Path("id") id: String): TransactionDetailResponse
 
   @POST(ApiConstants.TRANSACTIONS)
   suspend fun createTransaction(
