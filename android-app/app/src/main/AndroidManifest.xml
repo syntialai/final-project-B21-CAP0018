@@ -27,8 +27,8 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.QHope"
-        android:usesCleartextTraffic="true">
+        android:theme="@style/Theme.QHope">
+
         <activity
             android:name=".ui.main.view.MainActivity"
             android:windowSoftInputMode="adjustPan" />

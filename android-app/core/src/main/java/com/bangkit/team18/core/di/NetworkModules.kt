@@ -1,5 +1,6 @@
 package com.bangkit.team18.core.di
 
+import com.bangkit.team18.core.BuildConfig
 import com.bangkit.team18.core.config.Constants
 import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.google.firebase.auth.FirebaseAuth
@@ -54,8 +55,8 @@ val networkModule = module {
 
   fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
-//      .baseUrl(BuildConfig.QHOPE_API_URL)
-      .baseUrl("http://192.168.0.103:6543/")
+      .baseUrl(BuildConfig.QHOPE_API_URL)
+//      .baseUrl("http://192.168.0.103:6543/")
       .addConverterFactory(GsonConverterFactory.create())
       .client(okHttpClient)
       .build()
