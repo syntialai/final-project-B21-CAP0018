@@ -9,26 +9,36 @@ from firebase_admin import credentials, firestore, initialize_app, auth, storage
 from flask import Flask, request, jsonify
 from marshmallow import Schema, fields, ValidationError, EXCLUDE, validates_schema, validate
 from werkzeug.exceptions import HTTPException
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 app.config['SECRET_KEY'] = 'cdf1791e499190767ec7267f2a1b1f8e'
 app.config['BUCKET_NAME'] = 'q-hope.appspot.com'
+app.config['IS_PRODUCTION'] = False
 cred = credentials.Certificate('q-hope-cred.json')
 default_app = initialize_app(cred, {
     'storageBucket': app.config['BUCKET_NAME']
 })
 snap = midtransclient.Snap(
-    is_production=False,
+    is_production=app.config['IS_PRODUCTION'],
     server_key=''
 )
 db = firestore.client()
 bucket = storage.bucket()
 
-COLLECTION_TRANSACTIONS = 'transactions'
-COLLECTION_PAYMENTS = 'payments'
-COLLECTION_HOSPITALS = 'hospitals'
-COLLECTION_HOSPITAL_ROOM = 'hospital_rooms'
-COLLECTION_USERS = 'users'
+if app.config['IS_PRODUCTION']:
+    COLLECTION_TRANSACTIONS = 'transactions'
+    COLLECTION_PAYMENTS = 'payments'
+    COLLECTION_HOSPITALS = 'hospitals'
+    COLLECTION_HOSPITAL_ROOM = 'hospital_rooms'
+    COLLECTION_USERS = 'users'
+else:
+    COLLECTION_TRANSACTIONS = 'transactions_test'
+    COLLECTION_PAYMENTS = 'payments_test'
+    COLLECTION_HOSPITALS = 'hospitals_test'
+    COLLECTION_HOSPITAL_ROOM = 'hospital_rooms_test'
+    COLLECTION_USERS = 'users_test'
 
 
 class TransactionStatus(enum.Enum):
@@ -158,28 +168,6 @@ def validate_data_not_none(data):
 
 # ============================ Auth API ==================================
 
-@app.route('/hospital/<id>/generate-token', methods=['POST'])
-def generate_hospital_token(id):
-    hospital_ref = db.collection('hospitals').document(id)
-    hospital = hospital_ref.get()
-    if hospital.exists:
-        hospital_data = hospital.to_dict()
-
-        if 'token' in hospital_data:
-            db.collection('blacklisted_token').document(hospital_data['token']).set({})
-
-        iat = get_current_timestamp()
-        encoded_jwt = jwt.encode({
-            'hospital_id': id,
-            'iat': iat
-        }, app.config['SECRET_KEY'])
-        token = encoded_jwt.decode('UTF-8')
-        hospital_ref.update({'token': token})
-
-        return jsonify(token=token, iat=iat), 200
-
-    raise werkzeug.exceptions.NotFound()
-
 
 def token_required(f):
     @wraps(f)
@@ -209,17 +197,13 @@ def hospital_token_required(f):
 
         if not token:
             raise werkzeug.exceptions.Unauthorized('A valid token is missing.')
-
-        blacklisted = db.collection('blacklisted_token').document(token).get()
-        if blacklisted.exists:
-            raise werkzeug.exceptions.Unauthorized('Token is invalid.')
-
         try:
-            current_user = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            decoded_token = auth.verify_id_token(token)
+            if decoded_token['role'] != 'HOSPITAL':
+                raise Exception()
         except:
             raise werkzeug.exceptions.Unauthorized('Token is invalid.')
-
-        return f(current_user['hospital_id'], *args, **kwargs)
+        return f(decoded_token['uid'], *args, **kwargs)
 
     return decorator
 
@@ -315,6 +299,15 @@ def add_hospital():
     return get_success_create_response({
         'id': hospital_doc.id
     })
+
+
+@app.route('/hospital', methods=['GET'])
+@hospital_token_required
+def get_hospital(hospital_id):
+    hospital_doc = db.collection(COLLECTION_HOSPITALS).document(hospital_id).get()
+    validate_data_exists(hospital_doc)
+    hospital_response = hospital_doc.to_dict()
+    return get_success_response(hospital_response)
 
 
 # ====================== End of Hospital API =============================
@@ -783,4 +776,4 @@ def is_uploaded(verification_status):
 
 # port = int(os.environ.get('PORT', 80))
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6543, debug=True)
+    app.run(host='0.0.0.0', port=6543, debug=(not app.config['IS_PRODUCTION']))
