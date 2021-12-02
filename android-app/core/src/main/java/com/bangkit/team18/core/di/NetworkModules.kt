@@ -1,11 +1,11 @@
 package com.bangkit.team18.core.di
 
+import android.content.Context
 import com.bangkit.team18.core.BuildConfig
 import com.bangkit.team18.core.config.Constants
 import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
+import com.bangkit.team18.core.utils.NetworkUtils.getSslContext
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -16,9 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 val firebaseModule = module {
-  single { FirebaseFirestore.getInstance() }
   single { FirebaseAuth.getInstance() }
-  single { FirebaseStorage.getInstance() }
 }
 
 val dispatcherModule = module {
@@ -42,21 +40,28 @@ val networkModule = module {
   }
 
   fun provideOkHttpClient(
+    context: Context,
     loggingInterceptor: HttpLoggingInterceptor,
     authInterceptor: Interceptor
   ): OkHttpClient {
-    return OkHttpClient.Builder()
+    val sslContextWithTMF = getSslContext(context)
+    val okHttpClientBuilder = OkHttpClient.Builder()
       .addInterceptor(loggingInterceptor)
       .addInterceptor(authInterceptor)
+//      .connectionSpecs(listOf(ConnectionSpec.COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT))
       .connectTimeout(Constants.CONNECTION_TIMEOUT_SECOND, TimeUnit.SECONDS)
       .readTimeout(Constants.CONNECTION_TIMEOUT_SECOND, TimeUnit.SECONDS)
-      .build()
+
+    sslContextWithTMF.second?.let {
+      okHttpClientBuilder.sslSocketFactory(sslContextWithTMF.first.socketFactory, it)
+    }
+
+    return okHttpClientBuilder.build()
   }
 
   fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
       .baseUrl(BuildConfig.QHOPE_API_URL)
-//      .baseUrl("http://192.168.0.103:6543/")
       .addConverterFactory(GsonConverterFactory.create())
       .client(okHttpClient)
       .build()
@@ -64,6 +69,6 @@ val networkModule = module {
 
   single { provideLoggingInterceptor() }
   single { provideAuthInterceptor(get()) }
-  single { provideOkHttpClient(get(), get()) }
+  single { provideOkHttpClient(get(), get(), get()) }
   single { provideRetrofit(get()) }
 }

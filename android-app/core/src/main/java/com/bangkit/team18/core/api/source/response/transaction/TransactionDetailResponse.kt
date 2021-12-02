@@ -19,4 +19,6 @@ data class TransactionDetailResponse(
   var updated_at: Long? = null,
 
   var user: TransactionUserResponse? = null,
+
+  var referral_letter: UploadReferralLetterResponse? = null
 )

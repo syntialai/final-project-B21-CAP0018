@@ -2,7 +2,7 @@ package com.bangkit.team18.core.api.source.response.transaction
 
 data class TransactionUserResponse(
 
-  var birth_date: Int? = null,
+  var birth_date: Long? = null,
 
   var email: String? = null,
 

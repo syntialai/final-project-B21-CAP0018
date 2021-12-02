@@ -2,7 +2,7 @@ package com.bangkit.team18.qhope.ui.payment
 
 import android.content.Context
 import android.text.TextUtils
-import com.google.android.gms.common.internal.service.Common
+import com.bangkit.team18.core.BuildConfig
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
 import com.midtrans.sdk.corekit.core.PaymentType
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
@@ -11,7 +11,6 @@ import com.midtrans.sdk.corekit.models.snap.EnabledPayment
 import com.midtrans.sdk.corekit.models.snap.TransactionResult
 import com.midtrans.sdk.uikit.PaymentMethods
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
-
 
 class MidtransPayment(
   private val context: Context,
@@ -30,7 +29,7 @@ class MidtransPayment(
 
   fun setupPayments() {
     SdkUIFlowBuilder.init()
-      .setClientKey(Common.CLIENT_KEY.toString())
+      .setClientKey(BuildConfig.MIDTRANS_CLIENT_KEY)
       .setContext(context)
       .setTransactionFinishedCallback(getTransactionFinishedCallback())
       .setMerchantBaseUrl(com.midtrans.sdk.corekit.BuildConfig.BASE_URL)

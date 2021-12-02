@@ -11,7 +11,6 @@ import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import timber.log.Timber
 
-
 @ExperimentalCoroutinesApi
 class QHopeApplication : Application() {
 
