@@ -1,5 +1,6 @@
 package com.bangkit.team18.core.api.source.service
 
+import com.bangkit.team18.core.api.source.request.user.IdentityConfirmationRequest
 import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
 import com.bangkit.team18.core.api.source.response.user.UserResponse
 import com.bangkit.team18.core.config.ApiConstants
@@ -28,6 +29,11 @@ interface UserService {
   suspend fun uploadUserVerification(
     @Part ktp: MultipartBody.Part,
     @Part selfie: MultipartBody.Part
+  ): UserResponse
+
+  @POST(ApiConstants.USER_IDENTITY_VERIFICATION)
+  suspend fun confirmUserIdentity(
+    @Body identityConfirmationRequest: IdentityConfirmationRequest
   ): UserResponse
 
   @POST(ApiConstants.USER_SIGN_OUT)

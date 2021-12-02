@@ -6,6 +6,7 @@ import android.net.Uri
 import com.bangkit.team18.qhope.ui.login.view.LoginActivity
 import com.bangkit.team18.qhope.ui.main.view.MainActivity
 import com.bangkit.team18.qhope.ui.registration.view.IdVerificationActivity
+import com.bangkit.team18.qhope.ui.registration.view.IdentityConfirmationActivity
 import com.bangkit.team18.qhope.ui.registration.view.RegistrationActivity
 import com.bangkit.team18.qhope.ui.registration.view.VerificationResultActivity
 
@@ -36,6 +37,13 @@ object Router {
 
   fun goToIdVerification(context: Context) {
     val intent = Intent(context, IdVerificationActivity::class.java).apply {
+      flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    }
+    context.startActivity(intent)
+  }
+
+  fun goToIdentityConfirmation(context: Context) {
+    val intent = Intent(context, IdentityConfirmationActivity::class.java).apply {
       flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
     context.startActivity(intent)

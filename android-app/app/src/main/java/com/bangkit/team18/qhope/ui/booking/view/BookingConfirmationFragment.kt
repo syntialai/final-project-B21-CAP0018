@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bangkit.team18.core.data.mapper.DataMapper
 import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.utils.view.DataUtils
 import com.bangkit.team18.core.utils.view.FileUtil
@@ -137,7 +138,7 @@ class BookingConfirmationFragment :
         R.string.selected_room_type, roomType.name,
         hospitalName
       )
-      textViewBookingSelectedRoomPrice.text = viewModel.mapToFormattedPrice(roomType.price)
+      textViewBookingSelectedRoomPrice.text = DataMapper.toFormattedPrice(roomType.price)
     }
   }
 

@@ -15,8 +15,8 @@ abstract class UpdateDataWrapper<Response> {
     return flow {
       emit(ResponseWrapper.Loading<Boolean>())
       try {
-        doUpdate()
-        emit(ResponseWrapper.Success(true))
+        val response = doUpdate()
+        emit(ResponseWrapper.Success(response != null))
       } catch (throwable: Throwable) {
         emit(
           when {

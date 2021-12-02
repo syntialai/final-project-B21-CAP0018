@@ -1,5 +1,6 @@
 package com.bangkit.team18.qhope.ui.base.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
@@ -28,10 +29,12 @@ abstract class BaseViewModelWithAuth(
     _user.value = auth.currentUser
   }
 
-  fun saveIdToken() {
+  fun saveIdToken(onSuccessFetch: (() -> Unit)? = null) {
     _user.value?.let { safeUser ->
       safeUser.getIdToken(true).addOnSuccessListener { tokenResult ->
         authSharedPrefRepository.idToken = tokenResult.token.orEmpty()
+        Log.d("TOKEN", authSharedPrefRepository.idToken)
+        onSuccessFetch?.invoke()
       }
     }
   }

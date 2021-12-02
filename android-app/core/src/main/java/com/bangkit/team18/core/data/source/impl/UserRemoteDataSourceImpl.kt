@@ -1,5 +1,6 @@
 package com.bangkit.team18.core.data.source.impl
 
+import com.bangkit.team18.core.api.source.request.user.IdentityConfirmationRequest
 import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
 import com.bangkit.team18.core.api.source.response.user.UserResponse
 import com.bangkit.team18.core.api.source.service.UserService
@@ -43,6 +44,12 @@ class UserRemoteDataSourceImpl(
       MultipartBody.Part.createFormData("selfie", selfie.name.orEmpty(), selfieFileBody)
 
     return userService.uploadUserVerification(ktpFilePart, selfieFilePart)
+  }
+
+  override suspend fun confirmUserIdentity(
+    identityConfirmationRequest: IdentityConfirmationRequest
+  ): UserResponse {
+    return userService.confirmUserIdentity(identityConfirmationRequest)
   }
 }
 

@@ -1,5 +1,6 @@
 package com.bangkit.team18.core.domain.usecase.interactor
 
+import com.bangkit.team18.core.api.source.request.user.IdentityConfirmationRequest
 import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.domain.model.user.User
@@ -23,5 +24,11 @@ class UserInteractor(private val userRepository: UserRepository) : UserUseCase {
     selfie: File
   ): Flow<ResponseWrapper<Boolean>> {
     return userRepository.uploadUserVerification(ktp, selfie)
+  }
+
+  override suspend fun confirmUserIdentity(
+    identityConfirmationRequest: IdentityConfirmationRequest
+  ): Flow<ResponseWrapper<Boolean>> {
+    return userRepository.confirmUserIdentity(identityConfirmationRequest)
   }
 }

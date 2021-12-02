@@ -10,22 +10,38 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:padding="@dimen/dp_16"
+        android:paddingVertical="@dimen/dp_16"
         tools:context=".ui.history.view.HistoryDetailFragment">
+
+        <com.bangkit.team18.qhope.ui.widget.BannerInfo
+            android:id="@+id/banner_info_continue_payment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:button_visible="false"
+            app:button_label="@string/pay_label"
+            app:description="@string/continue_payment_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
         <include
             android:id="@+id/layout_history_detail_booking_data"
             layout="@layout/layout_history_detail_booking_data"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginHorizontal="@dimen/dp_16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/banner_info_continue_payment" />
 
         <include
             android:id="@+id/layout_history_detail_user_data"
             layout="@layout/layout_history_detail_user_data"
             android:layout_width="match_parent"
+            android:layout_marginHorizontal="@dimen/dp_16"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_16"
             app:layout_constraintEnd_toEndOf="parent"

@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.bangkit.team18.core.api.source.request.transaction.CreateTransactionRequest
-import com.bangkit.team18.core.data.mapper.DataMapper
 import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.domain.model.booking.BookedHospital
 import com.bangkit.team18.core.domain.model.booking.BookingDetail
@@ -64,8 +63,6 @@ class BookingConfirmationViewModel(
     _bookingDetail.value?.selectedDateTime?.get(Calendar.HOUR),
     _bookingDetail.value?.selectedDateTime?.get(Calendar.MINUTE)
   )
-
-  fun mapToFormattedPrice(price: Double): String = DataMapper.toFormattedPrice(price)
 
   fun setBookingDetail(hospital: BookedHospital, selectedRoomType: RoomType) {
     _bookingDetail.value = BookingDetail(hospital, selectedRoomType)
