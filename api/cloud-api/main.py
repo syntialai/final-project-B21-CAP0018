@@ -12,6 +12,7 @@ from marshmallow import Schema, fields, ValidationError, EXCLUDE, validates_sche
 from werkzeug.exceptions import HTTPException
 from flask_cors import CORS
 
+ASSETS_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'cdf1791e499190767ec7267f2a1b1f8e'
@@ -703,30 +704,11 @@ def identity_verification(uid):
     ktp = file_schema.get('ktp')
     selfie = file_schema.get('selfie')
     user_ref = db.collection(COLLECTION_USERS).document(uid)
+    user_doc = user_ref.get()
+    validate_data_exists(user_doc)
     check_user = user_ref.get().to_dict()
-    # print(uid, ktp, selfie)
-    # print(check_user['verification_status'])
+
     if is_uploaded(check_user['verification_status']):
-        # resource_string = context.resource
-        # userId = resource_string.split("/")[-1]  # This is the userId
-        # oldVerificationStatus = event["oldValue"]["fields"]["verification_status"]["stringValue"]
-        # verificationStatus = event["value"]["fields"]["verification_status"]["stringValue"]  # This is the verification_status
-        # ktpUrl = event["value"]["fields"]["ktp_url"]["stringValue"]
-        # selfieUrl = event["value"]["fields"]["selfie_url"]["stringValue"]
-        ktp_url = {"ktp": (ktp.filename, ktp.stream, ktp.mimetype)}
-        selfie_url = {"selfie": (selfie.filename, selfie.stream, selfie.mimetype)}
-        print(ktp_url, selfie_url)
-        # r1 = requests.request("POST", url="http://34.101.241.255:4321/", files=ktp_url)
-        # r2 = requests.request("POST", url="http://34.101.241.255:4321/", files=selfie_url)
-
-        r1 = requests.post("http://34.101.241.255:4321/", ktp_url)
-        r2 = requests.post("http://34.101.241.255:4321/", selfie_url)
-
-        # payload = {'userId': uid, 'ktp':ktp, 'selfie':selfie}
-        print(uid, ktp, selfie)
-        # r = requests.request("POST", url="http://34.101.241.255:4321/register", json=payload)
-        print(f"Changed by user: {uid} with status {'verification_status'}, data ktp : {ktp}, data selfie: {selfie}")
-
         raise werkzeug.exceptions.BadRequest("Your files has been uploaded.")
     if is_verified(check_user['verification_status']):
         raise werkzeug.exceptions.BadRequest("Your files has been verified.")
@@ -735,24 +717,46 @@ def identity_verification(uid):
     if selfie.content_type.split('/')[0] != 'image':
         raise werkzeug.exceptions.BadRequest("Selfie should be an image.")
 
-    raise werkzeug.exceptions.BadRequest("Server currently can't process your request.")
-    # user = {'verification_status': VerificationStatus.UPLOADED.name}
-    # filename, ktp_file_extension = os.path.splitext(ktp.filename)
-    # blob = bucket.blob(f'user_data/{uid}/ktp{ktp_file_extension}')
-    # blob.upload_from_file(ktp)
-    # blob.make_public()
-    # user['ktp_url'] = blob.public_url
-    # filename, selfie_file_extension = os.path.splitext(selfie.filename)
-    # blob = bucket.blob(f'user_data/{uid}/selfie{selfie_file_extension}')
-    # blob.upload_from_file(selfie)
-    # blob.make_public()
-    # user['selfie_url'] = blob.public_url
+    file_ktp = (ktp.filename, ktp.stream, ktp.mimetype)
+    file_selfie = (selfie.filename, selfie.stream, selfie.mimetype)
+    identify = requests.post("http://34.101.241.255:4321/register", files={'ktp': file_ktp, 'selfie': file_selfie})
+    if identify.status_code != 200:
+        raise werkzeug.exceptions.BadRequest("KTP and Selfie can't be verified")
+    data = identify.json()
+    if data['face_verification'] == VerificationStatus.REJECTED.name:
+        raise werkzeug.exceptions.BadRequest("KTP and Selfie not match.")
+
+    filename, ktp_file_extension = os.path.splitext(ktp.filename)
+    blob = bucket.blob(f'user_data/{uid}/ktp{ktp_file_extension}')
+    blob.upload_from_file(ktp, rewind=True)
+    blob.make_public()
+    ktp_url = blob.public_url
+    filename, selfie_file_extension = os.path.splitext(selfie.filename)
+    blob = bucket.blob(f'user_data/{uid}/selfie{selfie_file_extension}')
+    blob.upload_from_file(selfie, rewind=True)
+    blob.make_public()
+    selfie_url = blob.public_url
+
+    ktp_data = data['ktp_data']
+    user_ref.update({
+        'verification_status': VerificationStatus.ACCEPTED.name,
+        'ktp_url': ktp_url,
+        'selfie_url': selfie_url,
+        'nik': ktp_data['no_ktp'],
+        'birth_place': ktp_data['place_of_birth'],
+        'gender': ktp_data['gender'],
+        'birth_date': ktp_data['birth_date']
+    })
+
+    user = user_ref.get()
+    return jsonify(user.to_dict()), 200
 
 
 class IdentityConfirmationSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
+    nik = fields.String(required=True)
     name = fields.String(required=True)
     date_of_birth = fields.Integer(required=True)
     ktp_address = fields.String(required=True)
@@ -783,6 +787,7 @@ def identity_confirmation(uid):
     user_ref = db.collection(COLLECTION_USERS).document(uid)
     check_user = user_ref.get().to_dict()
 
+    nik = request_data.get('nik')
     name = request_data.get('name')
     date_of_birth = request_data.get('date_of_birth')
     ktp_address = request_data.get('ktp_address')
@@ -808,6 +813,7 @@ def identity_confirmation(uid):
         raise werkzeug.exceptions.BadRequest('Invalid religion.')
 
     to_be_update = {
+        'nik': nik,
         'name': name,
         'date_of_birth': date_of_birth,
         'ktp_address': ktp_address,
