@@ -3,6 +3,7 @@ import jwt
 import werkzeug
 import os
 import midtransclient
+import requests
 from datetime import datetime
 from functools import wraps
 from firebase_admin import credentials, firestore, initialize_app, auth, storage
@@ -91,7 +92,6 @@ class Religion(enum.Enum):
     HINDU = 3
     BUDDHA = 4
     CONFUCIANISM = 5
-
     @classmethod
     def has_key(cls, name):
         return name in cls.__members__
@@ -104,7 +104,7 @@ def get_success_response(response):
 def get_success_create_response(response):
     return jsonify(response), 201
 
-
+  
 def get_current_timestamp():
     return int(datetime.now().timestamp())
 
@@ -163,8 +163,13 @@ def validate_data_not_none(data):
         raise werkzeug.exceptions.BadRequest('Request param data can\'t be none')
 
 
-# ===================== End of Error handling ============================
+@app.errorhandler(Exception)
+def handle_exception(error):
+    return jsonify(
+        message=error.__str__()
+    ), 500
 
+# ===================== End of Error handling ============================
 
 # ============================ Auth API ==================================
 
@@ -402,6 +407,7 @@ def create_transaction(user_id):
         'id': transaction_doc.id
     })
 
+    raise werkzeug.exceptions.NotFound()
 
 @app.route('/transactions/<id>', methods=['GET'])
 def get_transaction_by_id(id):
@@ -641,10 +647,8 @@ def update_user(uid):
 class IdentityVerificationSchema(Schema):
     class Meta:
         unknown = EXCLUDE
-
     ktp = fields.Raw(type='file', required=True)
     selfie = fields.Raw(type='file', required=True)
-
 
 @app.route('/user/identity-verification', methods=['POST'])
 @token_required
@@ -655,8 +659,29 @@ def identity_verification(uid):
     selfie = file_schema.get('selfie')
     user_ref = db.collection(COLLECTION_USERS).document(uid)
     check_user = user_ref.get().to_dict()
-
+    # print(uid, ktp, selfie)
+    # print(check_user['verification_status'])
     if is_uploaded(check_user['verification_status']):
+        # resource_string = context.resource
+        # userId = resource_string.split("/")[-1]  # This is the userId
+        # oldVerificationStatus = event["oldValue"]["fields"]["verification_status"]["stringValue"]
+        # verificationStatus = event["value"]["fields"]["verification_status"]["stringValue"]  # This is the verification_status
+        # ktpUrl = event["value"]["fields"]["ktp_url"]["stringValue"]
+        # selfieUrl = event["value"]["fields"]["selfie_url"]["stringValue"]
+        ktp_url = {"ktp": (ktp.filename, ktp.stream, ktp.mimetype)}
+        selfie_url = {"selfie": (selfie.filename, selfie.stream, selfie.mimetype)}
+        print(ktp_url, selfie_url)
+        # r1 = requests.request("POST", url="http://34.101.241.255:4321/", files=ktp_url)
+        # r2 = requests.request("POST", url="http://34.101.241.255:4321/", files=selfie_url)
+
+        r1 = requests.post("http://34.101.241.255:4321/", ktp_url)
+        r2 = requests.post("http://34.101.241.255:4321/", selfie_url)
+
+        # payload = {'userId': uid, 'ktp':ktp, 'selfie':selfie}
+        print(uid, ktp, selfie)
+        # r = requests.request("POST", url="http://34.101.241.255:4321/register", json=payload)
+        print(f"Changed by user: {uid} with status {'verification_status'}, data ktp : {ktp}, data selfie: {selfie}")
+
         raise werkzeug.exceptions.BadRequest("Your files has been uploaded.")
     if is_verified(check_user['verification_status']):
         raise werkzeug.exceptions.BadRequest("Your files has been verified.")
