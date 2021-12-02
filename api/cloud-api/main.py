@@ -339,6 +339,14 @@ def update_hospital_room(hospital_id, room_id):
     })
 
 
+@app.route('/hospital', methods=['GET'])
+@hospital_token_required
+def get_hospital(hospital_id):
+    hospital_doc = db.collection(COLLECTION_HOSPITALS).document(hospital_id).get()
+    validate_data_exists(hospital_doc)
+    hospital_response = hospital_doc.to_dict()
+    return get_success_response(hospital_response)
+
 # ====================== End of Hospital API =============================
 
 
