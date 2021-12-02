@@ -201,11 +201,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
           chipVerificationStatusNotVerified.remove()
           chipVerificationStatusVerified.remove()
           buttonVerificationStatus.setOnClickListener {
-            Router.goToIdVerification(mContext)
+            goToIdVerification()
           }
         }
       }
     }
+  }
+
+  private fun goToIdVerification() {
+    findNavController().navigate(
+      HomeFragmentDirections.actionHomeFragmentToProfileIdVerificationFragment2())
   }
 
   private fun setupRecyclerView() {

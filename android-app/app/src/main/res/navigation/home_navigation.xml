@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_hospitalDetailFragment"
             app:destination="@id/hospitalDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_profileIdVerificationFragment2"
+            app:destination="@id/profileIdVerificationFragment2" />
     </fragment>
 
     <fragment
@@ -47,4 +50,9 @@
         app:launchSingleTop="true"
         app:popUpTo="@id/homeFragment"
         app:popUpToInclusive="true" />
+    <fragment
+        android:id="@+id/profileIdVerificationFragment2"
+        android:name="com.bangkit.team18.qhope.ui.profile.view.ProfileIdVerificationFragment"
+        android:label="fragment_profile_id_verification"
+        tools:layout="@layout/fragment_profile_id_verification" />
 </navigation>
