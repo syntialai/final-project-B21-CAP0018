@@ -287,12 +287,12 @@ def get_hospital_by_id(uid, id):
 
 @app.route('/hospital/rooms', methods=['GET'])
 @hospital_token_required
-def get_hospital_room(hospital_id):
+def get_hospital_rooms(hospital_id):
     rooms_collection = db.collection(COLLECTION_HOSPITAL_ROOM).where('hospital_id', '==', hospital_id).stream()
     rooms = []
     for room_doc in rooms_collection:
         room = room_doc.to_dict()
-        room['id'] = room_doc['id']
+        room['id'] = room_doc.id
         rooms.append(room)
 
     return get_success_response(rooms)
