@@ -272,13 +272,13 @@ def get_all_hospitals(uid):
 
 @app.route('/hospitals/<id>', methods=['GET'])
 @token_required
-def get_hospital_by_id(id):
+def get_hospital_by_id(uid, id):
     hospital_doc = db.collection(COLLECTION_HOSPITALS).document(id).get()
+    validate_data_exists(hospital_doc)
     room_type_docs = db.collection(COLLECTION_HOSPITAL_ROOM).where('hospital_id', '==', id).stream()
 
-    validate_data_exists(hospital_doc)
-
     hospital_response = hospital_doc.to_dict()
+    hospital_response['id'] = hospital_doc.id
     hospital_response['room_types'] = map_to_dictionaries(room_type_docs)
 
     return get_success_response(hospital_response)
