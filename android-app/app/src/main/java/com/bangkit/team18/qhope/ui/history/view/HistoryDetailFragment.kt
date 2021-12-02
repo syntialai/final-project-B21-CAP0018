@@ -1,5 +1,6 @@
 package com.bangkit.team18.qhope.ui.history.view
 
+import android.content.Context
 import android.view.View
 import androidx.core.content.ContextCompat.getColor
 import androidx.navigation.fragment.findNavController
@@ -12,6 +13,9 @@ import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentHistoryDetailBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.history.viewmodel.HistoryDetailViewModel
+import com.bangkit.team18.qhope.ui.home.view.HomeFragmentDirections
+import com.bangkit.team18.qhope.ui.payment.MidtransPayment
+import com.bangkit.team18.qhope.ui.payment.PaymentStatusListener
 import com.bangkit.team18.qhope.ui.widget.callback.OnBannerActionButtonClickListener
 import com.bangkit.team18.qhope.utils.Router
 import com.bumptech.glide.Glide
@@ -19,9 +23,16 @@ import com.bumptech.glide.Glide
 class HistoryDetailFragment :
   BaseFragment<FragmentHistoryDetailBinding, HistoryDetailViewModel>(
     FragmentHistoryDetailBinding::inflate, HistoryDetailViewModel::class
-  ), OnBannerActionButtonClickListener {
+  ), OnBannerActionButtonClickListener, PaymentStatusListener {
 
   private val args: HistoryDetailFragmentArgs by navArgs()
+
+  private var midtransPayment: MidtransPayment? = null
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    midtransPayment = MidtransPayment(context, this)
+  }
 
   override fun setupViews() {
     binding.apply {
@@ -71,7 +82,24 @@ class HistoryDetailFragment :
   }
 
   override fun onBannerButtonClicked() {
-    TODO("Not yet implemented")
+    midtransPayment?.setupPayments()
+  }
+
+  override fun onPaymentSuccess(transactionId: String) {
+    viewModel.fetchUserBookingHistory()
+  }
+
+  override fun onPaymentPending(transactionId: String) {
+    // TODO
+  }
+
+  override fun onPaymentFailed(statusMessage: String) {
+    showErrorToast(statusMessage, R.string.unknown_error_message)
+  }
+
+  override fun onPaymentCancelled() {
+    showErrorToast(null, R.string.payment_cancelled_message)
+    goToHome()
   }
 
   override fun showLoadingState(isLoading: Boolean) {
@@ -80,6 +108,10 @@ class HistoryDetailFragment :
       layoutHistoryDetailBookingData.root.showOrRemove(isLoading.not())
       layoutHistoryDetailUserData.root.showOrRemove(isLoading.not())
     }
+  }
+
+  private fun goToHome() {
+    findNavController().navigate(HomeFragmentDirections.actionGlobalHomeFragment())
   }
 
   private fun goToHospitalDetail() {
