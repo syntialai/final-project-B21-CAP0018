@@ -10,26 +10,36 @@ from firebase_admin import credentials, firestore, initialize_app, auth, storage
 from flask import Flask, request, jsonify
 from marshmallow import Schema, fields, ValidationError, EXCLUDE, validates_schema, validate
 from werkzeug.exceptions import HTTPException
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 app.config['SECRET_KEY'] = 'cdf1791e499190767ec7267f2a1b1f8e'
 app.config['BUCKET_NAME'] = 'q-hope.appspot.com'
+app.config['IS_PRODUCTION'] = False
 cred = credentials.Certificate('q-hope-cred.json')
 default_app = initialize_app(cred, {
     'storageBucket': app.config['BUCKET_NAME']
 })
 snap = midtransclient.Snap(
-    is_production=False,
+    is_production=app.config['IS_PRODUCTION'],
     server_key=''
 )
 db = firestore.client()
 bucket = storage.bucket()
 
-COLLECTION_TRANSACTIONS = 'transactions'
-COLLECTION_PAYMENTS = 'payments'
-COLLECTION_HOSPITALS = 'hospitals'
-COLLECTION_HOSPITAL_ROOM = 'hospital_rooms'
-COLLECTION_USERS = 'users'
+if app.config['IS_PRODUCTION']:
+    COLLECTION_TRANSACTIONS = 'transactions'
+    COLLECTION_PAYMENTS = 'payments'
+    COLLECTION_HOSPITALS = 'hospitals'
+    COLLECTION_HOSPITAL_ROOM = 'hospital_rooms'
+    COLLECTION_USERS = 'users'
+else:
+    COLLECTION_TRANSACTIONS = 'transactions_test'
+    COLLECTION_PAYMENTS = 'payments_test'
+    COLLECTION_HOSPITALS = 'hospitals_test'
+    COLLECTION_HOSPITAL_ROOM = 'hospital_rooms_test'
+    COLLECTION_USERS = 'users_test'
 
 
 class TransactionStatus(enum.Enum):
@@ -154,38 +164,21 @@ def validate_data_not_none(data):
         raise werkzeug.exceptions.BadRequest('Request param data can\'t be none')
 
 
+@app.errorhandler(Exception)
+def handle_exception(error):
+    return jsonify(
+        message=error.__str__()
+    ), 500
+
+
 # ===================== End of Error handling ============================
 
-
 # ============================ Auth API ==================================
-
-@app.route('/hospital/<id>/generate-token', methods=['POST'])
-def generate_hospital_token(id):
-    hospital_ref = db.collection('hospitals').document(id)
-    hospital = hospital_ref.get()
-    if hospital.exists:
-        hospital_data = hospital.to_dict()
-
-        if 'token' in hospital_data:
-            db.collection('blacklisted_token').document(hospital_data['token']).set({})
-
-        iat = get_current_timestamp()
-        encoded_jwt = jwt.encode({
-            'hospital_id': id,
-            'iat': iat
-        }, app.config['SECRET_KEY'])
-        token = encoded_jwt.decode('UTF-8')
-        hospital_ref.update({'token': token})
-
-        return jsonify(token=token, iat=iat), 200
-
-    raise werkzeug.exceptions.NotFound()
 
 
 def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
-        return f('nd20aiNuERWX8A8y79PCyeq56tq2', *args, **kwargs)
         token = None
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
@@ -205,29 +198,24 @@ def token_required(f):
 def hospital_token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
-        return f('12345', *args, **kwargs)
         token = None
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
 
         if not token:
             raise werkzeug.exceptions.Unauthorized('A valid token is missing.')
-
-        blacklisted = db.collection('blacklisted_token').document(token).get()
-        if blacklisted.exists:
-            raise werkzeug.exceptions.Unauthorized('Token is invalid.')
-
         try:
-            current_user = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            decoded_token = auth.verify_id_token(token)
+            if decoded_token['role'] != 'HOSPITAL':
+                raise Exception()
         except:
             raise werkzeug.exceptions.Unauthorized('Token is invalid.')
+        return f(decoded_token['uid'], *args, **kwargs)
 
-        return f(current_user['hospital_id'], *args, **kwargs)
     return decorator
 
 
 # ======================== End of Auth API ===============================
-
 
 # ========================== Hospital API ================================
 
@@ -254,12 +242,14 @@ class AddHospitalRoomSchema(Schema):
     total_room = fields.Integer(required=True)
     price = fields.Integer(required=True)
 
+
 class UpdateHospitalRoomSchema(Schema):
     available_room = fields.Integer(required=True)
 
+
 @app.route('/hospitals', methods=['GET'])
 @token_required
-def get_all_hospitals():
+def get_all_hospitals(uid):
     hospital_docs = db.collection(COLLECTION_HOSPITALS).stream()
     hospital_responses = []
     for hospital_doc in hospital_docs:
@@ -315,6 +305,7 @@ def add_hospital_room(hospital_id):
         'id': room_doc.id
     })
 
+
 @app.route('/hospital/rooms/<room_id>', methods=['POST'])
 @hospital_token_required
 def update_hospital_room(hospital_id, room_id):
@@ -330,7 +321,7 @@ def update_hospital_room(hospital_id, room_id):
     # validate_data_exists(roomdoctest)
     if not roomdoctest.exists:
         raise werkzeug.exceptions.NotFound('Data not found')
-    if doc_id['id'] != hospital_id:
+    if room_doc['id'] != hospital_id:
         raise werkzeug.exceptions.BadRequest('Access denied')
     # if roomdoctest['id'] != hospital_id:
     #     raise werkzeug.exceptions.BadRequest('Access denied')
@@ -594,7 +585,6 @@ def update_payment_status_by_id(id):
 
 # ======================== End of Payment API ============================
 
-
 # ============================= User API =================================
 
 @app.route('/user', methods=['GET'])
@@ -680,8 +670,9 @@ class IdentityVerificationSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
-    ktp = fields.Raw(type='file')
-    selfie = fields.Raw(type='file')
+    ktp = fields.Raw(type='file', required=True)
+    selfie = fields.Raw(type='file', required=True)
+
 
 @app.route('/user/identity-verification', methods=['POST'])
 @token_required
@@ -834,4 +825,4 @@ def is_uploaded(verification_status):
 
 # port = int(os.environ.get('PORT', 80))
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6543, debug=True)
+    app.run(host='0.0.0.0', port=6543, debug=(not app.config['IS_PRODUCTION']))
