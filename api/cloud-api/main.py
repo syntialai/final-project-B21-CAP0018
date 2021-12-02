@@ -255,7 +255,7 @@ def get_all_hospitals(uid):
     for hospital_doc in hospital_docs:
         hospital = hospital_doc.to_dict()
         hospital_response = {
-            'id': hospital_doc['id'],
+            'id': hospital_doc.id,
             'name': hospital['name'],
             'type': hospital['type'],
             'image': hospital['image'],
