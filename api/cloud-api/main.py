@@ -92,6 +92,7 @@ class Religion(enum.Enum):
     HINDU = 3
     BUDDHA = 4
     CONFUCIANISM = 5
+
     @classmethod
     def has_key(cls, name):
         return name in cls.__members__
@@ -104,7 +105,7 @@ def get_success_response(response):
 def get_success_create_response(response):
     return jsonify(response), 201
 
-  
+
 def get_current_timestamp():
     return int(datetime.now().timestamp())
 
@@ -169,6 +170,7 @@ def handle_exception(error):
         message=error.__str__()
     ), 500
 
+
 # ===================== End of Error handling ============================
 
 # ============================ Auth API ==================================
@@ -215,7 +217,6 @@ def hospital_token_required(f):
 
 # ======================== End of Auth API ===============================
 
-
 # ========================== Hospital API ================================
 
 class AddHospitalAddressGeopointSchema(Schema):
@@ -234,14 +235,16 @@ class AddHospitalAddressSchema(Schema):
     postalCode = fields.String(required=True)
 
 
-class AddHospitalSchema(Schema):
-    name = fields.String(required=True)
-    email = fields.Email(required=True)
-    type = fields.String()
-    image = fields.URL(required=True)
-    telephone = fields.String(required=True)
-    website = fields.URL()
-    address = fields.Dict(keys=fields.Str(), values=fields.Nested(AddHospitalAddressSchema()))
+class AddHospitalRoomSchema(Schema):
+    # id = fields.String()
+    type = fields.String(required=True)
+    available_room = fields.Integer(required=True)
+    total_room = fields.Integer(required=True)
+    price = fields.Integer(required=True)
+
+
+class UpdateHospitalRoomSchema(Schema):
+    available_room = fields.Integer(required=True)
 
 
 @app.route('/hospitals', methods=['GET'])
@@ -281,38 +284,59 @@ def get_hospital_by_id(id):
     return get_success_response(hospital_response)
 
 
-@app.route('/hospitals', methods=['POST'])
-@token_required
-def add_hospital():
-    add_hospital_schema = AddHospitalSchema()
-    hospital_request = add_hospital_schema.load(request.json)
+@app.route('/hospital/rooms', methods=['POST'])
+@hospital_token_required
+def add_hospital_room(hospital_id):
+    add_hospital_room_schema = AddHospitalRoomSchema()
+    room_request = add_hospital_room_schema.load(request.json)
 
-    hospital_doc = db.collection(COLLECTION_HOSPITALS).document()
-    hospital_doc.set({
-        'name': hospital_request['name'],
-        'image': hospital_request['image'],
-        'address': hospital_request['address'],
-        'type': hospital_request['type'],
-        'telephone': hospital_request['telephone'],
-        'website': hospital_request['website'],
-        'email': hospital_request['email'],
-        'available_room_count': 0,
-        'created_at': get_current_timestamp(),
-        'updated_at': get_current_timestamp()
+    room_doc = db.collection(COLLECTION_HOSPITAL_ROOM).document()
+    # print(room_doc.id)
+    # print(hospital_id)
+    room_doc.set({
+        'id': hospital_id,
+        'type': room_request['type'],
+        'available_room': room_request['available_room'],
+        'total_room': room_request['total_room'],
+        'price': room_request['price'],
     })
 
     return get_success_create_response({
-        'id': hospital_doc.id
+        'id': room_doc.id
     })
 
 
-@app.route('/hospital', methods=['GET'])
+@app.route('/hospital/rooms/<room_id>', methods=['POST'])
 @hospital_token_required
-def get_hospital(hospital_id):
-    hospital_doc = db.collection(COLLECTION_HOSPITALS).document(hospital_id).get()
-    validate_data_exists(hospital_doc)
-    hospital_response = hospital_doc.to_dict()
-    return get_success_response(hospital_response)
+def update_hospital_room(hospital_id, room_id):
+    update_hospital_room_schema = UpdateHospitalRoomSchema()
+    room_request = update_hospital_room_schema.load(request.json)
+
+    room_doc = db.collection(COLLECTION_HOSPITAL_ROOM).document(room_id)
+
+    # print(room_doc.id)
+    # print(hospital_id)
+    roomdoctest = room_doc.get()
+    # token_hospital_id = db.collection(COLLECTION_HOSPITAL_ROOM).where('hospital_id', '==', id).stream()
+    # validate_data_exists(roomdoctest)
+    if not roomdoctest.exists:
+        raise werkzeug.exceptions.NotFound('Data not found')
+    if room_doc['id'] != hospital_id:
+        raise werkzeug.exceptions.BadRequest('Access denied')
+    # if roomdoctest['id'] != hospital_id:
+    #     raise werkzeug.exceptions.BadRequest('Access denied')
+
+    room_doc.update({
+        # 'id': hospital_id,
+        # 'type': room_request['type'],
+        # 'total_room': room_request['total_room'],
+        # 'price': room_request['price'],
+        'available_room': room_request['available_room']
+    })
+
+    return get_success_create_response({
+        'id': room_doc.id
+    })
 
 
 # ====================== End of Hospital API =============================
@@ -407,7 +431,6 @@ def create_transaction(user_id):
         'id': transaction_doc.id
     })
 
-    raise werkzeug.exceptions.NotFound()
 
 @app.route('/transactions/<id>', methods=['GET'])
 def get_transaction_by_id(id):
@@ -562,7 +585,6 @@ def update_payment_status_by_id(id):
 
 # ======================== End of Payment API ============================
 
-
 # ============================= User API =================================
 
 @app.route('/user', methods=['GET'])
@@ -647,8 +669,10 @@ def update_user(uid):
 class IdentityVerificationSchema(Schema):
     class Meta:
         unknown = EXCLUDE
+
     ktp = fields.Raw(type='file', required=True)
     selfie = fields.Raw(type='file', required=True)
+
 
 @app.route('/user/identity-verification', methods=['POST'])
 @token_required
