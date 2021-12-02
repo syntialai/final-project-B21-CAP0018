@@ -3,32 +3,43 @@ import jwt
 import werkzeug
 import os
 import midtransclient
+import requests
 from datetime import datetime
 from functools import wraps
 from firebase_admin import credentials, firestore, initialize_app, auth, storage
 from flask import Flask, request, jsonify
 from marshmallow import Schema, fields, ValidationError, EXCLUDE, validates_schema, validate
 from werkzeug.exceptions import HTTPException
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 app.config['SECRET_KEY'] = 'cdf1791e499190767ec7267f2a1b1f8e'
 app.config['BUCKET_NAME'] = 'q-hope.appspot.com'
+app.config['IS_PRODUCTION'] = False
 cred = credentials.Certificate('q-hope-cred.json')
 default_app = initialize_app(cred, {
     'storageBucket': app.config['BUCKET_NAME']
 })
 snap = midtransclient.Snap(
-    is_production=False,
+    is_production=app.config['IS_PRODUCTION'],
     server_key=''
 )
 db = firestore.client()
 bucket = storage.bucket()
 
-COLLECTION_TRANSACTIONS = 'transactions'
-COLLECTION_PAYMENTS = 'payments'
-COLLECTION_HOSPITALS = 'hospitals'
-COLLECTION_HOSPITAL_ROOM = 'hospital_rooms'
-COLLECTION_USERS = 'users'
+if app.config['IS_PRODUCTION']:
+    COLLECTION_TRANSACTIONS = 'transactions'
+    COLLECTION_PAYMENTS = 'payments'
+    COLLECTION_HOSPITALS = 'hospitals'
+    COLLECTION_HOSPITAL_ROOM = 'hospital_rooms'
+    COLLECTION_USERS = 'users'
+else:
+    COLLECTION_TRANSACTIONS = 'transactions_test'
+    COLLECTION_PAYMENTS = 'payments_test'
+    COLLECTION_HOSPITALS = 'hospitals_test'
+    COLLECTION_HOSPITAL_ROOM = 'hospital_rooms_test'
+    COLLECTION_USERS = 'users_test'
 
 
 class TransactionStatus(enum.Enum):
@@ -153,32 +164,16 @@ def validate_data_not_none(data):
         raise werkzeug.exceptions.BadRequest('Request param data can\'t be none')
 
 
+@app.errorhandler(Exception)
+def handle_exception(error):
+    return jsonify(
+        message=error.__str__()
+    ), 500
+
+
 # ===================== End of Error handling ============================
 
-
 # ============================ Auth API ==================================
-
-@app.route('/hospital/<id>/generate-token', methods=['POST'])
-def generate_hospital_token(id):
-    hospital_ref = db.collection('hospitals').document(id)
-    hospital = hospital_ref.get()
-    if hospital.exists:
-        hospital_data = hospital.to_dict()
-
-        if 'token' in hospital_data:
-            db.collection('blacklisted_token').document(hospital_data['token']).set({})
-
-        iat = get_current_timestamp()
-        encoded_jwt = jwt.encode({
-            'hospital_id': id,
-            'iat': iat
-        }, app.config['SECRET_KEY'])
-        token = encoded_jwt.decode('UTF-8')
-        hospital_ref.update({'token': token})
-
-        return jsonify(token=token, iat=iat), 200
-
-    raise werkzeug.exceptions.NotFound()
 
 
 def token_required(f):
@@ -209,23 +204,18 @@ def hospital_token_required(f):
 
         if not token:
             raise werkzeug.exceptions.Unauthorized('A valid token is missing.')
-
-        blacklisted = db.collection('blacklisted_token').document(token).get()
-        if blacklisted.exists:
-            raise werkzeug.exceptions.Unauthorized('Token is invalid.')
-
         try:
-            current_user = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            decoded_token = auth.verify_id_token(token)
+            if decoded_token['role'] != 'HOSPITAL':
+                raise Exception()
         except:
             raise werkzeug.exceptions.Unauthorized('Token is invalid.')
-
-        return f(current_user['hospital_id'], *args, **kwargs)
+        return f(decoded_token['uid'], *args, **kwargs)
 
     return decorator
 
 
 # ======================== End of Auth API ===============================
-
 
 # ========================== Hospital API ================================
 
@@ -245,14 +235,16 @@ class AddHospitalAddressSchema(Schema):
     postalCode = fields.String(required=True)
 
 
-class AddHospitalSchema(Schema):
-    name = fields.String(required=True)
-    email = fields.Email(required=True)
-    type = fields.String()
-    image = fields.URL(required=True)
-    telephone = fields.String(required=True)
-    website = fields.URL()
-    address = fields.Dict(keys=fields.Str(), values=fields.Nested(AddHospitalAddressSchema()))
+class AddHospitalRoomSchema(Schema):
+    # id = fields.String()
+    type = fields.String(required=True)
+    available_room = fields.Integer(required=True)
+    total_room = fields.Integer(required=True)
+    price = fields.Integer(required=True)
+
+
+class UpdateHospitalRoomSchema(Schema):
+    available_room = fields.Integer(required=True)
 
 
 @app.route('/hospitals', methods=['GET'])
@@ -292,30 +284,68 @@ def get_hospital_by_id(id):
     return get_success_response(hospital_response)
 
 
-@app.route('/hospitals', methods=['POST'])
-@token_required
-def add_hospital():
-    add_hospital_schema = AddHospitalSchema()
-    hospital_request = add_hospital_schema.load(request.json)
+@app.route('/hospital/rooms', methods=['POST'])
+@hospital_token_required
+def add_hospital_room(hospital_id):
+    add_hospital_room_schema = AddHospitalRoomSchema()
+    room_request = add_hospital_room_schema.load(request.json)
 
-    hospital_doc = db.collection(COLLECTION_HOSPITALS).document()
-    hospital_doc.set({
-        'name': hospital_request['name'],
-        'image': hospital_request['image'],
-        'address': hospital_request['address'],
-        'type': hospital_request['type'],
-        'telephone': hospital_request['telephone'],
-        'website': hospital_request['website'],
-        'email': hospital_request['email'],
-        'available_room_count': 0,
-        'created_at': get_current_timestamp(),
-        'updated_at': get_current_timestamp()
+    room_doc = db.collection(COLLECTION_HOSPITAL_ROOM).document()
+    # print(room_doc.id)
+    # print(hospital_id)
+    room_doc.set({
+        'id': hospital_id,
+        'type': room_request['type'],
+        'available_room': room_request['available_room'],
+        'total_room': room_request['total_room'],
+        'price': room_request['price'],
     })
 
     return get_success_create_response({
-        'id': hospital_doc.id
+        'id': room_doc.id
     })
 
+
+@app.route('/hospital/rooms/<room_id>', methods=['POST'])
+@hospital_token_required
+def update_hospital_room(hospital_id, room_id):
+    update_hospital_room_schema = UpdateHospitalRoomSchema()
+    room_request = update_hospital_room_schema.load(request.json)
+
+    room_doc = db.collection(COLLECTION_HOSPITAL_ROOM).document(room_id)
+
+    # print(room_doc.id)
+    # print(hospital_id)
+    roomdoctest = room_doc.get()
+    # token_hospital_id = db.collection(COLLECTION_HOSPITAL_ROOM).where('hospital_id', '==', id).stream()
+    # validate_data_exists(roomdoctest)
+    if not roomdoctest.exists:
+        raise werkzeug.exceptions.NotFound('Data not found')
+    if room_doc['id'] != hospital_id:
+        raise werkzeug.exceptions.BadRequest('Access denied')
+    # if roomdoctest['id'] != hospital_id:
+    #     raise werkzeug.exceptions.BadRequest('Access denied')
+
+    room_doc.update({
+        # 'id': hospital_id,
+        # 'type': room_request['type'],
+        # 'total_room': room_request['total_room'],
+        # 'price': room_request['price'],
+        'available_room': room_request['available_room']
+    })
+
+    return get_success_create_response({
+        'id': room_doc.id
+    })
+
+
+@app.route('/hospital', methods=['GET'])
+@hospital_token_required
+def get_hospital(hospital_id):
+    hospital_doc = db.collection(COLLECTION_HOSPITALS).document(hospital_id).get()
+    validate_data_exists(hospital_doc)
+    hospital_response = hospital_doc.to_dict()
+    return get_success_response(hospital_response)
 
 # ====================== End of Hospital API =============================
 
@@ -563,7 +593,6 @@ def update_payment_status_by_id(id):
 
 # ======================== End of Payment API ============================
 
-
 # ============================= User API =================================
 
 @app.route('/user', methods=['GET'])
@@ -662,8 +691,29 @@ def identity_verification(uid):
     selfie = file_schema.get('selfie')
     user_ref = db.collection(COLLECTION_USERS).document(uid)
     check_user = user_ref.get().to_dict()
-
+    # print(uid, ktp, selfie)
+    # print(check_user['verification_status'])
     if is_uploaded(check_user['verification_status']):
+        # resource_string = context.resource
+        # userId = resource_string.split("/")[-1]  # This is the userId
+        # oldVerificationStatus = event["oldValue"]["fields"]["verification_status"]["stringValue"]
+        # verificationStatus = event["value"]["fields"]["verification_status"]["stringValue"]  # This is the verification_status
+        # ktpUrl = event["value"]["fields"]["ktp_url"]["stringValue"]
+        # selfieUrl = event["value"]["fields"]["selfie_url"]["stringValue"]
+        ktp_url = {"ktp": (ktp.filename, ktp.stream, ktp.mimetype)}
+        selfie_url = {"selfie": (selfie.filename, selfie.stream, selfie.mimetype)}
+        print(ktp_url, selfie_url)
+        # r1 = requests.request("POST", url="http://34.101.241.255:4321/", files=ktp_url)
+        # r2 = requests.request("POST", url="http://34.101.241.255:4321/", files=selfie_url)
+
+        r1 = requests.post("http://34.101.241.255:4321/", ktp_url)
+        r2 = requests.post("http://34.101.241.255:4321/", selfie_url)
+
+        # payload = {'userId': uid, 'ktp':ktp, 'selfie':selfie}
+        print(uid, ktp, selfie)
+        # r = requests.request("POST", url="http://34.101.241.255:4321/register", json=payload)
+        print(f"Changed by user: {uid} with status {'verification_status'}, data ktp : {ktp}, data selfie: {selfie}")
+
         raise werkzeug.exceptions.BadRequest("Your files has been uploaded.")
     if is_verified(check_user['verification_status']):
         raise werkzeug.exceptions.BadRequest("Your files has been verified.")
@@ -783,4 +833,4 @@ def is_uploaded(verification_status):
 
 # port = int(os.environ.get('PORT', 80))
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6543, debug=True)
+    app.run(host='0.0.0.0', port=6543, debug=(not app.config['IS_PRODUCTION']))
