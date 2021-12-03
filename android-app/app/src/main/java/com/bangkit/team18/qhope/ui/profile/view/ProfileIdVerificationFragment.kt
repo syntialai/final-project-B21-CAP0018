@@ -51,7 +51,8 @@ class ProfileIdVerificationFragment :
 
     viewModel.isSubmitted.observe(viewLifecycleOwner, {
       if (it) {
-        findNavController().navigate(ProfileIdVerificationFragmentDirections.actionProfileIdVerificationFragmentToProfileVerificationResultFragment())
+        findNavController().navigate(ProfileIdVerificationFragmentDirections
+          .actionProfileIdVerificationFragmentToProfileVerificationResultFragment())
       }
     })
   }

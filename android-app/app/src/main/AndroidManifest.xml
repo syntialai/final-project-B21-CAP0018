@@ -46,6 +46,7 @@
         <activity android:name=".ui.registration.view.RegistrationActivity" />
         <activity android:name=".ui.registration.view.VerificationResultActivity" />
         <activity android:name=".ui.registration.view.IdVerificationActivity" />
+        <activity android:name=".ui.registration.view.IdentityConfirmationActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

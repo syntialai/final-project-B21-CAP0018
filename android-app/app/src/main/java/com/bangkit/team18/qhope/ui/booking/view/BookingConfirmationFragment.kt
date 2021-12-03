@@ -105,7 +105,7 @@ class BookingConfirmationFragment :
   }
 
   override fun onBannerButtonClicked() {
-    Router.goToIdVerification(mContext)
+    Router.goToIdVerification(mContext, false)
   }
 
   override fun goToHome() {
