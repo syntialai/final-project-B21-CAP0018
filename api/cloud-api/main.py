@@ -12,6 +12,7 @@ from marshmallow import Schema, fields, ValidationError, EXCLUDE, validates_sche
 from werkzeug.exceptions import HTTPException
 from flask_cors import CORS
 
+ASSETS_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'cdf1791e499190767ec7267f2a1b1f8e'
@@ -32,13 +33,13 @@ if app.config['IS_PRODUCTION']:
     COLLECTION_TRANSACTIONS = 'transactions'
     COLLECTION_PAYMENTS = 'payments'
     COLLECTION_HOSPITALS = 'hospitals'
-    COLLECTION_HOSPITAL_ROOM = 'hospital_rooms'
+    COLLECTION_HOSPITAL_ROOMS = 'hospital_rooms'
     COLLECTION_USERS = 'users'
 else:
     COLLECTION_TRANSACTIONS = 'transactions_test'
     COLLECTION_PAYMENTS = 'payments_test'
     COLLECTION_HOSPITALS = 'hospitals_test'
-    COLLECTION_HOSPITAL_ROOM = 'hospital_rooms_test'
+    COLLECTION_HOSPITAL_ROOMS = 'hospital_rooms_test'
     COLLECTION_USERS = 'users_test'
 
 
@@ -220,11 +221,15 @@ def hospital_token_required(f):
 # ========================== Hospital API ================================
 
 class AddHospitalAddressGeopointSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
     lat = fields.String(required=True)
     lng = fields.String(required=True)
 
 
 class AddHospitalAddressSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
     name = fields.String(required=True)
     geopoint = fields.Dict(keys=fields.Str(), values=fields.Nested(AddHospitalAddressGeopointSchema()))
     description = fields.String(required=True)
@@ -236,15 +241,20 @@ class AddHospitalAddressSchema(Schema):
 
 
 class AddHospitalRoomSchema(Schema):
-    # id = fields.String()
-    type = fields.String(required=True)
+    class Meta:
+        unknown = EXCLUDE
+    type = fields.String(required=True, validate=validate.Length(max=64))
     available_room = fields.Integer(required=True)
     total_room = fields.Integer(required=True)
     price = fields.Integer(required=True)
 
 
 class UpdateHospitalRoomSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
     available_room = fields.Integer(required=True)
+    total_room = fields.Integer(required=True)
+    price = fields.Integer(required=True)
 
 
 @app.route('/hospitals', methods=['GET'])
@@ -275,7 +285,7 @@ def get_all_hospitals(uid):
 def get_hospital_by_id(uid, id):
     hospital_doc = db.collection(COLLECTION_HOSPITALS).document(id).get()
     validate_data_exists(hospital_doc)
-    room_type_docs = db.collection(COLLECTION_HOSPITAL_ROOM).where('hospital_id', '==', id).stream()
+    room_type_docs = db.collection(COLLECTION_HOSPITAL_ROOMS).where('hospital_id', '==', id).stream()
 
     hospital_response = hospital_doc.to_dict()
     hospital_response['id'] = hospital_doc.id
@@ -286,12 +296,12 @@ def get_hospital_by_id(uid, id):
 
 @app.route('/hospital/rooms', methods=['GET'])
 @hospital_token_required
-def get_hospital_room(hospital_id):
-    rooms_collection = db.collection(COLLECTION_HOSPITAL_ROOM).where('hospital_id', '==', hospital_id).stream()
+def get_hospital_rooms(hospital_id):
+    rooms_collection = db.collection(COLLECTION_HOSPITAL_ROOMS).where('hospital_id', '==', hospital_id).stream()
     rooms = []
     for room_doc in rooms_collection:
         room = room_doc.to_dict()
-        room['id'] = room_doc['id']
+        room['id'] = room_doc.id
         rooms.append(room)
 
     return get_success_response(rooms)
@@ -302,54 +312,96 @@ def get_hospital_room(hospital_id):
 def add_hospital_room(hospital_id):
     add_hospital_room_schema = AddHospitalRoomSchema()
     room_request = add_hospital_room_schema.load(request.json)
-
-    room_doc = db.collection(COLLECTION_HOSPITAL_ROOM).document()
-    # print(room_doc.id)
-    # print(hospital_id)
+    room_type = room_request['type'].strip().upper()
+    total_room = room_request['total_room']
+    available_room = room_request['available_room']
+    check_room = db.collection(COLLECTION_HOSPITAL_ROOMS).where('hospital_id', '==', hospital_id) \
+        .where('type', '==', room_type).get()
+    if check_room:
+        raise werkzeug.exceptions.BadRequest('Room with given type already exists.')
+    if len(room_type) == 0:
+        raise werkzeug.exceptions.BadRequest('Room type cannot be empty.')
+    if total_room < available_room:
+        raise werkzeug.exceptions.BadRequest('Available room must be less than Total Room.')
+    room_doc = db.collection(COLLECTION_HOSPITAL_ROOMS).document()
     room_doc.set({
-        'id': hospital_id,
-        'type': room_request['type'],
-        'available_room': room_request['available_room'],
-        'total_room': room_request['total_room'],
+        'hospital_id': hospital_id,
+        'type': room_type,
+        'available_room': available_room,
+        'total_room': total_room,
         'price': room_request['price'],
+        'created_at': get_current_timestamp(),
+        'updated_at': get_current_timestamp()
+    })
+    hospital_ref = db.collection(COLLECTION_HOSPITALS).document(hospital_id)
+    hospital = hospital_ref.get().to_dict()
+    hospital_ref.update({
+        'available_room_count': hospital['available_room_count'] + 1,
+        'updated_at': get_current_timestamp()
     })
 
     return get_success_create_response({
         'id': room_doc.id
     })
+
+
+@app.route('/hospital/rooms/<room_id>', methods=['GET'])
+@hospital_token_required
+def get_hospital_room(hospital_id, room_id):
+    room_ref = db.collection(COLLECTION_HOSPITAL_ROOMS).document(room_id)
+    room_doc = room_ref.get()
+    validate_data_exists(room_doc)
+    room = room_doc.to_dict()
+    if room['hospital_id'] != hospital_id:
+        raise werkzeug.exceptions.NotFound()
+    return get_success_response(room)
 
 
 @app.route('/hospital/rooms/<room_id>', methods=['POST'])
 @hospital_token_required
 def update_hospital_room(hospital_id, room_id):
-    update_hospital_room_schema = UpdateHospitalRoomSchema()
+    update_hospital_room_schema = AddHospitalRoomSchema()
     room_request = update_hospital_room_schema.load(request.json)
-
-    room_doc = db.collection(COLLECTION_HOSPITAL_ROOM).document(room_id)
-
-    # print(room_doc.id)
-    # print(hospital_id)
-    roomdoctest = room_doc.get()
-    # token_hospital_id = db.collection(COLLECTION_HOSPITAL_ROOM).where('hospital_id', '==', id).stream()
-    # validate_data_exists(roomdoctest)
-    if not roomdoctest.exists:
-        raise werkzeug.exceptions.NotFound('Data not found')
-    if room_doc['id'] != hospital_id:
-        raise werkzeug.exceptions.BadRequest('Access denied')
-    # if roomdoctest['id'] != hospital_id:
-    #     raise werkzeug.exceptions.BadRequest('Access denied')
-
-    room_doc.update({
-        # 'id': hospital_id,
-        # 'type': room_request['type'],
-        # 'total_room': room_request['total_room'],
-        # 'price': room_request['price'],
-        'available_room': room_request['available_room']
+    room_type = room_request['type'].strip().upper()
+    total_room = room_request['total_room']
+    available_room = room_request['available_room']
+    room_ref = db.collection(COLLECTION_HOSPITAL_ROOMS).document(room_id)
+    check_room = room_ref.get()
+    validate_data_exists(check_room)
+    check_rooms = db.collection(COLLECTION_HOSPITAL_ROOMS).where('hospital_id', '==', hospital_id) \
+        .where('type', '==', room_type).stream()
+    for room_doc in check_rooms:
+        if room_doc.id != room_id:
+            raise werkzeug.exceptions.BadRequest('Room with given type already exists.')
+    if check_room.to_dict()['hospital_id'] != hospital_id:
+        raise werkzeug.exceptions.NotFound()
+    if total_room < available_room:
+        raise werkzeug.exceptions.BadRequest('Available room must be less than Total Room.')
+    room_ref.update({
+        'type': room_type,
+        'available_room': available_room,
+        'total_room': total_room,
+        'price': room_request['price'],
+        'updated_at': get_current_timestamp()
     })
 
     return get_success_create_response({
-        'id': room_doc.id
+        'id': room_id
     })
+
+
+# Maybe no need delete
+# @app.route('/hospital/rooms/<room_id>', methods=['DELETE'])
+# @hospital_token_required
+# def delete_hospital_room(hospital_id, room_id):
+#     room_ref = db.collection(COLLECTION_HOSPITAL_ROOM).document(room_id)
+#     room_doc = room_ref.get()
+#     validate_data_exists(room_doc)
+#     room = room_doc.to_dict()
+#     if room['hospital_id'] != hospital_id:
+#         raise werkzeug.exceptions.NotFound()
+#     room_ref.delete()
+#     return jsonify(message="Room deleted successfully"), 200
 
 
 @app.route('/hospital', methods=['GET'])
@@ -359,6 +411,7 @@ def get_hospital(hospital_id):
     validate_data_exists(hospital_doc)
     hospital_response = hospital_doc.to_dict()
     return get_success_response(hospital_response)
+
 
 # ====================== End of Hospital API =============================
 
@@ -405,7 +458,7 @@ def create_transaction(user_id):
 
     hospital_doc = db.collection(COLLECTION_HOSPITALS).document(hospital_id).get()
     user_doc = db.collection(COLLECTION_USERS).document(user_id).get()
-    hospital_room_doc = db.collection(COLLECTION_HOSPITAL_ROOM).document(room_type_id).get()
+    hospital_room_doc = db.collection(COLLECTION_HOSPITAL_ROOMS).document(room_type_id).get()
     transaction_doc = db.collection(COLLECTION_TRANSACTIONS).document()
     payment_doc = db.collection(COLLECTION_PAYMENTS).document()
 
@@ -703,30 +756,11 @@ def identity_verification(uid):
     ktp = file_schema.get('ktp')
     selfie = file_schema.get('selfie')
     user_ref = db.collection(COLLECTION_USERS).document(uid)
+    user_doc = user_ref.get()
+    validate_data_exists(user_doc)
     check_user = user_ref.get().to_dict()
-    # print(uid, ktp, selfie)
-    # print(check_user['verification_status'])
+
     if is_uploaded(check_user['verification_status']):
-        # resource_string = context.resource
-        # userId = resource_string.split("/")[-1]  # This is the userId
-        # oldVerificationStatus = event["oldValue"]["fields"]["verification_status"]["stringValue"]
-        # verificationStatus = event["value"]["fields"]["verification_status"]["stringValue"]  # This is the verification_status
-        # ktpUrl = event["value"]["fields"]["ktp_url"]["stringValue"]
-        # selfieUrl = event["value"]["fields"]["selfie_url"]["stringValue"]
-        ktp_url = {"ktp": (ktp.filename, ktp.stream, ktp.mimetype)}
-        selfie_url = {"selfie": (selfie.filename, selfie.stream, selfie.mimetype)}
-        print(ktp_url, selfie_url)
-        # r1 = requests.request("POST", url="http://34.101.241.255:4321/", files=ktp_url)
-        # r2 = requests.request("POST", url="http://34.101.241.255:4321/", files=selfie_url)
-
-        r1 = requests.post("http://34.101.241.255:4321/", ktp_url)
-        r2 = requests.post("http://34.101.241.255:4321/", selfie_url)
-
-        # payload = {'userId': uid, 'ktp':ktp, 'selfie':selfie}
-        print(uid, ktp, selfie)
-        # r = requests.request("POST", url="http://34.101.241.255:4321/register", json=payload)
-        print(f"Changed by user: {uid} with status {'verification_status'}, data ktp : {ktp}, data selfie: {selfie}")
-
         raise werkzeug.exceptions.BadRequest("Your files has been uploaded.")
     if is_verified(check_user['verification_status']):
         raise werkzeug.exceptions.BadRequest("Your files has been verified.")
@@ -735,24 +769,47 @@ def identity_verification(uid):
     if selfie.content_type.split('/')[0] != 'image':
         raise werkzeug.exceptions.BadRequest("Selfie should be an image.")
 
-    raise werkzeug.exceptions.BadRequest("Server currently can't process your request.")
-    # user = {'verification_status': VerificationStatus.UPLOADED.name}
-    # filename, ktp_file_extension = os.path.splitext(ktp.filename)
-    # blob = bucket.blob(f'user_data/{uid}/ktp{ktp_file_extension}')
-    # blob.upload_from_file(ktp)
-    # blob.make_public()
-    # user['ktp_url'] = blob.public_url
-    # filename, selfie_file_extension = os.path.splitext(selfie.filename)
-    # blob = bucket.blob(f'user_data/{uid}/selfie{selfie_file_extension}')
-    # blob.upload_from_file(selfie)
-    # blob.make_public()
-    # user['selfie_url'] = blob.public_url
+    file_ktp = (ktp.filename, ktp.stream, ktp.mimetype)
+    file_selfie = (selfie.filename, selfie.stream, selfie.mimetype)
+    identify = requests.post("http://34.101.241.255:4321/register", files={'ktp': file_ktp, 'selfie': file_selfie})
+    if identify.status_code != 200:
+        raise werkzeug.exceptions.BadRequest("KTP and Selfie can't be verified")
+    data = identify.json()
+    if data['face_verification'] == VerificationStatus.REJECTED.name:
+        raise werkzeug.exceptions.BadRequest("KTP and Selfie not match.")
+
+    filename, ktp_file_extension = os.path.splitext(ktp.filename)
+    blob = bucket.blob(f'user_data/{uid}/ktp{ktp_file_extension}')
+    blob.upload_from_file(ktp, rewind=True)
+    blob.make_public()
+    ktp_url = blob.public_url
+    filename, selfie_file_extension = os.path.splitext(selfie.filename)
+    blob = bucket.blob(f'user_data/{uid}/selfie{selfie_file_extension}')
+    blob.upload_from_file(selfie, rewind=True)
+    blob.make_public()
+    selfie_url = blob.public_url
+
+    ktp_data = data['ktp_data']
+    user_ref.update({
+        'verification_status': VerificationStatus.ACCEPTED.name,
+        'ktp_url': ktp_url,
+        'selfie_url': selfie_url,
+        'nik': ktp_data['no_ktp'],
+        'birth_place': ktp_data['place_of_birth'],
+        'gender': ktp_data['gender'],
+        'birth_date': ktp_data['birth_date'],
+        'updated_at': get_current_timestamp()
+    })
+
+    user = user_ref.get()
+    return jsonify(user.to_dict()), 200
 
 
 class IdentityConfirmationSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
+    nik = fields.String(required=True)
     name = fields.String(required=True)
     date_of_birth = fields.Integer(required=True)
     ktp_address = fields.String(required=True)
@@ -783,6 +840,7 @@ def identity_confirmation(uid):
     user_ref = db.collection(COLLECTION_USERS).document(uid)
     check_user = user_ref.get().to_dict()
 
+    nik = request_data.get('nik')
     name = request_data.get('name')
     date_of_birth = request_data.get('date_of_birth')
     ktp_address = request_data.get('ktp_address')
@@ -808,6 +866,7 @@ def identity_confirmation(uid):
         raise werkzeug.exceptions.BadRequest('Invalid religion.')
 
     to_be_update = {
+        'nik': nik,
         'name': name,
         'date_of_birth': date_of_birth,
         'ktp_address': ktp_address,
