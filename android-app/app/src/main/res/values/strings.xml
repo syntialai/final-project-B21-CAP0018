@@ -10,7 +10,6 @@
     <string name="our_hospitals_label">Our hospitals</string>
     <string name="book_a_room_label">Book a Room</string>
     <plurals name="room_available_label">
-        <item quantity="zero">Not available</item>
         <item quantity="one">%d room left</item>
         <item quantity="few">%d rooms left</item>
         <item quantity="other">Available</item>
@@ -58,6 +57,7 @@
     <string name="terms_of_use">Terms of Use</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="pay_label">Pay</string>
+    <string name="payment_cancelled_message">Payment cancelled.</string>
 
     <!-- History -->
     <string name="history_label">History</string>

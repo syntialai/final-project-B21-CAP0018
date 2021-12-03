@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipToPadding="false"
+        android:clipChildren="false"
         android:paddingHorizontal="@dimen/dp_16"
         tools:context=".ui.home.view.HomeFragment">
 
@@ -169,6 +169,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_16"
             android:clipToPadding="false"
+            android:paddingBottom="@dimen/dp_24"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

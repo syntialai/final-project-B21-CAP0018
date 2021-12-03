@@ -9,7 +9,9 @@ import com.bangkit.team18.core.data.source.base.BaseRemoteDataSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 @ExperimentalCoroutinesApi
@@ -21,11 +23,17 @@ class UserRemoteDataSourceImpl(
     userProfileRequest: UpdateUserProfileRequest,
     image: File?
   ): UserResponse {
-    val fileBody = image?.asRequestBody("image/*".toMediaTypeOrNull())
-    val filePart = fileBody?.let {
-      MultipartBody.Part.createFormData("image", image.name.orEmpty(), it)
-    }
-    return userService.updateUserProfile(userProfileRequest, filePart)
+    val imageFileBody = image?.asRequestBody("image/*".toMediaTypeOrNull())
+    val requestMap = mapOf(
+      "image" to imageFileBody,
+      "name" to getTextRequestBody(userProfileRequest.name),
+      "date_of_birth" to getTextRequestBody(userProfileRequest.date_of_birth.toString()),
+      "gender" to getTextRequestBody(userProfileRequest.gender),
+      "phone_number" to getTextRequestBody(userProfileRequest.phone_number),
+      "birth_place" to getTextRequestBody(userProfileRequest.birth_place),
+      "address" to getTextRequestBody(userProfileRequest.address)
+    )
+    return userService.updateUserProfile(requestMap)
   }
 
   override suspend fun getUserProfile(): UserResponse {
@@ -50,6 +58,10 @@ class UserRemoteDataSourceImpl(
     identityConfirmationRequest: IdentityConfirmationRequest
   ): UserResponse {
     return userService.confirmUserIdentity(identityConfirmationRequest)
+  }
+
+  private fun getTextRequestBody(value: String?): RequestBody {
+    return value.orEmpty().toRequestBody("text/plain".toMediaTypeOrNull());
   }
 }
 

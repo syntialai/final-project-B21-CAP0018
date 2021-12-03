@@ -1,5 +1,6 @@
 package com.bangkit.team18.qhope.ui.booking.view
 
+import android.content.Context
 import android.content.Intent
 import android.view.View
 import androidx.navigation.fragment.findNavController
@@ -18,6 +19,8 @@ import com.bangkit.team18.qhope.ui.booking.callback.RouteToCallback
 import com.bangkit.team18.qhope.ui.booking.viewmodel.BookingConfirmationViewModel
 import com.bangkit.team18.qhope.ui.history.view.HistoryFragmentDirections
 import com.bangkit.team18.qhope.ui.home.view.HomeFragmentDirections
+import com.bangkit.team18.qhope.ui.payment.MidtransPayment
+import com.bangkit.team18.qhope.ui.payment.PaymentStatusListener
 import com.bangkit.team18.qhope.ui.widget.callback.OnBannerActionButtonClickListener
 import com.bangkit.team18.qhope.utils.Router
 import java.io.File
@@ -26,14 +29,21 @@ import java.util.*
 class BookingConfirmationFragment :
   BaseFragment<FragmentBookingConfirmationBinding, BookingConfirmationViewModel>(
     FragmentBookingConfirmationBinding::inflate, BookingConfirmationViewModel::class
-  ), OnBannerActionButtonClickListener, RouteToCallback {
+  ), OnBannerActionButtonClickListener, RouteToCallback, PaymentStatusListener {
 
   companion object {
     private const val OPEN_TIME_PICKER = "OPEN TIME PICKER"
     private const val APPLICATION_PDF_TYPE = "application/pdf"
   }
 
+  private var midtransPayment: MidtransPayment? = null
+
   private val args: BookingConfirmationFragmentArgs by navArgs()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    midtransPayment = MidtransPayment(context, this)
+  }
 
   override fun setupViews() {
     binding.apply {
@@ -62,7 +72,7 @@ class BookingConfirmationFragment :
     viewModel.isBooked.observe(viewLifecycleOwner, {
       it?.let { isBooked ->
         if (isBooked) {
-          openSuccessBookBottomSheet()
+          midtransPayment?.setupPayments()
         }
       }
     })
@@ -95,7 +105,7 @@ class BookingConfirmationFragment :
   }
 
   override fun onBannerButtonClicked() {
-    Router.goToIdVerification(mContext)
+    Router.goToIdVerification(mContext, false)
   }
 
   override fun goToHome() {
@@ -185,5 +195,22 @@ class BookingConfirmationFragment :
       type = APPLICATION_PDF_TYPE
     }
     intentLauncher.launch(uploadPdfIntent)
+  }
+
+  override fun onPaymentSuccess(transactionId: String) {
+    openSuccessBookBottomSheet()
+  }
+
+  override fun onPaymentPending(transactionId: String) {
+    // TODO
+  }
+
+  override fun onPaymentFailed(statusMessage: String) {
+    showErrorToast(statusMessage, R.string.unknown_error_message)
+  }
+
+  override fun onPaymentCancelled() {
+    showErrorToast(null, R.string.payment_cancelled_message)
+    goToHome()
   }
 }

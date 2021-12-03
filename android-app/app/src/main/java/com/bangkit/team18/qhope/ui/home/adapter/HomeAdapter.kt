@@ -52,20 +52,26 @@ class HomeAdapter(private val hospitalItemCallback: HomeHospitalItemCallback) :
         chipHospitalItemRoomAvailable.showOrRemove(isRoomAvailable)
         chipHospitalItemRoomNotAvailable.showOrRemove(isRoomAvailable.not())
 
-        mContext.resources.getQuantityString(
-          R.plurals.room_available_label, roomAvailable,
-          roomAvailable
-        ).also { roomAvailableLabel ->
-          chipHospitalItemRoomNotAvailable.setChipIconResource(
-            if (isRoomAvailable) {
-              R.drawable.ic_info
-            } else {
-              R.drawable.ic_not_available
-            }
+        val roomAvailableLabel = if (isRoomAvailable.not()) {
+          mContext.getString(R.string.not_available_label)
+        } else {
+          mContext.resources.getQuantityString(
+            R.plurals.room_available_label,
+            roomAvailable,
+            roomAvailable
           )
-          chipHospitalItemRoomNotAvailable.text = roomAvailableLabel
-          chipHospitalItemRoomAvailable.text = roomAvailableLabel
         }
+
+        chipHospitalItemRoomNotAvailable.setChipIconResource(
+          if (isRoomAvailable) {
+            R.drawable.ic_info
+          } else {
+            R.drawable.ic_not_available
+          }
+        )
+
+        chipHospitalItemRoomNotAvailable.text = roomAvailableLabel
+        chipHospitalItemRoomAvailable.text = roomAvailableLabel
       }
     }
 

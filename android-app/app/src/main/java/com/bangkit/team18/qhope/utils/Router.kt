@@ -35,16 +35,18 @@ object Router {
     context.startActivity(intent)
   }
 
-  fun goToIdVerification(context: Context) {
+  fun goToIdVerification(context: Context, newTask: Boolean = true) {
     val intent = Intent(context, IdVerificationActivity::class.java).apply {
-      flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+      if (newTask) {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+      }
     }
     context.startActivity(intent)
   }
 
   fun goToIdentityConfirmation(context: Context) {
     val intent = Intent(context, IdentityConfirmationActivity::class.java).apply {
-      flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+      flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
     }
     context.startActivity(intent)
   }
