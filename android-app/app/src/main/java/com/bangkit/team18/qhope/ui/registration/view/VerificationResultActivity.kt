@@ -55,7 +55,13 @@ class VerificationResultActivity :
 
   override fun onClick(v: View?) {
     when (v?.id) {
-      R.id.verification_result_finish -> Router.goToMain(this)
+      R.id.verification_result_finish -> {
+        if (viewModel.userDoc.value?.verificationStatus == VerificationStatus.ACCEPTED) {
+          Router.goToIdentityConfirmation(this)
+        } else {
+          Router.goToMain(this)
+        }
+      }
     }
   }
 }

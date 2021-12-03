@@ -7,6 +7,7 @@ import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentProfileVerificationResultBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.profile.viewmodel.ProfileVerificationResultViewModel
+import com.bangkit.team18.qhope.utils.Router
 
 class ProfileVerificationResultFragment :
   BaseFragment<FragmentProfileVerificationResultBinding, ProfileVerificationResultViewModel>(
@@ -54,10 +55,15 @@ class ProfileVerificationResultFragment :
   override fun onClick(v: View?) {
     when (v?.id) {
       R.id.profile_verification_result_finish -> {
-        viewModel.userDoc.value?.let {
-          if (it.verificationStatus == VerificationStatus.REJECTED) {
-            findNavController().navigate(ProfileVerificationResultFragmentDirections.actionProfileVerificationResultFragmentToProfileIdVerificationFragment())
-          } else {
+        when(viewModel.userDoc.value?.verificationStatus) {
+          VerificationStatus.REJECTED -> {
+            findNavController().navigate(ProfileVerificationResultFragmentDirections
+              .actionProfileVerificationResultFragmentToProfileIdVerificationFragment())
+          }
+          VerificationStatus.ACCEPTED -> {
+            Router.goToIdentityConfirmation(mContext)
+          }
+          else -> {
             findNavController().navigateUp()
           }
         }
