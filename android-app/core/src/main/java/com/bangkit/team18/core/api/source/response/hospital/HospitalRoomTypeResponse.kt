@@ -4,7 +4,7 @@ data class HospitalRoomTypeResponse(
 
   var id: String? = null,
 
-  var name: String? = null,
+  var type: String? = null,
 
   var price: Double? = null,
 

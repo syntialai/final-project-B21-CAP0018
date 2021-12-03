@@ -16,7 +16,9 @@ class QHopeApplication : Application() {
 
   override fun onCreate() {
     super.onCreate()
+    
     FirebaseApp.initializeApp(this)
+    
     startKoin {
       androidLogger(Level.DEBUG)
       androidLogger(Level.ERROR)
@@ -35,6 +37,7 @@ class QHopeApplication : Application() {
         )
       )
     }
+
     if (BuildConfig.DEBUG) {
       Timber.plant(Timber.DebugTree())
     }

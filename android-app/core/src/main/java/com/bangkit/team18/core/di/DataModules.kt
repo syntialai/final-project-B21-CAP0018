@@ -44,7 +44,7 @@ val sharedPrefRepositoryModule = module {
 @ExperimentalCoroutinesApi
 val remoteDataSourceModule = module {
   single { HospitalRemoteDataSourceImpl(get()) } bind HospitalRemoteDataSource::class
-  single { RoomBookingRemoteDataSourceImpl(get(), get()) } bind RoomBookingRemoteDataSource::class
+  single { RoomBookingRemoteDataSourceImpl(get()) } bind RoomBookingRemoteDataSource::class
   single { AuthRemoteDataSourceImpl(get(), get()) } bind AuthRemoteDataSource::class
   single { UserRemoteDataSourceImpl(get()) } bind UserRemoteDataSource::class
 }

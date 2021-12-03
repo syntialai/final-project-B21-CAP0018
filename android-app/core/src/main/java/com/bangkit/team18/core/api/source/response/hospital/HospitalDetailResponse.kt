@@ -12,9 +12,7 @@ data class HospitalDetailResponse(
 
   var description: String? = null,
 
-  var address: String? = null,
-
-  var location: HospitalLocationResponse? = null,
+  var address: HospitalAddressResponse? = null,
 
   var telephone: String? = null,
 

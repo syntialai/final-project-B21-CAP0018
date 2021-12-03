@@ -11,7 +11,7 @@ object UserMapper {
       userResponse.id.orEmpty(),
       userResponse.name.orEmpty(),
       userResponse.phone_number.orEmpty(),
-      userResponse.image_url.orEmpty(),
+      userResponse.photo_url.orEmpty(),
       userResponse.birth_date,
       userResponse.verification_status?.let {
         VerificationStatus.valueOf(it)
@@ -21,7 +21,15 @@ object UserMapper {
         GenderType.valueOf(it)
       } ?: GenderType.MALE,
       userResponse.place_of_birth.orEmpty(),
-      userResponse.address.orEmpty()
+      userResponse.address.orEmpty(),
+      userResponse.ktp_address.orEmpty(),
+      userResponse.blood_type.orEmpty(),
+      userResponse.district.orEmpty(),
+      userResponse.village.orEmpty(),
+      userResponse.city.orEmpty(),
+      userResponse.neighborhood.orEmpty(),
+      userResponse.hamlet.orEmpty(),
+      userResponse.religion.orEmpty()
     )
   }
 }

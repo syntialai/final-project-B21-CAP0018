@@ -12,5 +12,5 @@ data class UpdateUserProfileRequest(
 
   val birth_place: String? = null,
 
-  val address: String? = null,
+  val address: String? = null
 )

@@ -10,7 +10,6 @@
     <string name="our_hospitals_label">Our hospitals</string>
     <string name="book_a_room_label">Book a Room</string>
     <plurals name="room_available_label">
-        <item quantity="zero">Not available</item>
         <item quantity="one">%d room left</item>
         <item quantity="few">%d rooms left</item>
         <item quantity="other">Available</item>
@@ -18,12 +17,13 @@
     <string name="verification_status_not_upload_title">Hello!</string>
     <string name="verification_status_uploaded_title">You are…</string>
     <string name="verification_status_not_upload_description">Let’s verify your identity to book a room in a hospital.</string>
+    <string name="verification_status_accepted_description">Let\'s confirm your identity before explore more in Q-Hope.</string>
     <string name="verification_status_verified_description">Now you can book a room in a hospital.</string>
     <string name="verification_status_not_verified_description">We’re sorry. Let’s check what’s wrong in your verification.</string>
     <string name="verification_status_not_upload_button_label">Verify</string>
-    <string name="verification_status_verified_button_label">Done</string>
+    <string name="verification_status_accepted_button_label">Confirm my data</string>
+    <string name="verification_status_verified_button_label">Show hospitals</string>
     <string name="verification_status_not_verified_button_label">Check</string>
-
 
     <!-- Booking -->
     <string name="hospital_detail_description">Hospital Detail</string>
@@ -48,6 +48,16 @@
     <string name="update_profile_banner">Update your profile to continue your booking process.</string>
     <string name="update_profile_banner_button">Go to Profile</string>
     <string name="booking_confirmation_title">Book a Room</string>
+    <string name="identity_confirmation_banner">Please recheck your identity and update any if wrong. Once you submit, you will never be able to make an edit to your identity.</string>
+    <string name="save">Save</string>
+
+    <!-- Payment -->
+    <string name="payment_method_label">Payment Method</string>
+    <string name="payment_policy_agreement">By continuing you agree to our Terms of Use and Privacy Policy</string>
+    <string name="terms_of_use">Terms of Use</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="pay_label">Pay</string>
+    <string name="payment_cancelled_message">Payment cancelled.</string>
 
     <!-- History -->
     <string name="history_label">History</string>
@@ -61,6 +71,7 @@
     <string name="booking_id_label">Booking ID</string>
     <string name="booking_date_label">Booked at</string>
     <string name="booking_status_label">Status</string>
+    <string name="booking_refundable_label">Refundable</string>
     <string name="booked_hospital_label">Booked Hospital</string>
     <string name="booking_info_label">Booking Info</string>
     <string name="check_in_at_label">Check In at</string>
@@ -75,6 +86,7 @@
     <string name="patient_address_label">Patient Address in KTP</string>
     <string name="patient_gender_label">Gender</string>
     <string name="patient_referral_letter_label">Patient Referral Letter</string>
+    <string name="continue_payment_description">Please continue your payment before %s to process the booking.</string>
 
     <!-- Profile -->
     <string name="profile_label">Profile</string>
@@ -133,11 +145,16 @@
     <string name="ktp_number_hint">KTP Number</string>
     <string name="place_of_birth_hint">Place of Birth</string>
     <string name="address_hint">Address</string>
+    <string name="ktp_address_hint">KTP Address</string>
     <string name="male_label">Male</string>
     <string name="female_label">Female</string>
     <string name="edit_label">Edit</string>
     <string name="gender_field_error">You need to select one.</string>
     <string name="verified_label">Verified</string>
+    <string name="accepted_label">Accepted</string>
     <string name="not_verified_label">Not Verified</string>
     <string name="intent_choose_capturer">Capture with ...</string>
+    <string name="district_hint">District</string>
+    <string name="village_hint">Village</string>
+    <string name="city_hint">City</string>
 </resources>

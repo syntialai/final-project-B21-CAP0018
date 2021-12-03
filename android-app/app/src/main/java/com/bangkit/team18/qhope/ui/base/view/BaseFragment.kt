@@ -139,8 +139,10 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
   }
 
   protected fun showErrorToast(message: String? = null, defaultMessageId: Int) {
-    Toast.makeText(binding.root.context, message ?: getString(defaultMessageId), Toast.LENGTH_SHORT)
-      .show()
+    Toast.makeText(
+      binding.root.context,
+      message ?: getString(defaultMessageId),
+      Toast.LENGTH_LONG).show()
   }
 
   protected fun showToast(messageId: Int) {

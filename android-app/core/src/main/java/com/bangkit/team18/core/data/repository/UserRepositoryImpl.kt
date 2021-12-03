@@ -1,5 +1,6 @@
 package com.bangkit.team18.core.data.repository
 
+import com.bangkit.team18.core.api.source.request.user.IdentityConfirmationRequest
 import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
 import com.bangkit.team18.core.api.source.response.user.UserResponse
 import com.bangkit.team18.core.data.mapper.UserMapper.mapToUser
@@ -49,10 +50,19 @@ class UserRepositoryImpl(
     ktp: File,
     selfie: File
   ): Flow<ResponseWrapper<Boolean>> {
-    return object :
-      UpdateDataWrapper<UserResponse>() {
+    return object : UpdateDataWrapper<UserResponse>() {
       override suspend fun doUpdate(): UserResponse {
         return userRemoteDataSource.uploadUserVerification(ktp, selfie)
+      }
+    }.updateData().flowOn(ioDispatcher)
+  }
+
+  override suspend fun confirmUserIdentity(
+    identityConfirmationRequest: IdentityConfirmationRequest
+  ): Flow<ResponseWrapper<Boolean>> {
+    return object : UpdateDataWrapper<UserResponse>() {
+      override suspend fun doUpdate(): UserResponse {
+        return userRemoteDataSource.confirmUserIdentity(identityConfirmationRequest)
       }
     }.updateData().flowOn(ioDispatcher)
   }

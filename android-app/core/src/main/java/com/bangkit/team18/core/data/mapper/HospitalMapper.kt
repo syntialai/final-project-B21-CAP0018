@@ -7,6 +7,7 @@ import com.bangkit.team18.core.domain.model.booking.BookedHospital
 import com.bangkit.team18.core.domain.model.home.Hospital
 import com.bangkit.team18.core.domain.model.hospital.HospitalDetail
 import com.bangkit.team18.core.domain.model.hospital.RoomType
+import com.bangkit.team18.core.utils.view.DataUtils.orHyphen
 import com.google.android.gms.maps.model.LatLng
 
 object HospitalMapper {
@@ -18,10 +19,10 @@ object HospitalMapper {
       imagePath = response.image.orEmpty(),
       type = response.type.orEmpty(),
       location = LatLng(
-        response.location?.lat?.toDoubleOrNull() ?: 0.0,
-        response.location?.lng?.toDoubleOrNull() ?: 0.0
+        response.address?.geopoint?.lat?.toDoubleOrNull() ?: 0.0,
+        response.address?.geopoint?.lng?.toDoubleOrNull() ?: 0.0
       ),
-      address = response.address.orEmpty(),
+      address = response.address?.description.orHyphen(),
       telephone = response.telephone.orEmpty(),
       description = response.description.orEmpty(),
       availableRoomCount = response.available_room_count ?: 0,
@@ -32,7 +33,7 @@ object HospitalMapper {
     hospitalRoomTypeResponses.map { response ->
       RoomType(
         id = response.id.orEmpty(),
-        name = response.name.orEmpty(),
+        name = response.type.orEmpty(),
         price = response.price ?: 0.0,
         availableRoomCount = response.available_room ?: 0
       )

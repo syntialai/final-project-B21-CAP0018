@@ -4,6 +4,7 @@ object ApiConstants {
 
   const val USER = "user"
   const val USER_IDENTITY_VERIFICATION = "user/identity-verification"
+  const val USER_IDENTITY_CONFIRMATION = "user/identity-confirmation"
   const val USER_SIGN_OUT = "user/_sign-out"
 
   const val HOSPITALS = "hospitals"

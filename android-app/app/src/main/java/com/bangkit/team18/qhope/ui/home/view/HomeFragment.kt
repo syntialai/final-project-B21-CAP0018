@@ -6,6 +6,7 @@ import android.location.Geocoder
 import android.location.Location
 import android.view.View
 import android.widget.SearchView
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.domain.model.user.VerificationStatus
 import com.bangkit.team18.core.utils.location.LocationManager
@@ -20,10 +21,9 @@ import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.home.adapter.HomeAdapter
 import com.bangkit.team18.qhope.ui.home.adapter.HomeHospitalItemCallback
 import com.bangkit.team18.qhope.ui.home.viewmodel.HomeViewModel
+import com.bangkit.team18.qhope.utils.Router
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
-import com.google.firebase.storage.FirebaseStorage
-import org.koin.android.ext.android.inject
 import java.util.Locale
 
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
@@ -34,8 +34,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   companion object {
     fun newInstance() = HomeFragment()
   }
-
-  private val storage: FirebaseStorage by inject()
 
   private val homeAdapter by lazy {
     HomeAdapter(this)
@@ -124,18 +122,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   }
 
   private fun getVerificationButtonText(status: VerificationStatus) = getString(when (status) {
+    VerificationStatus.ACCEPTED -> R.string.verification_status_accepted_button_label
     VerificationStatus.VERIFIED -> R.string.verification_status_verified_button_label
     VerificationStatus.REJECTED -> R.string.verification_status_not_verified_button_label
     else -> R.string.verification_status_not_upload_button_label
   })
 
   private fun getVerificationDrawable(status: VerificationStatus) = when (status) {
+    VerificationStatus.ACCEPTED,
     VerificationStatus.VERIFIED -> R.drawable.drawable_verification_status_verified
     VerificationStatus.REJECTED -> R.drawable.drawable_verification_status_not_verified
     else -> R.drawable.drawable_verification_status_not_upload
   }
 
   private fun getVerificationDescription(status: VerificationStatus) = getString(when (status) {
+    VerificationStatus.ACCEPTED -> R.string.verification_status_accepted_description
     VerificationStatus.VERIFIED -> R.string.verification_status_verified_description
     VerificationStatus.REJECTED -> R.string.verification_status_not_verified_description
     else -> R.string.verification_status_not_upload_description
@@ -148,12 +149,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   })
 
   private fun setLocation(location: Location) {
-    val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(
-      location.latitude,
-      location.longitude, 1
-    )
-    binding.textViewYourLocation.text = addresses[0].getAddressLine(0)
-    showLocationLoadingState(false)
+    viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+      val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(
+        location.latitude,
+        location.longitude, 1
+      )
+      binding.textViewYourLocation.text = addresses[0].getAddressLine(0)
+      showLocationLoadingState(false)
+    }
   }
 
   private fun setUserName(name: String) {
@@ -171,20 +174,42 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
       textViewVerificationStatusTitle.text = getVerificationTitle(status)
 
       when (status) {
+        VerificationStatus.ACCEPTED -> {
+          chipVerificationStatusNotVerified.remove()
+          chipVerificationStatusVerified.show()
+          chipVerificationStatusVerified.text = mContext.getString(R.string.accepted_label)
+          buttonVerificationStatus.setOnClickListener {
+            Router.goToIdentityConfirmation(mContext)
+          }
+        }
         VerificationStatus.VERIFIED -> {
           chipVerificationStatusNotVerified.remove()
           chipVerificationStatusVerified.show()
+          chipVerificationStatusVerified.text = mContext.getString(R.string.verified_label)
+          buttonVerificationStatus.setOnClickListener {
+            // TODO
+          }
         }
         VerificationStatus.REJECTED -> {
           chipVerificationStatusNotVerified.show()
           chipVerificationStatusVerified.hide()
+          buttonVerificationStatus.setOnClickListener {
+            Router.goToVerificationResult(mContext)
+          }
         }
         else -> {
           chipVerificationStatusNotVerified.remove()
           chipVerificationStatusVerified.remove()
+          buttonVerificationStatus.setOnClickListener {
+            goToIdVerification()
+          }
         }
       }
     }
+  }
+
+  private fun goToIdVerification() {
+    Router.goToIdVerification(mContext, false)
   }
 
   private fun setupRecyclerView() {

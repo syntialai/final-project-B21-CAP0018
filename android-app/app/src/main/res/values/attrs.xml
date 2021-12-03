@@ -22,6 +22,7 @@
 
     <declare-styleable name="BannerInfo">
         <attr name="description" />
+        <attr name="button_visible" format="boolean" />
         <attr name="button_label" format="string" />
     </declare-styleable>
 </resources>

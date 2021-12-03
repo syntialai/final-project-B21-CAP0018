@@ -72,4 +72,7 @@ dependencies {
 
   // Multidex
   implementation "androidx.multidex:multidex:2.0.1"
+
+  // Midtrans
+  implementation 'com.midtrans:uikit:1.28.0-SANDBOX'
 }

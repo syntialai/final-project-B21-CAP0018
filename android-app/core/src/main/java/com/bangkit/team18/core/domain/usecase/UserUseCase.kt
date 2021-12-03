@@ -1,5 +1,6 @@
 package com.bangkit.team18.core.domain.usecase
 
+import com.bangkit.team18.core.api.source.request.user.IdentityConfirmationRequest
 import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.domain.model.user.User
@@ -16,4 +17,8 @@ interface UserUseCase {
   ): Flow<ResponseWrapper<Boolean>>
 
   suspend fun uploadUserVerification(ktp: File, selfie: File): Flow<ResponseWrapper<Boolean>>
+
+  suspend fun confirmUserIdentity(
+    identityConfirmationRequest: IdentityConfirmationRequest
+  ): Flow<ResponseWrapper<Boolean>>
 }

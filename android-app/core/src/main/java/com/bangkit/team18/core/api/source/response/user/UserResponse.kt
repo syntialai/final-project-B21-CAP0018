@@ -8,7 +8,7 @@ data class UserResponse(
 
   var phone_number: String? = null,
 
-  var image_url: String? = null,
+  var photo_url: String? = null,
 
   var birth_date: Long? = null,
 
@@ -20,5 +20,21 @@ data class UserResponse(
 
   var place_of_birth: String? = null,
 
-  var address: String? = null
+  var address: String? = null,
+
+  var ktp_address: String? = null,
+
+  var blood_type: String? = null,
+
+  var district: String? = null,
+
+  var village: String? = null,
+
+  var city: String? = null,
+
+  var neighborhood: String? = null,
+
+  var hamlet: String? = null,
+
+  var religion: String? = null
 )
