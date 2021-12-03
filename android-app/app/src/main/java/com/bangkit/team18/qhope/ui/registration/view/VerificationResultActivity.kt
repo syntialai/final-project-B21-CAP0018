@@ -26,7 +26,7 @@ class VerificationResultActivity :
     viewModel.userDoc.observe(this, {
       binding.apply {
         when (it.verificationStatus) {
-          VerificationStatus.VERIFIED -> {
+          VerificationStatus.VERIFIED, VerificationStatus.ACCEPTED -> {
             verificationResultMessage.text = getString(R.string.verified_message)
             verificationResultMessageDescription.text =
               getString(R.string.verified_message_description)

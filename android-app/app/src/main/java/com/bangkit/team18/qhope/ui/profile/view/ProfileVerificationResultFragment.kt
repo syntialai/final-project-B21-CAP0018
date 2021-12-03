@@ -28,7 +28,7 @@ class ProfileVerificationResultFragment :
     viewModel.userDoc.observe(viewLifecycleOwner, {
       binding.apply {
         when (it.verificationStatus) {
-          VerificationStatus.VERIFIED -> {
+          VerificationStatus.VERIFIED, VerificationStatus.ACCEPTED -> {
             profileVerificationResultMessage.text = getString(R.string.verified_message)
             profileVerificationResultMessageDescription.text =
               getString(R.string.verified_message_description)
