@@ -209,8 +209,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   }
 
   private fun goToIdVerification() {
-    findNavController().navigate(
-      HomeFragmentDirections.actionHomeFragmentToProfileIdVerificationFragment2())
+    Router.goToIdVerification(mContext, false)
   }
 
   private fun setupRecyclerView() {
