@@ -5,8 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.domain.model.user.DocumentType
+import com.bangkit.team18.core.domain.model.user.VerificationStatus
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
+import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import id.zelory.compressor.Compressor
 import java.io.File
@@ -28,8 +30,8 @@ class IdVerificationViewModel(
   private val _selfiePicture = MutableLiveData<File?>()
   val selfiePicture: LiveData<File?> get() = _selfiePicture
 
-  private val _isSubmitted = MutableLiveData<Boolean>()
-  val isSubmitted: LiveData<Boolean> get() = _isSubmitted
+  private val _submitStatus = MutableLiveData<Pair<Boolean, VerificationStatus?>>()
+  val submitStatus: LiveData<Pair<Boolean, VerificationStatus?>> get() = _submitStatus
 
   fun setDocumentType(documentType: DocumentType) {
     this.documentType = documentType
@@ -80,8 +82,10 @@ class IdVerificationViewModel(
     val selfie = _selfiePicture.value
     if (ktp != null && selfie != null) {
       launchViewModelScope({
-        userUseCase.uploadUserVerification(ktp, selfie).runFlow({ success ->
-          _isSubmitted.value = success
+        userUseCase.uploadUserVerification(ktp, selfie).runFlow({ user ->
+          _submitStatus.value = Pair(user.verificationStatus.isNotNull(), user.verificationStatus)
+        }, {
+          _submitStatus.value = Pair(false, null)
         })
       })
     }
