@@ -179,7 +179,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
           chipVerificationStatusVerified.show()
           chipVerificationStatusVerified.text = mContext.getString(R.string.accepted_label)
           buttonVerificationStatus.setOnClickListener {
-            Router.goToIdentityConfirmation(mContext)
+            Router.goToIdentityConfirmation(mContext, false)
           }
         }
         VerificationStatus.VERIFIED -> {

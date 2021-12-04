@@ -22,7 +22,9 @@ class VerificationResultActivity :
 
   override fun setupObserver() {
     super.setupObserver()
+
     viewModel.getUserDoc()
+
     viewModel.userDoc.observe(this, {
       binding.apply {
         when (it.verificationStatus) {

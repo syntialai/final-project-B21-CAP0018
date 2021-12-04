@@ -16,7 +16,7 @@ interface UserUseCase {
     image: File? = null
   ): Flow<ResponseWrapper<Boolean>>
 
-  suspend fun uploadUserVerification(ktp: File, selfie: File): Flow<ResponseWrapper<Boolean>>
+  suspend fun uploadUserVerification(ktp: File, selfie: File): Flow<ResponseWrapper<User>>
 
   suspend fun confirmUserIdentity(
     identityConfirmationRequest: IdentityConfirmationRequest
