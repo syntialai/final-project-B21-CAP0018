@@ -16,7 +16,7 @@ object UserMapper {
       userResponse.verification_status?.let {
         VerificationStatus.valueOf(it)
       } ?: VerificationStatus.NOT_UPLOAD,
-      userResponse.no_ktp.orEmpty(),
+      userResponse.nik.orEmpty(),
       userResponse.gender?.let {
         GenderType.valueOf(it)
       } ?: GenderType.MALE,

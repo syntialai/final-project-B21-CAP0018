@@ -14,7 +14,7 @@ data class UserResponse(
 
   var verification_status: String? = null,
 
-  var no_ktp: String? = null,
+  var nik: String? = null,
 
   var gender: String? = null,
 
