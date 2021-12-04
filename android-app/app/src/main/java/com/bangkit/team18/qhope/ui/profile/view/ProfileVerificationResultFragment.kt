@@ -62,7 +62,6 @@ class ProfileVerificationResultFragment :
           }
           VerificationStatus.ACCEPTED -> {
             Router.goToIdentityConfirmation(mContext, false)
-            activity?.finish()
           }
           else -> {
             findNavController().navigateUp()

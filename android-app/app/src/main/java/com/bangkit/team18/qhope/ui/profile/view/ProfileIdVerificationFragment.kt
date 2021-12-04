@@ -78,7 +78,7 @@ class ProfileIdVerificationFragment :
 
   private fun onSuccessUserVerification(verificationStatus: VerificationStatus) {
     if (verificationStatus == VerificationStatus.ACCEPTED) {
-      Router.goToIdentityConfirmation(mContext)
+      Router.goToIdentityConfirmation(mContext, false)
     } else {
       findNavController().navigate(ProfileIdVerificationFragmentDirections
         .actionProfileIdVerificationFragmentToProfileVerificationResultFragment())
