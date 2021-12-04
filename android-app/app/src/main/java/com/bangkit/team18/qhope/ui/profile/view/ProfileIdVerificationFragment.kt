@@ -8,16 +8,18 @@ import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageView
 import androidx.activity.result.ActivityResult
-import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.domain.model.user.DocumentType
+import com.bangkit.team18.core.domain.model.user.VerificationStatus
 import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.core.utils.view.FileUtil
 import com.bangkit.team18.core.utils.view.ViewUtils.loadImage
+import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentProfileIdVerificationBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.profile.viewmodel.ProfileIdVerificationViewModel
+import com.bangkit.team18.qhope.utils.Router
 import java.io.File
 
 class ProfileIdVerificationFragment :
@@ -27,34 +29,60 @@ class ProfileIdVerificationFragment :
   ) {
 
   override fun setupViews() {
-    setupListener()
     binding.apply {
-      setupListener()
-      viewModel.ktpPicture.observe(viewLifecycleOwner, {
-        setupImage(profileIdVerificationKtpPicture, it)
-        profileIdVerificationEditKtpPicture.isVisible = it.isNotNull()
-        profileIdVerificationDeleteKtpPicture.isVisible = it.isNotNull()
-        checkSubmitButton()
-      })
-      viewModel.selfiePicture.observe(viewLifecycleOwner, {
-        setupImage(profileIdVerificationSelfiePicture, it)
-        profileIdVerificationEditSelfiePicture.isVisible = it.isNotNull()
-        profileIdVerificationDeleteSelfiePicture.isVisible = it.isNotNull()
-        checkSubmitButton()
-      })
+      profileIdVerificationKtpPicture.setOnClickListener(this@ProfileIdVerificationFragment)
+      profileIdVerificationSelfiePicture.setOnClickListener(this@ProfileIdVerificationFragment)
+      profileIdVerificationEditKtpPicture.setOnClickListener(this@ProfileIdVerificationFragment)
+      profileIdVerificationEditSelfiePicture.setOnClickListener(this@ProfileIdVerificationFragment)
+      profileIdVerificationDeleteKtpPicture.setOnClickListener(this@ProfileIdVerificationFragment)
+      profileIdVerificationDeleteSelfiePicture.setOnClickListener(this@ProfileIdVerificationFragment)
+      profileIdVerificationSubmit.setOnClickListener(this@ProfileIdVerificationFragment)
     }
   }
 
   override fun setupObserver() {
     super.setupObserver()
+
     viewModel.getUserDoc()
 
-    viewModel.isSubmitted.observe(viewLifecycleOwner, {
-      if (it) {
-        findNavController().navigate(ProfileIdVerificationFragmentDirections
-          .actionProfileIdVerificationFragmentToProfileVerificationResultFragment())
+    viewModel.ktpPicture.observe(this, {
+      setupImage(binding.profileIdVerificationKtpPicture, it)
+      toggleEditButtonVisibility(false, it.isNotNull())
+      checkSubmitButton()
+    })
+
+    viewModel.selfiePicture.observe(this, {
+      setupImage(binding.profileIdVerificationSelfiePicture, it)
+      toggleEditButtonVisibility(true, it.isNotNull())
+      checkSubmitButton()
+    })
+
+    viewModel.submitStatus.observe(viewLifecycleOwner, { submitStatus ->
+      if (submitStatus.first) {
+        onSuccessUserVerification(submitStatus.second ?: VerificationStatus.UPLOADED)
       }
     })
+  }
+
+  private fun toggleEditButtonVisibility(selfie: Boolean, fileExist: Boolean) {
+    with(binding) {
+      if (selfie) {
+        profileIdVerificationEditSelfiePicture.showOrRemove(fileExist)
+        profileIdVerificationDeleteSelfiePicture.showOrRemove(fileExist)
+      } else {
+        profileIdVerificationEditKtpPicture.showOrRemove(fileExist)
+        profileIdVerificationDeleteKtpPicture.showOrRemove(fileExist)
+      }
+    }
+  }
+
+  private fun onSuccessUserVerification(verificationStatus: VerificationStatus) {
+    if (verificationStatus == VerificationStatus.ACCEPTED) {
+      Router.goToIdentityConfirmation(mContext, false)
+    } else {
+      findNavController().navigate(ProfileIdVerificationFragmentDirections
+        .actionProfileIdVerificationFragmentToProfileVerificationResultFragment())
+    }
   }
 
   private fun checkSubmitButton() {
@@ -75,18 +103,6 @@ class ProfileIdVerificationFragment :
         setImageResource(R.drawable.ic_add)
         setOnClickListener(this@ProfileIdVerificationFragment)
       }
-    }
-  }
-
-  private fun setupListener() {
-    binding.apply {
-      profileIdVerificationKtpPicture.setOnClickListener(this@ProfileIdVerificationFragment)
-      profileIdVerificationSelfiePicture.setOnClickListener(this@ProfileIdVerificationFragment)
-      profileIdVerificationEditKtpPicture.setOnClickListener(this@ProfileIdVerificationFragment)
-      profileIdVerificationEditSelfiePicture.setOnClickListener(this@ProfileIdVerificationFragment)
-      profileIdVerificationDeleteKtpPicture.setOnClickListener(this@ProfileIdVerificationFragment)
-      profileIdVerificationDeleteSelfiePicture.setOnClickListener(this@ProfileIdVerificationFragment)
-      profileIdVerificationSubmit.setOnClickListener(this@ProfileIdVerificationFragment)
     }
   }
 

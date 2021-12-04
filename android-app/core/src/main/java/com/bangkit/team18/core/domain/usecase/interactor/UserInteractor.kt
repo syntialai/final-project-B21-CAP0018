@@ -22,7 +22,7 @@ class UserInteractor(private val userRepository: UserRepository) : UserUseCase {
   override suspend fun uploadUserVerification(
     ktp: File,
     selfie: File
-  ): Flow<ResponseWrapper<Boolean>> {
+  ): Flow<ResponseWrapper<User>> {
     return userRepository.uploadUserVerification(ktp, selfie)
   }
 

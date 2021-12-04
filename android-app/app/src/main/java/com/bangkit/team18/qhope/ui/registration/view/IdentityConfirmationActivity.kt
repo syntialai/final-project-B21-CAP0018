@@ -40,6 +40,7 @@ class IdentityConfirmationActivity :
   override fun setupObserver() {
     super.setupObserver()
 
+    viewModel.getUserDoc()
     viewModel.userDoc.observe(this, { user ->
       setupUser(user)
     })

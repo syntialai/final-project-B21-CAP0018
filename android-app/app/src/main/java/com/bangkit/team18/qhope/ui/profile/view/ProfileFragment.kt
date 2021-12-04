@@ -37,17 +37,28 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(
     binding.apply {
       profileName.text = user.name
       profilePictureImage.loadImage(mContext, user.imageUrl, R.drawable.ic_person)
-      if (user.verificationStatus == VerificationStatus.VERIFIED) {
-        profileVerificationStatus.apply {
-          chipBackgroundColor =
-            ColorStateList.valueOf(mContext.getColor(R.color.green_700))
-          text = getString(R.string.verified_label)
+
+      when (user.verificationStatus) {
+        VerificationStatus.VERIFIED -> {
+          profileVerificationStatus.apply {
+            chipBackgroundColor =
+              ColorStateList.valueOf(mContext.getColor(R.color.green_700))
+            text = getString(R.string.verified_label)
+          }
         }
-      } else {
-        profileVerificationStatus.apply {
-          chipBackgroundColor =
-            ColorStateList.valueOf(mContext.getColor(R.color.grey_300))
-          text = getString(R.string.not_verified_label)
+        VerificationStatus.ACCEPTED -> {
+          profileVerificationStatus.apply {
+            chipBackgroundColor =
+              ColorStateList.valueOf(mContext.getColor(R.color.green_700))
+            text = getString(R.string.accepted_label)
+          }
+        }
+        else -> {
+          profileVerificationStatus.apply {
+            chipBackgroundColor =
+              ColorStateList.valueOf(mContext.getColor(R.color.grey_300))
+            text = getString(R.string.not_verified_label)
+          }
         }
       }
     }
