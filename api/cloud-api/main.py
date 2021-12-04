@@ -700,7 +700,7 @@ class UpdateUserSchema(Schema):
 
     photo = fields.Raw(type='file')
     name = fields.String()
-    date_of_birth = fields.Integer()
+    birth_date = fields.Integer()
     address = fields.String()
 
 
@@ -714,7 +714,7 @@ def update_user(uid):
 
     photo = file_schema.get('photo')
     name = request_data.get('name')
-    date_of_birth = request_data.get('date_of_birth')
+    birth_date = request_data.get('birth_date')
     address = request_data.get('address')
     user = {}
     check_user = user_ref.get().to_dict()
@@ -730,8 +730,8 @@ def update_user(uid):
     if not is_verified(check_user['verification_status']):
         if name:
             user['name'] = name
-        if date_of_birth and not is_verified(check_user['verification_status']):
-            user['date_of_birth'] = date_of_birth
+        if birth_date and not is_verified(check_user['verification_status']):
+            user['birth_date'] = birth_date
 
     if user:
         user['updated_at'] = get_current_timestamp()
@@ -811,7 +811,7 @@ class IdentityConfirmationSchema(Schema):
 
     nik = fields.String(required=True)
     name = fields.String(required=True)
-    date_of_birth = fields.Integer(required=True)
+    birth_date = fields.Integer(required=True)
     ktp_address = fields.String(required=True)
     blood_type = fields.String(required=True)
     birth_place = fields.String(required=True)
@@ -824,9 +824,9 @@ class IdentityConfirmationSchema(Schema):
     religion = fields.String(required=True)
 
     @validates_schema
-    def validate_date_of_birth(self, data, **kwargs):
+    def validate_birth_date(self, data, **kwargs):
         try:
-            datetime.fromtimestamp(data['date_of_birth'])
+            datetime.fromtimestamp(data['birth_date'])
         except:
             raise ValidationError('Not a valid date.')
 
@@ -842,7 +842,7 @@ def identity_confirmation(uid):
 
     nik = request_data.get('nik')
     name = request_data.get('name')
-    date_of_birth = request_data.get('date_of_birth')
+    birth_date = request_data.get('birth_date')
     ktp_address = request_data.get('ktp_address')
     blood_type = request_data.get('blood_type')
     birth_place = request_data.get('birth_place')
@@ -868,7 +868,7 @@ def identity_confirmation(uid):
     to_be_update = {
         'nik': nik,
         'name': name,
-        'date_of_birth': date_of_birth,
+        'birth_date': birth_date,
         'ktp_address': ktp_address,
         'blood_type': blood_type,
         'gender': gender,
