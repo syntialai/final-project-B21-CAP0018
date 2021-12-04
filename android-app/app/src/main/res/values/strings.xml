@@ -50,6 +50,7 @@
     <string name="booking_confirmation_title">Book a Room</string>
     <string name="identity_confirmation_banner">Please recheck your identity and update any if wrong. Once you submit, you will never be able to make an edit to your identity.</string>
     <string name="save">Save</string>
+    <string name="back">Back</string>
 
     <!-- Payment -->
     <string name="payment_method_label">Payment Method</string>
@@ -153,8 +154,29 @@
     <string name="verified_label">Verified</string>
     <string name="accepted_label">Accepted</string>
     <string name="not_verified_label">Not Verified</string>
-    <string name="intent_choose_capturer">Capture with ...</string>
+    <string name="intent_choose_capturer">Capture with …</string>
     <string name="district_hint">District</string>
     <string name="village_hint">Village</string>
     <string name="city_hint">City</string>
+    <string name="hamlet_hint">Hamlet</string>
+    <string name="religion_hint">Religion</string>
+    <string name="blood_type_hint">Blood type</string>
+    <string name="confirm_identity_title">Submit your identity?</string>
+    <string name="confirm_identity_description">After submit, your identity will be saved and won\'t be able to be updated. Make sure your data is correct.</string>
+
+    <string-array name="blood_types">
+        <item>A</item>
+        <item>B</item>
+        <item>AB</item>
+        <item>O</item>
+    </string-array>
+
+    <string-array name="religions">
+        <item>ISLAM</item>
+        <item>CHRISTIAN</item>
+        <item>CATHOLIC</item>
+        <item>HINDU</item>
+        <item>BUDDHA</item>
+        <item>CONFUCIANISM</item>
+    </string-array>
 </resources>
