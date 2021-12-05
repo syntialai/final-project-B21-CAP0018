@@ -9,8 +9,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:layout_marginBottom="@dimen/dp_64">
+        android:layout_marginBottom="@dimen/dp_64"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -279,6 +279,7 @@
             android:id="@+id/button_confirm_identity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="@string/save" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

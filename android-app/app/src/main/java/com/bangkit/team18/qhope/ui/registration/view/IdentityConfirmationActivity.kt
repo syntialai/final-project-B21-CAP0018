@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.doOnTextChanged
 import com.bangkit.team18.core.domain.model.user.GenderType
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.utils.view.DataUtils.orHyphen
@@ -137,10 +138,10 @@ class IdentityConfirmationActivity :
   private fun setupUser(user: User) {
     with(binding) {
       etKtpNumber.setText(user.ktpNumber.orHyphen())
-      etName.setText(user.name.orHyphen())
+      etName.setText(user.name)
       etBirthDate.setText(user.birthDate?.toDateString("yyyy-MM-dd", true))
-      etKtpAddress.setText(user.address.orHyphen())
-      etPlaceOfBirth.setText(user.placeOfBirth.orHyphen())
+      etKtpAddress.setText(user.address)
+      etPlaceOfBirth.setText(user.placeOfBirth)
       rbGenderMale.isChecked = user.gender == GenderType.MALE
       rbGenderFemale.isChecked = user.gender == GenderType.FEMALE
       etDistrict.setText(user.district)
@@ -149,6 +150,44 @@ class IdentityConfirmationActivity :
       etHamlet.setText(user.hamlet)
       actvReligion.setText(user.religion)
       actvBloodType.setText(user.bloodType)
+    }
+    validate(null, 0, 0, 0)
+    setupOnTextChanged()
+  }
+
+  private fun setupOnTextChanged() {
+    with(binding) {
+      etKtpNumber.doOnTextChanged(::validate)
+      etName.doOnTextChanged(::validate)
+      etBirthDate.doOnTextChanged(::validate)
+      etKtpAddress.doOnTextChanged(::validate)
+      etPlaceOfBirth.doOnTextChanged(::validate)
+      etDistrict.doOnTextChanged(::validate)
+      etCity.doOnTextChanged(::validate)
+      etVillage.doOnTextChanged(::validate)
+      etHamlet.doOnTextChanged(::validate)
+      actvReligion.doOnTextChanged(::validate)
+      actvBloodType.doOnTextChanged(::validate)
+    }
+  }
+
+  private fun validate(
+    text: CharSequence?,
+    start: Int,
+    before: Int,
+    count: Int) {
+    with(binding) {
+      buttonConfirmIdentity.isEnabled = etKtpNumber.text.isNullOrBlank().not() &&
+        etName.text.isNullOrBlank().not() &&
+        etBirthDate.text.isNullOrBlank().not() &&
+        etKtpAddress.text.isNullOrBlank().not() &&
+        etPlaceOfBirth.text.isNullOrBlank().not() &&
+        etDistrict.text.isNullOrBlank().not() &&
+        etCity.text.isNullOrBlank().not() &&
+        etVillage.text.isNullOrBlank().not() &&
+        etHamlet.text.isNullOrBlank().not() &&
+        actvReligion.text.isNullOrBlank().not() &&
+        actvBloodType.text.isNullOrBlank().not()
     }
   }
 }
