@@ -22,6 +22,24 @@
             android:src="@drawable/ic_person"
             app:shapeAppearance="@style/ShapeAppearance.QHope.LargeComponent" />
 
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/personal_data_ktp_number_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:hint="@string/ktp_number_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/personal_data_ktp_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:inputType="numberPassword"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/personal_data_name_container"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -40,35 +58,12 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/personal_data_ktp_number_container"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_16"
-            android:hint="@string/ktp_number_hint"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/personal_data_name_container">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/personal_data_ktp_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:enabled="false"
-                android:inputType="numberPassword"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/personal_data_birth_date_container"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_16"
-            android:hint="@string/birth_date_hint"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/personal_data_name_container">
+            android:hint="@string/birth_date_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/personal_data_birth_date"
@@ -117,10 +112,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_16"
-            android:hint="@string/place_of_birth_hint"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/personal_data_name_container">
+            android:hint="@string/place_of_birth_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/personal_data_place_of_birth"
@@ -137,10 +129,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_16"
-            android:hint="@string/address_hint"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/personal_data_name_container">
+            android:hint="@string/address_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/personal_data_address"
