@@ -60,12 +60,12 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
       setupPersonalData(it, viewModel.userDoc.value)
       setupMenuItem(it)
     })
-    viewModel.birthDate.observe(this, {
+    viewModel.birthDate.observe(viewLifecycleOwner, {
       binding.personalDataBirthDate.setText(
         it.toDateString("yyyy-MM-dd", true)
       )
     })
-    viewModel.profilePicture.observe(this, {
+    viewModel.profilePicture.observe(viewLifecycleOwner, {
       binding.personalDataProfilePicture.loadImage<File>(mContext, it)
     })
   }
@@ -86,7 +86,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
           personalDataKtpNumber.setText(user.ktpNumber.orHyphen())
           personalDataBirthDate.setOnClickListener(null)
           personalDataPlaceOfBirth.setText(user.placeOfBirth.orHyphen())
-          personalDataAddress.setText(user.address.orHyphen())
+          personalDataAddress.setText(user.address)
         } else {
           personalDataName.setText(user.name)
           personalDataKtpNumber.setText(user.ktpNumber)

@@ -21,7 +21,7 @@ interface UserService {
   @Multipart
   @PATCH(ApiConstants.USER)
   suspend fun updateUserProfile(
-    @PartMap requestMap: Map<String, RequestBody?>
+    @PartMap requestMap: Map<String, RequestBody>
   ): UserResponse
 
   @Multipart
