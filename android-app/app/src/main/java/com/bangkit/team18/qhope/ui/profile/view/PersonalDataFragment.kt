@@ -27,6 +27,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
   FragmentPersonalDataBinding::inflate,
   PersonalDataViewModel::class
 ) {
+
   private var birthDatePicker: MaterialDatePicker<Long> = getDatePicker(R.string.birth_date_hint)
 
   private var menu: Menu? = null
@@ -49,6 +50,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
 
   override fun setupObserver() {
     super.setupObserver()
+
     viewModel.getUserDoc()
 
     viewModel.userDoc.observe(viewLifecycleOwner, {
@@ -98,11 +100,6 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
           birthDatePicker = getDatePicker(R.string.birth_date_hint, it)
         }
         personalDataName.apply {
-          isFocusable = isEditable
-          isFocusableInTouchMode = isEditable
-          isCursorVisible = isEditable
-        }
-        personalDataKtpNumber.apply {
           isFocusable = isEditable
           isFocusableInTouchMode = isEditable
           isCursorVisible = isEditable
@@ -189,7 +186,6 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
       }
       if (valid) {
         val name = personalDataName.text.toString()
-        val ktpNumber = personalDataKtpNumber.text.toString()
         val placeOfBirth = personalDataPlaceOfBirth.text.toString()
         val address = personalDataAddress.text.toString()
         val gender = if (personalDataGenderMale.isChecked) GenderType.MALE else GenderType.FEMALE

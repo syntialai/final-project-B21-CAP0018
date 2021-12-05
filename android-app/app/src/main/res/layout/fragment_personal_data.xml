@@ -54,8 +54,8 @@
                 android:id="@+id/personal_data_ktp_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="false"
-                android:inputType="text"
+                android:enabled="false"
+                android:inputType="numberPassword"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
