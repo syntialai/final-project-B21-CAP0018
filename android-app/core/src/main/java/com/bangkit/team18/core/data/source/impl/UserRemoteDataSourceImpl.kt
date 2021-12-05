@@ -60,8 +60,8 @@ class UserRemoteDataSourceImpl(
     return userService.confirmUserIdentity(identityConfirmationRequest)
   }
 
-  private fun getTextRequestBody(value: String?): RequestBody {
-    return value.orEmpty().toRequestBody("text/plain".toMediaTypeOrNull());
+  private fun getTextRequestBody(value: String?): RequestBody? {
+    return value?.toRequestBody("text/plain".toMediaTypeOrNull());
   }
 }
 
