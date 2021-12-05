@@ -16,7 +16,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingVertical="@dimen/dp_16">
+            android:paddingBottom="@dimen/dp_16">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/t_identity_confirmation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_16"
+                app:navigationIcon="@drawable/ic_toolbar_back"
+                app:title="@string/confirm_identity" />
 
             <com.bangkit.team18.qhope.ui.widget.BannerInfo
                 android:id="@+id/banner_info_update_profile"

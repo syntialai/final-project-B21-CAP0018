@@ -161,6 +161,7 @@
     <string name="hamlet_hint">Hamlet</string>
     <string name="religion_hint">Religion</string>
     <string name="blood_type_hint">Blood type</string>
+    <string name="confirm_identity">Confirm Identity</string>
     <string name="confirm_identity_title">Submit your identity?</string>
     <string name="confirm_identity_description">After submit, your identity will be saved and won\'t be able to be updated. Make sure your data is correct.</string>
 

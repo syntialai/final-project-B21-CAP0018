@@ -48,6 +48,10 @@ class IdentityConfirmationActivity :
     with(binding) {
       etBirthDate.setOnClickListener(this@IdentityConfirmationActivity)
       buttonConfirmIdentity.setOnClickListener(this@IdentityConfirmationActivity)
+
+      tIdentityConfirmation.setNavigationOnClickListener {
+        onBackPressed()
+      }
     }
     birthDatePicker.addOnPositiveButtonClickListener {
       viewModel.setBirthDate(it / 1000)
@@ -68,6 +72,13 @@ class IdentityConfirmationActivity :
         Router.goToMain(this)
       }
     })
+  }
+
+  override fun onBackPressed() {
+    if (isTaskRoot) {
+      Router.goToMain(this)
+    }
+    super.onBackPressed()
   }
 
   override fun onClick(view: View?) {
