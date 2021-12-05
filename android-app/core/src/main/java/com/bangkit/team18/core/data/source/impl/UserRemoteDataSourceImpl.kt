@@ -27,7 +27,7 @@ class UserRemoteDataSourceImpl(
     val requestMap = mapOf(
       "image" to imageFileBody,
       "name" to getTextRequestBody(userProfileRequest.name),
-      "date_of_birth" to getTextRequestBody(userProfileRequest.date_of_birth.toString()),
+      "date_of_birth" to getTextRequestBody(userProfileRequest.birth_date.toString()),
       "gender" to getTextRequestBody(userProfileRequest.gender),
       "phone_number" to getTextRequestBody(userProfileRequest.phone_number),
       "birth_place" to getTextRequestBody(userProfileRequest.birth_place),

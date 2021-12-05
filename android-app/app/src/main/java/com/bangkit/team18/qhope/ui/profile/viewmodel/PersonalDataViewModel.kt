@@ -57,7 +57,7 @@ class PersonalDataViewModel(
   ) {
     val request = UpdateUserProfileRequest(
       name = name,
-      date_of_birth = _birthDate.value,
+      birth_date = _birthDate.value,
       address = address,
       birth_place = placeOfBirth,
       gender = gender.name
