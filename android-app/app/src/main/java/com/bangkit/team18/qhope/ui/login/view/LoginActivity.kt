@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import androidx.core.widget.doAfterTextChanged
+import com.bangkit.team18.core.domain.model.user.VerificationStatus
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityLoginBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseActivityViewModel
@@ -40,9 +41,9 @@ class LoginActivity : BaseActivityViewModel<ActivityLoginBinding, LoginViewModel
         viewModel.saveIdToken(viewModel::registerUser)
       }
     })
-    viewModel.userDoc.observe(this, {
+    viewModel.userDoc.observe(this, { user ->
       otpBottomSheet?.dismiss()
-      if (it == null) {
+      if (user.name.isBlank() && user.verificationStatus == VerificationStatus.NOT_UPLOAD) {
         Router.goToRegistration(this)
       } else {
         Router.goToMain(this)
