@@ -8,7 +8,6 @@ import androidx.navigation.fragment.navArgs
 import com.bangkit.team18.core.data.mapper.DataMapper
 import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.utils.view.DataUtils
-import com.bangkit.team18.core.utils.view.FileUtil
 import com.bangkit.team18.core.utils.view.PickerUtils
 import com.bangkit.team18.core.utils.view.ViewUtils.show
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
@@ -88,8 +87,8 @@ class BookingConfirmationFragment :
 
   override fun onIntentResult(data: Intent?) {
     data?.data?.let { fileUri ->
-      FileUtil.getFileAbsolutePath(mContext.contentResolver, fileUri)?.let {
-        viewModel.uploadReferralLetter(File(it))
+      fileUri.path?.let { filePath ->
+        viewModel.uploadReferralLetter(File(filePath))
       }
     }
   }

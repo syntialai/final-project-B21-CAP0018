@@ -40,7 +40,7 @@
         <item name="fontFamily">@font/raleway_semi_bold</item>
         <item name="android:fontFamily">@font/raleway_semi_bold</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:textSize">@dimen/sp_20</item>
     </style>
 
     <style name="TextAppearance.QHope.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
