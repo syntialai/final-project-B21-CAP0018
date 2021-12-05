@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".ui.profile.view.PersonalDataFragment">
 
     <LinearLayout
@@ -22,13 +23,12 @@
             android:src="@drawable/ic_person"
             app:shapeAppearance="@style/ShapeAppearance.QHope.LargeComponent" />
 
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/personal_data_ktp_number_container"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_32"
             android:hint="@string/ktp_number_hint">
 
             <com.google.android.material.textfield.TextInputEditText
