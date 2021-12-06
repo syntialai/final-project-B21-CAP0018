@@ -8,7 +8,9 @@ import com.bangkit.team18.core.domain.model.user.GenderType
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
+import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
+import timber.log.Timber
 import java.io.File
 
 class PersonalDataViewModel(
@@ -63,8 +65,11 @@ class PersonalDataViewModel(
       gender = gender.name
     )
     launchViewModelScope({
-      userUseCase.updateUser(request, _profilePicture.value).runFlow({
-        changeMode()
+      userUseCase.updateUser(request, _profilePicture.value).runFlow({ user ->
+        Timber.d("User: $user")
+        if (user.isNotNull()) {
+          changeMode()
+        }
       })
     })
   }

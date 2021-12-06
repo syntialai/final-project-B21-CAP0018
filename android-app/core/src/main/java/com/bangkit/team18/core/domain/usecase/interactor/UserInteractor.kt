@@ -17,7 +17,7 @@ class UserInteractor(private val userRepository: UserRepository) : UserUseCase {
   override suspend fun updateUser(
     updateUserProfileRequest: UpdateUserProfileRequest,
     image: File?
-  ) = userRepository.updateUser(updateUserProfileRequest, image)
+  ): Flow<ResponseWrapper<User>> = userRepository.updateUser(updateUserProfileRequest, image)
 
   override suspend fun uploadUserVerification(
     ktp: File,

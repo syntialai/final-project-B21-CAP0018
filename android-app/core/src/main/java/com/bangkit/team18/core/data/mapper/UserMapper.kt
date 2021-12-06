@@ -8,6 +8,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import timber.log.Timber
 import java.io.File
 
 object UserMapper {
@@ -44,7 +45,7 @@ object UserMapper {
     image: File?): Map<String, RequestBody> {
     val imageFileBody = image?.asRequestBody("image/*".toMediaTypeOrNull())
     val requestMap = hashMapOf<String, RequestBody>()
-    requestMap.addIfNotNull("image", imageFileBody)
+    requestMap.addIfNotNull("photo", imageFileBody)
     requestMap.addIfNotNull("name", getTextRequestBody(userProfileRequest.name))
     requestMap.addIfNotNull(
       "birth_date",
@@ -54,6 +55,7 @@ object UserMapper {
     requestMap.addIfNotNull("phone_number", getTextRequestBody(userProfileRequest.phone_number))
     requestMap.addIfNotNull("birth_place", getTextRequestBody(userProfileRequest.birth_place))
     requestMap.addIfNotNull("address", getTextRequestBody(userProfileRequest.address))
+    Timber.d("requestMap: $requestMap")
     return requestMap.toMap()
   }
 

@@ -14,7 +14,7 @@ interface UserUseCase {
   suspend fun updateUser(
     updateUserProfileRequest: UpdateUserProfileRequest,
     image: File? = null
-  ): Flow<ResponseWrapper<Boolean>>
+  ): Flow<ResponseWrapper<User>>
 
   suspend fun uploadUserVerification(ktp: File, selfie: File): Flow<ResponseWrapper<User>>
 

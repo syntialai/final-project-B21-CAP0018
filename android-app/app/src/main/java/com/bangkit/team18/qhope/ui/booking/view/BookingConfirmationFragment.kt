@@ -2,12 +2,15 @@ package com.bangkit.team18.qhope.ui.booking.view
 
 import android.content.Context
 import android.content.Intent
+import android.os.FileUtils
 import android.view.View
+import androidx.core.net.toFile
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bangkit.team18.core.data.mapper.DataMapper
 import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.utils.view.DataUtils
+import com.bangkit.team18.core.utils.view.FileUtil
 import com.bangkit.team18.core.utils.view.PickerUtils
 import com.bangkit.team18.core.utils.view.ViewUtils.show
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
@@ -22,6 +25,7 @@ import com.bangkit.team18.qhope.ui.payment.MidtransPayment
 import com.bangkit.team18.qhope.ui.payment.PaymentStatusListener
 import com.bangkit.team18.qhope.ui.widget.callback.OnBannerActionButtonClickListener
 import com.bangkit.team18.qhope.utils.Router
+import timber.log.Timber
 import java.io.File
 import java.util.*
 
@@ -190,7 +194,8 @@ class BookingConfirmationFragment :
   }
 
   private fun uploadPdf() {
-    val uploadPdfIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
+    val uploadPdfIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+      addCategory(Intent.CATEGORY_OPENABLE)
       type = APPLICATION_PDF_TYPE
     }
     intentLauncher.launch(uploadPdfIntent)
