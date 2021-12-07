@@ -7,7 +7,6 @@ import android.view.View
 import androidx.core.widget.doOnTextChanged
 import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.domain.model.user.User
-import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.core.utils.view.DataUtils.orHyphen
 import com.bangkit.team18.core.utils.view.DateUtils.toDateString
 import com.bangkit.team18.qhope.R
@@ -19,6 +18,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
   FragmentPersonalDataBinding::inflate,
   PersonalDataViewModel::class
 ) {
+
   private var menu: Menu? = null
 
   override fun setupViews() {
@@ -33,11 +33,9 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
 
   override fun setupObserver() {
     super.setupObserver()
-    viewModel.user.observe(viewLifecycleOwner, {
-      if (it.isNotNull()) {
-        viewModel.getUserDoc()
-      }
-    })
+
+    viewModel.getUserDoc()
+
     viewModel.userDoc.observe(viewLifecycleOwner, this::setupPersonalData)
   }
 
@@ -46,9 +44,8 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
       binding.apply {
         personalDataName.text = user.name.orHyphen()
         personalDataKtpNumber.text = user.ktpNumber.orHyphen()
+        personalDataBirthDate.text = user.birthDate?.toDateString("dd MMMM yyyy").orHyphen()
         personalDataPlaceOfBirth.text = user.placeOfBirth.orHyphen()
-        personalDataBirthDate.text = user.birthDate?.toDate()?.time?.toDateString("dd MMMM yyyy")
-        personalDataGender.text = user.gender?.toString().orHyphen()
         personalDataAddress.text = user.address.orHyphen()
       }
     }

@@ -8,5 +8,7 @@ sealed class ResponseWrapper<T> {
 
   data class Error<T>(val message: String? = null) : ResponseWrapper<T>()
 
+  data class HttpError<T>(val code: Int? = null, val message: String? = null) : ResponseWrapper<T>()
+
   data class NetworkError<T>(val message: String? = null) : ResponseWrapper<T>()
 }

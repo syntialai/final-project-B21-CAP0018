@@ -22,7 +22,9 @@ class ProfilePictureFragment : BaseFragment<FragmentProfilePictureBinding, Profi
   FragmentProfilePictureBinding::inflate,
   ProfilePictureViewModel::class
 ) {
+
   private val args by navArgs<ProfilePictureFragmentArgs>()
+
   private var menu: Menu? = null
 
   override fun setupViews() {

@@ -10,13 +10,13 @@ import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageView
 import androidx.activity.result.ActivityResult
-import androidx.core.view.isVisible
 import com.bangkit.team18.core.domain.model.user.DocumentType
+import com.bangkit.team18.core.domain.model.user.VerificationStatus
 import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
-import com.bangkit.team18.core.utils.view.DataUtils.isNull
 import com.bangkit.team18.core.utils.view.FileUtil
 import com.bangkit.team18.core.utils.view.FileUtil.getUri
 import com.bangkit.team18.core.utils.view.ViewUtils.loadImage
+import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityIdVerificationBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseActivityViewModel
@@ -33,31 +33,58 @@ class IdVerificationActivity :
 
   override fun setupViews(savedInstanceState: Bundle?) {
     supportActionBar?.hide()
-    binding.apply {
-      setupListener()
-      viewModel.ktpPicture.observe(this@IdVerificationActivity, {
-        setupImage(idVerificationKtpPicture, it)
-        idVerificationEditKtpPicture.isVisible = it.isNotNull()
-        idVerificationDeleteKtpPicture.isVisible = it.isNotNull()
-        checkSubmitButton()
-      })
-      viewModel.selfiePicture.observe(this@IdVerificationActivity, {
-        setupImage(idVerificationSelfiePicture, it)
-        idVerificationEditSelfiePicture.isVisible = it.isNotNull()
-        idVerificationDeleteSelfiePicture.isVisible = it.isNotNull()
-        checkSubmitButton()
-      })
+    with(binding) {
+      idVerificationKtpPicture.setOnClickListener(this@IdVerificationActivity)
+      idVerificationSelfiePicture.setOnClickListener(this@IdVerificationActivity)
+      idVerificationEditKtpPicture.setOnClickListener(this@IdVerificationActivity)
+      idVerificationEditSelfiePicture.setOnClickListener(this@IdVerificationActivity)
+      idVerificationDeleteKtpPicture.setOnClickListener(this@IdVerificationActivity)
+      idVerificationDeleteSelfiePicture.setOnClickListener(this@IdVerificationActivity)
+      idVerificationSkip.setOnClickListener(this@IdVerificationActivity)
+      idVerificationSubmit.setOnClickListener(this@IdVerificationActivity)
     }
-    viewModel.user.observe(this, {
-      if (it.isNull()) {
-        Router.goToLogin(this)
+  }
+
+  override fun setupObserver() {
+    super.setupObserver()
+
+    viewModel.ktpPicture.observe(this, {
+      setupImage(binding.idVerificationKtpPicture, it)
+      toggleEditButtonVisibility(false, it.isNotNull())
+      checkSubmitButton()
+    })
+
+    viewModel.selfiePicture.observe(this, {
+      setupImage(binding.idVerificationSelfiePicture, it)
+      toggleEditButtonVisibility(true, it.isNotNull())
+      checkSubmitButton()
+    })
+
+    viewModel.submitStatus.observe(this, { submitStatus ->
+      if (submitStatus.first) {
+        onSuccessUserVerification(submitStatus.second ?: VerificationStatus.UPLOADED)
       }
     })
-    viewModel.isSubmitted.observe(this, {
-      if (it) {
-        Router.goToVerificationResult(this)
+  }
+
+  private fun onSuccessUserVerification(verificationStatus: VerificationStatus) {
+    if (verificationStatus == VerificationStatus.ACCEPTED) {
+      Router.goToIdentityConfirmation(this, true)
+    } else {
+      Router.goToVerificationResult(this)
+    }
+  }
+
+  private fun toggleEditButtonVisibility(selfie: Boolean, fileExist: Boolean) {
+    with(binding) {
+      if (selfie) {
+        idVerificationEditSelfiePicture.showOrRemove(fileExist)
+        idVerificationDeleteSelfiePicture.showOrRemove(fileExist)
+      } else {
+        idVerificationEditKtpPicture.showOrRemove(fileExist)
+        idVerificationDeleteKtpPicture.showOrRemove(fileExist)
       }
-    })
+    }
   }
 
   private fun checkSubmitButton() {
@@ -78,19 +105,6 @@ class IdVerificationActivity :
         setImageResource(R.drawable.ic_add)
         setOnClickListener(this@IdVerificationActivity)
       }
-    }
-  }
-
-  private fun setupListener() {
-    binding.apply {
-      idVerificationKtpPicture.setOnClickListener(this@IdVerificationActivity)
-      idVerificationSelfiePicture.setOnClickListener(this@IdVerificationActivity)
-      idVerificationEditKtpPicture.setOnClickListener(this@IdVerificationActivity)
-      idVerificationEditSelfiePicture.setOnClickListener(this@IdVerificationActivity)
-      idVerificationDeleteKtpPicture.setOnClickListener(this@IdVerificationActivity)
-      idVerificationDeleteSelfiePicture.setOnClickListener(this@IdVerificationActivity)
-      idVerificationSkip.setOnClickListener(this@IdVerificationActivity)
-      idVerificationSubmit.setOnClickListener(this@IdVerificationActivity)
     }
   }
 

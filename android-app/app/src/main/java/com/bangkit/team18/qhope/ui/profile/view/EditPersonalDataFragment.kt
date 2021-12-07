@@ -23,6 +23,7 @@ class EditPersonalDataFragment :
     FragmentEditPersonalDataBinding::inflate,
     EditPersonalDataViewModel::class
   ) {
+
   private var birthDatePicker: MaterialDatePicker<Long> =
     PickerUtils.getDatePicker(R.string.birth_date_hint)
 
@@ -43,11 +44,9 @@ class EditPersonalDataFragment :
 
   override fun setupObserver() {
     super.setupObserver()
-    viewModel.user.observe(viewLifecycleOwner, {
-      if (it.isNotNull()) {
-        viewModel.getUserDoc()
-      }
-    })
+
+    viewModel.getUserDoc()
+
     viewModel.userDoc.observe(viewLifecycleOwner, {
       setupPersonalData(it)
     })
@@ -72,15 +71,12 @@ class EditPersonalDataFragment :
         editPersonalDataBirthDate.setOnClickListener(this@EditPersonalDataFragment)
         editPersonalDataPlaceOfBirth.setText(user.placeOfBirth)
         editPersonalDataAddress.setText(user.address)
-        user.birthDate?.toDate()?.time?.let {
+        user.birthDate?.let {
           birthDatePicker = PickerUtils.getDatePicker(R.string.birth_date_hint, it)
+          viewModel.setBirthDate(it / 1000)
         }
         editPersonalDataGenderMale.isChecked = user.gender == GenderType.MALE
         editPersonalDataGenderFemale.isChecked = user.gender == GenderType.FEMALE
-
-        user.birthDate?.toDate()?.time?.let {
-          viewModel.setBirthDate(it / 1000)
-        }
       }
     }
   }

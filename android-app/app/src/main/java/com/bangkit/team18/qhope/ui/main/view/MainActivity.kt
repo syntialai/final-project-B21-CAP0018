@@ -6,14 +6,12 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.bangkit.team18.core.utils.view.DataUtils.isNull
 import com.bangkit.team18.core.utils.view.DataUtils.orFalse
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.ActivityMainBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseActivityViewModel
 import com.bangkit.team18.qhope.ui.main.viewmodel.MainViewModel
-import com.bangkit.team18.qhope.utils.Router
 import com.bangkit.team18.qhope.utils.setupWithNavController
 
 class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
@@ -39,11 +37,6 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
     if (savedInstanceState == null) {
       setupBottomNavigationBar()
     }
-    viewModel.user.observe(this, {
-      if (it.isNull()) {
-        Router.goToLogin(this)
-      }
-    })
   }
 
   override fun onClick(v: View?) {

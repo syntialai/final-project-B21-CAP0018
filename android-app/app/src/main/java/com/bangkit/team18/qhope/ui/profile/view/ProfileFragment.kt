@@ -18,19 +18,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(
   FragmentProfileBinding::inflate,
   ProfileViewModel::class
 ) {
-  override fun setupViews() {
-    setupListener()
-    viewModel.user.observe(viewLifecycleOwner, {
-      if (it.isNotNull()) {
-        viewModel.getUserDoc()
-      }
-    })
-    viewModel.userDoc.observe(viewLifecycleOwner, {
-      setupUserProfile(it)
-    })
-  }
 
-  private fun setupListener() {
+  override fun setupViews() {
     binding.apply {
       profileLogOut.setOnClickListener(this@ProfileFragment)
       profileIdVerification.setOnClickListener(this@ProfileFragment)
@@ -39,19 +28,37 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(
     }
   }
 
+  override fun setupObserver() {
+    super.setupObserver()
+    viewModel.getUserDoc()
+
+    viewModel.userDoc.observe(viewLifecycleOwner, {
+      setupUserProfile(it)
+    })
+  }
+
   private fun setupUserProfile(user: User) {
     binding.apply {
       profileName.text = user.name
       profilePictureImage.loadImage(mContext, user.imageUrl, R.drawable.default_profile_picture)
+
       val statusText: String
       val textColorInt: Int
-      if (user.verificationStatus == VerificationStatus.VERIFIED) {
-        statusText = getString(R.string.verified_label)
-        textColorInt = mContext.getColorFromAttr(R.attr.colorSecondaryVariant)
-      } else {
-        statusText = getString(R.string.not_verified_label)
-        textColorInt = ResourcesCompat.getColor(mContext.resources, R.color.grey_300, null)
+      when (user.verificationStatus) {
+        VerificationStatus.VERIFIED -> {
+          statusText = getString(R.string.verified_label)
+          textColorInt = mContext.getColorFromAttr(R.attr.colorSecondaryVariant)
+        }
+        VerificationStatus.ACCEPTED -> {
+          statusText = getString(R.string.accepted_label)
+          textColorInt = mContext.getColorFromAttr(R.attr.colorSecondaryVariant)
+        }
+        else -> {
+          statusText = getString(R.string.not_verified_label)
+          textColorInt = ResourcesCompat.getColor(mContext.resources, R.color.grey_300, null)
+        }
       }
+
       profileVerificationStatus.apply {
         text = statusText
         setTextColor(textColorInt)

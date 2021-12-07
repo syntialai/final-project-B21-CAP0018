@@ -1,10 +1,10 @@
 package com.bangkit.team18.qhope.ui.booking.viewmodel
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.bangkit.team18.core.data.mapper.DataMapper
+import com.bangkit.team18.core.api.source.request.transaction.CreateTransactionRequest
+import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.domain.model.booking.BookedHospital
 import com.bangkit.team18.core.domain.model.booking.BookingDetail
 import com.bangkit.team18.core.domain.model.hospital.RoomType
@@ -16,14 +16,15 @@ import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.core.utils.view.DataUtils.areNotEmpty
 import com.bangkit.team18.core.utils.view.DataUtils.orFalse
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
-import com.google.firebase.Timestamp
-import java.util.*
+import java.io.File
+import java.util.Calendar
 
 class BookingConfirmationViewModel(
+  private val authSharedPrefRepository: AuthSharedPrefRepository,
   private val roomBookingUseCase: RoomBookingUseCase,
   private val userUseCase: UserUseCase,
   authUseCase: AuthUseCase
-) : BaseViewModelWithAuth(authUseCase) {
+) : BaseViewModelWithAuth(authSharedPrefRepository, authUseCase) {
 
   private var _bookingDetail = MutableLiveData<BookingDetail>()
   val bookingDetail: LiveData<BookingDetail>
@@ -40,7 +41,6 @@ class BookingConfirmationViewModel(
     get() = _isEnableBooking
 
   init {
-    initAuthStateListener()
     setupIsEnableBookingMediator()
   }
 
@@ -50,14 +50,12 @@ class BookingConfirmationViewModel(
     _isEnableBooking.removeSource(_bookingDetail)
   }
 
-  fun fetchUserDetails(userId: String, userPhoneNumber: String) {
+  fun fetchUserDetails() {
     launchViewModelScope({
-      userUseCase.getUser(userId).runFlow({ userData ->
-        userData?.let {
-          _userDetails.value = userData
-          addUserData(userData, userPhoneNumber)
-        }
-      }, ::logOut)
+      userUseCase.getUserProfile().runFlow({
+        _userDetails.value = it
+        addUserData(it, it.phoneNumber)
+      })
     })
   }
 
@@ -65,8 +63,6 @@ class BookingConfirmationViewModel(
     _bookingDetail.value?.selectedDateTime?.get(Calendar.HOUR),
     _bookingDetail.value?.selectedDateTime?.get(Calendar.MINUTE)
   )
-
-  fun mapToFormattedPrice(price: Double): String = DataMapper.toFormattedPrice(price)
 
   fun setBookingDetail(hospital: BookedHospital, selectedRoomType: RoomType) {
     _bookingDetail.value = BookingDetail(hospital, selectedRoomType)
@@ -89,8 +85,16 @@ class BookingConfirmationViewModel(
 
   fun processBook() {
     _bookingDetail.value?.let { booking ->
+      val request = CreateTransactionRequest(
+        hospital_id = booking.hospital.id,
+        room_type_id = booking.selectedRoomType.id,
+        selected_date_time = booking.selectedDateTime.timeInMillis,
+        referral_letter_url = booking.referralLetterUri,
+        referral_letter_name = booking.referralLetterName,
+        payment_type = ""
+      )
       launchViewModelScope({
-        roomBookingUseCase.createBooking(booking).runFlow({
+        roomBookingUseCase.createBooking(request).runFlow({
           _isBooked.value = it
         }, {
           _isBooked.value = false
@@ -99,17 +103,16 @@ class BookingConfirmationViewModel(
     }
   }
 
-  fun uploadReferralLetter(fileUri: Uri) {
-    getUserId()?.let { id ->
-      val fileName = Timestamp.now().seconds.toString()
-      launchViewModelScope({
-        roomBookingUseCase.uploadReferralLetter(id, fileUri, fileName).runFlow({
-          _bookingDetail.value?.referralLetterUri = it.toString()
-          _bookingDetail.value?.referralLetterName = fileName
-          _bookingDetail.publishChanges()
-        })
-      })
-    }
+  fun uploadReferralLetter(file: File) {
+//    launchViewModelScope({
+//      roomBookingUseCase.uploadReferralLetter(file).runFlow({ referralLetter ->
+//        _bookingDetail.value?.referralLetterUri = referralLetter.url
+//        _bookingDetail.value?.referralLetterName = referralLetter.name
+      _bookingDetail.value?.referralLetterUri = file.toURI().toString()
+        _bookingDetail.value?.referralLetterName = file.name
+        _bookingDetail.publishChanges()
+//      })
+//    })
   }
 
   private fun addUserData(userDetails: User, phoneNumber: String) {

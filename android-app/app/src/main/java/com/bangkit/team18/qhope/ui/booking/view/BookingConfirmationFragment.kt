@@ -1,11 +1,14 @@
 package com.bangkit.team18.qhope.ui.booking.view
 
+import android.content.Context
 import android.content.Intent
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bangkit.team18.core.data.mapper.DataMapper
 import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.utils.view.DataUtils
+import com.bangkit.team18.core.utils.view.FileUtil
 import com.bangkit.team18.core.utils.view.PickerUtils
 import com.bangkit.team18.core.utils.view.ViewUtils.show
 import com.bangkit.team18.core.utils.view.ViewUtils.showOrRemove
@@ -16,21 +19,31 @@ import com.bangkit.team18.qhope.ui.booking.callback.RouteToCallback
 import com.bangkit.team18.qhope.ui.booking.viewmodel.BookingConfirmationViewModel
 import com.bangkit.team18.qhope.ui.history.view.HistoryFragmentDirections
 import com.bangkit.team18.qhope.ui.home.view.HomeFragmentDirections
+import com.bangkit.team18.qhope.ui.payment.MidtransPayment
+import com.bangkit.team18.qhope.ui.payment.PaymentStatusListener
 import com.bangkit.team18.qhope.ui.widget.callback.OnBannerActionButtonClickListener
 import com.bangkit.team18.qhope.utils.Router
+import java.io.File
 import java.util.*
 
 class BookingConfirmationFragment :
   BaseFragment<FragmentBookingConfirmationBinding, BookingConfirmationViewModel>(
     FragmentBookingConfirmationBinding::inflate, BookingConfirmationViewModel::class
-  ), OnBannerActionButtonClickListener, RouteToCallback {
+  ), OnBannerActionButtonClickListener, RouteToCallback, PaymentStatusListener {
 
   companion object {
     private const val OPEN_TIME_PICKER = "OPEN TIME PICKER"
     private const val APPLICATION_PDF_TYPE = "application/pdf"
   }
 
+  private var midtransPayment: MidtransPayment? = null
+
   private val args: BookingConfirmationFragmentArgs by navArgs()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    midtransPayment = MidtransPayment(context, this)
+  }
 
   override fun setupViews() {
     binding.apply {
@@ -47,11 +60,7 @@ class BookingConfirmationFragment :
     super.setupObserver()
 
     viewModel.setBookingDetail(args.bookedHospital, args.roomType)
-    viewModel.user.observe(viewLifecycleOwner, {
-      it?.let { user ->
-        viewModel.fetchUserDetails(user.uid, user.phoneNumber.orEmpty())
-      }
-    })
+    viewModel.fetchUserDetails()
     viewModel.bookingDetail.observe(viewLifecycleOwner, {
       it?.let { bookingDetail ->
         setRoomData(bookingDetail.hospital.name, bookingDetail.selectedRoomType)
@@ -63,7 +72,7 @@ class BookingConfirmationFragment :
     viewModel.isBooked.observe(viewLifecycleOwner, {
       it?.let { isBooked ->
         if (isBooked) {
-          openSuccessBookBottomSheet()
+          midtransPayment?.setupPayments()
         }
       }
     })
@@ -79,7 +88,9 @@ class BookingConfirmationFragment :
 
   override fun onIntentResult(data: Intent?) {
     data?.data?.let { fileUri ->
-      viewModel.uploadReferralLetter(fileUri)
+      FileUtil.getFileAbsolutePath(mContext.contentResolver, fileUri)?.let {
+        viewModel.uploadReferralLetter(File(it))
+      }
     }
   }
 
@@ -94,7 +105,7 @@ class BookingConfirmationFragment :
   }
 
   override fun onBannerButtonClicked() {
-    Router.goToIdVerification(mContext)
+    Router.goToIdVerification(mContext, false)
   }
 
   override fun goToHome() {
@@ -137,7 +148,7 @@ class BookingConfirmationFragment :
         R.string.selected_room_type, roomType.name,
         hospitalName
       )
-      textViewBookingSelectedRoomPrice.text = viewModel.mapToFormattedPrice(roomType.price)
+      textViewBookingSelectedRoomPrice.text = DataMapper.toFormattedPrice(roomType.price)
     }
   }
 
@@ -184,5 +195,22 @@ class BookingConfirmationFragment :
       type = APPLICATION_PDF_TYPE
     }
     intentLauncher.launch(uploadPdfIntent)
+  }
+
+  override fun onPaymentSuccess(transactionId: String) {
+    openSuccessBookBottomSheet()
+  }
+
+  override fun onPaymentPending(transactionId: String) {
+    // TODO
+  }
+
+  override fun onPaymentFailed(statusMessage: String) {
+    showErrorToast(statusMessage, R.string.unknown_error_message)
+  }
+
+  override fun onPaymentCancelled() {
+    showErrorToast(null, R.string.payment_cancelled_message)
+    goToHome()
   }
 }

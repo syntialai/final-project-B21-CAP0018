@@ -24,10 +24,13 @@
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.QHope">
+        android:theme="@style/Theme.QHope"
+        tools:targetApi="n">
+
         <activity
             android:name=".ui.main.view.MainActivity"
             android:windowSoftInputMode="adjustPan" />
@@ -39,10 +42,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ui.login.view.LoginActivity" />
+
         <activity android:name=".ui.registration.view.RegistrationActivity" />
+
         <activity android:name=".ui.registration.view.VerificationResultActivity" />
+
         <activity android:name=".ui.registration.view.IdVerificationActivity" />
+
+        <activity android:name=".ui.registration.view.IdentityConfirmationActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

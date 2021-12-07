@@ -16,18 +16,28 @@ class QHopeApplication : Application() {
 
   override fun onCreate() {
     super.onCreate()
+    
     FirebaseApp.initializeApp(this)
+    
     startKoin {
       androidLogger(Level.DEBUG)
       androidLogger(Level.ERROR)
       androidContext(this@QHopeApplication)
       modules(
         listOf(
-          dispatcherModule, firebaseModule, remoteDataSourceModule, repositoryModule,
-          useCaseModule, viewModelModule
+          dispatcherModule,
+          firebaseModule,
+          sharedPrefRepositoryModule,
+          networkModule,
+          serviceModule,
+          remoteDataSourceModule,
+          repositoryModule,
+          useCaseModule,
+          viewModelModule
         )
       )
     }
+
     if (BuildConfig.DEBUG) {
       Timber.plant(Timber.DebugTree())
     }

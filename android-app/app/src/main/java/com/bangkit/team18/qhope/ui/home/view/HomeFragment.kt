@@ -5,6 +5,7 @@ import android.location.Geocoder
 import android.location.Location
 import android.view.View
 import android.widget.SearchView
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.domain.model.user.VerificationStatus
 import com.bangkit.team18.core.utils.location.LocationManager
@@ -19,12 +20,10 @@ import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.home.adapter.HomeAdapter
 import com.bangkit.team18.qhope.ui.home.adapter.HomeHospitalItemCallback
 import com.bangkit.team18.qhope.ui.home.viewmodel.HomeViewModel
+import com.bangkit.team18.qhope.utils.Router
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import org.koin.android.ext.android.inject
-import java.util.*
+import java.util.Locale
 
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   FragmentHomeBinding::inflate,
@@ -34,8 +33,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   companion object {
     fun newInstance() = HomeFragment()
   }
-
-  private val storage: FirebaseStorage by inject()
 
   private val homeAdapter by lazy {
     HomeAdapter(this)
@@ -60,9 +57,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   override fun setupObserver() {
     super.setupObserver()
 
+    viewModel.fetchHospitals()
     viewModel.fetchUserData()
-    viewModel.nearbyHospitals.observe(viewLifecycleOwner, { nearbyHospitals ->
-      homeAdapter.submitList(nearbyHospitals)
+    viewModel.hospitals.observe(viewLifecycleOwner, { hospitals ->
+      homeAdapter.submitList(hospitals)
     })
     viewModel.userData.observe(viewLifecycleOwner, { userData ->
       setUserName(userData.name)
@@ -100,17 +98,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
     )
   }
 
-  override fun getStorageRef(imagePath: String): StorageReference {
-    return storage.getReference(imagePath)
-  }
-
-  override fun onPermissionsGranted() {
-    super.onPermissionsGranted()
-    locationManager.startUpdateLocation()
-  }
-
-  override fun onAnyPermissionsDenied(permissions: List<String>) {
-    showErrorToast(defaultMessageId = R.string.failed_to_get_location_message)
+  @SuppressLint("MissingPermission")
+  override fun onPermissionGrantedChange(isGranted: Boolean) {
+    if (isGranted) {
+      locationManager.startUpdateLocation()
+    } else {
+      showErrorToast(defaultMessageId = R.string.failed_to_get_location_message)
+    }
   }
 
   override fun showLoadingState(isLoading: Boolean) {
@@ -118,7 +112,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
       spinKitLoadHome.showOrRemove(isLoading)
       layoutVerificationStatus.root.showOrRemove(isLoading.not())
       textViewOurHospitalsLabel.showOrRemove(isLoading.not())
-      recyclerViewRecommendedHospitals.showOrRemove(isLoading.not())
+      recyclerViewHospitals.showOrRemove(isLoading.not())
     }
   }
 
@@ -128,6 +122,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
 
   private fun getVerificationButtonText(status: VerificationStatus) = getString(
     when (status) {
+      VerificationStatus.ACCEPTED -> R.string.verification_status_accepted_button_label
       VerificationStatus.VERIFIED -> R.string.verification_status_verified_button_label
       VerificationStatus.REJECTED -> R.string.verification_status_not_verified_button_label
       else -> R.string.verification_status_not_upload_button_label
@@ -135,6 +130,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   )
 
   private fun getVerificationDrawable(status: VerificationStatus) = when (status) {
+    VerificationStatus.ACCEPTED,
     VerificationStatus.VERIFIED -> R.drawable.drawable_verification_status_verified
     VerificationStatus.REJECTED -> R.drawable.drawable_verification_status_not_verified
     else -> R.drawable.drawable_verification_status_not_upload
@@ -142,6 +138,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
 
   private fun getVerificationDescription(status: VerificationStatus) = getString(
     when (status) {
+      VerificationStatus.ACCEPTED -> R.string.verification_status_accepted_description
       VerificationStatus.VERIFIED -> R.string.verification_status_verified_description
       VerificationStatus.REJECTED -> R.string.verification_status_not_verified_description
       else -> R.string.verification_status_not_upload_description
@@ -157,13 +154,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   )
 
   private fun setLocation(location: Location) {
-    viewModel.fetchNearbyHospitals(location.latitude, location.longitude)
-    val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(
-      location.latitude,
-      location.longitude, 1
-    )
-    binding.textViewYourLocation.text = addresses[0].getAddressLine(0)
-    showLocationLoadingState(false)
+    viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+      val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(
+        location.latitude,
+        location.longitude, 1
+      )
+      binding.textViewYourLocation.text = addresses[0].getAddressLine(0)
+      showLocationLoadingState(false)
+    }
   }
 
   private fun setUserName(name: String) {
@@ -181,24 +179,46 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
       textViewVerificationStatusTitle.text = getVerificationTitle(status)
 
       when (status) {
+        VerificationStatus.ACCEPTED -> {
+          chipVerificationStatusNotVerified.remove()
+          chipVerificationStatusVerified.show()
+          chipVerificationStatusVerified.text = mContext.getString(R.string.accepted_label)
+          buttonVerificationStatus.setOnClickListener {
+            Router.goToIdentityConfirmation(mContext, false)
+          }
+        }
         VerificationStatus.VERIFIED -> {
           chipVerificationStatusNotVerified.remove()
           chipVerificationStatusVerified.show()
+          chipVerificationStatusVerified.text = mContext.getString(R.string.verified_label)
+          buttonVerificationStatus.setOnClickListener {
+            // TODO
+          }
         }
         VerificationStatus.REJECTED -> {
           chipVerificationStatusNotVerified.show()
           chipVerificationStatusVerified.hide()
+          buttonVerificationStatus.setOnClickListener {
+            Router.goToVerificationResult(mContext)
+          }
         }
         else -> {
           chipVerificationStatusNotVerified.remove()
           chipVerificationStatusVerified.remove()
+          buttonVerificationStatus.setOnClickListener {
+            goToIdVerification()
+          }
         }
       }
     }
   }
 
+  private fun goToIdVerification() {
+    Router.goToIdVerification(mContext, false)
+  }
+
   private fun setupRecyclerView() {
-    binding.recyclerViewRecommendedHospitals.apply {
+    binding.recyclerViewHospitals.apply {
       adapter = homeAdapter
       setHasFixedSize(false)
     }
@@ -249,7 +269,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
 
   private fun showSearchResults(show: Boolean) {
     with(binding) {
-      recyclerViewRecommendedHospitals.showOrRemove(show.not())
+      recyclerViewHospitals.showOrRemove(show.not())
       recyclerViewHospitalSearchResults.showOrRemove(show)
     }
   }

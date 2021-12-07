@@ -9,6 +9,7 @@ import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.LayoutHospitalItemBinding
 import com.bangkit.team18.qhope.ui.base.adapter.BaseAdapter
 import com.bangkit.team18.qhope.ui.base.adapter.BaseDiffCallback
+import com.bumptech.glide.Glide
 
 class HomeAdapter(private val hospitalItemCallback: HomeHospitalItemCallback) :
   BaseAdapter<Hospital, LayoutHospitalItemBinding>(diffCallback) {
@@ -36,10 +37,10 @@ class HomeAdapter(private val hospitalItemCallback: HomeHospitalItemCallback) :
           hospitalItemCallback.onClickListener(data.id)
         }
 
-        imageViewHospitalItem.loadImage(
-          hospitalItemCallback.getStorageRef(data.image),
-          R.drawable.drawable_hospital_placeholder
-        )
+        Glide.with(root.context)
+          .load(data.image)
+          .placeholder(R.drawable.drawable_hospital_placeholder)
+          .into(imageViewHospitalItem)
 
         textViewHospitalItemName.text = data.name
         textViewHospitalItemAddress.text = data.address
@@ -51,20 +52,26 @@ class HomeAdapter(private val hospitalItemCallback: HomeHospitalItemCallback) :
         chipHospitalItemRoomAvailable.showOrRemove(isRoomAvailable)
         chipHospitalItemRoomNotAvailable.showOrRemove(isRoomAvailable.not())
 
-        mContext.resources.getQuantityString(
-          R.plurals.room_available_label, roomAvailable,
-          roomAvailable
-        ).also { roomAvailableLabel ->
-          chipHospitalItemRoomNotAvailable.setChipIconResource(
-            if (isRoomAvailable) {
-              R.drawable.ic_info
-            } else {
-              R.drawable.ic_not_available
-            }
+        val roomAvailableLabel = if (isRoomAvailable.not()) {
+          mContext.getString(R.string.not_available_label)
+        } else {
+          mContext.resources.getQuantityString(
+            R.plurals.room_available_label,
+            roomAvailable,
+            roomAvailable
           )
-          chipHospitalItemRoomNotAvailable.text = roomAvailableLabel
-          chipHospitalItemRoomAvailable.text = roomAvailableLabel
         }
+
+        chipHospitalItemRoomNotAvailable.setChipIconResource(
+          if (isRoomAvailable) {
+            R.drawable.ic_info
+          } else {
+            R.drawable.ic_not_available
+          }
+        )
+
+        chipHospitalItemRoomNotAvailable.text = roomAvailableLabel
+        chipHospitalItemRoomAvailable.text = roomAvailableLabel
       }
     }
 

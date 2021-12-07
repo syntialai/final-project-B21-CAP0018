@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import androidx.core.widget.doOnTextChanged
-import com.bangkit.team18.core.utils.view.DataUtils.isNull
 import com.bangkit.team18.core.utils.view.DateUtils.toDateString
 import com.bangkit.team18.core.utils.view.FileUtil
 import com.bangkit.team18.core.utils.view.ViewUtils.loadImage
@@ -15,7 +14,6 @@ import com.bangkit.team18.qhope.databinding.ActivityRegistrationBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseActivityViewModel
 import com.bangkit.team18.qhope.ui.registration.viewmodel.RegistrationViewModel
 import com.bangkit.team18.qhope.utils.Router
-import com.bangkit.team18.qhope.utils.Router.goToLogin
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.io.File
 
@@ -49,11 +47,6 @@ class RegistrationActivity :
       }
     }
     setupDatePicker()
-    viewModel.user.observe(this, {
-      if (it.isNull()) {
-        goToLogin(this)
-      }
-    })
     viewModel.profilePicture.observe(this, {
       binding.registrationProfilePicture.loadImage<File>(this, it)
     })

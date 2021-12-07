@@ -19,6 +19,9 @@ android {
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     consumerProguardFiles "consumer-rules.pro"
+
+    buildConfigField("String", "QHOPE_API_URL", "\"https://api.qhope.id/\"")
+    buildConfigField("String", "MIDTRANS_CLIENT_KEY", "\"SB-Mid-client-x02aWsSjwlJjbntc\"")
   }
 
   buildTypes {
