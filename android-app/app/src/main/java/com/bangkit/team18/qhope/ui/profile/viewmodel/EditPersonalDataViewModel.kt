@@ -10,7 +10,6 @@ import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.core.utils.view.DataUtils.orZero
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
-import com.google.firebase.Timestamp
 
 class EditPersonalDataViewModel(
   authSharedPrefRepository: AuthSharedPrefRepository,
@@ -57,9 +56,9 @@ class EditPersonalDataViewModel(
       birth_date = _birthDate.value.orZero()
     )
     launchViewModelScope({
-//      userUseCase.updateUser(request, user).runFlow({
-//        _saved.value = it
-//      })
+      userUseCase.updateUser(request).runFlow({
+        _saved.value = it
+      })
     })
   }
 }

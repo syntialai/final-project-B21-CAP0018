@@ -21,8 +21,8 @@ import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.utils.view.DialogUtils
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModel
-import com.bangkit.team18.qhope.utils.PermissionUtil
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
+import com.bangkit.team18.qhope.utils.PermissionUtil
 import com.bangkit.team18.qhope.utils.Router
 import com.bangkit.team18.qhope.utils.SnackbarUtils
 import kotlinx.coroutines.Job
@@ -168,7 +168,7 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
 
   private fun onHttpError(code: Int, message: String?) {
     when (code) {
-      HttpURLConnection.HTTP_UNAUTHORIZED -> (viewModel as? BaseViewModelWithAuth)?.logOut()
+      HttpURLConnection.HTTP_UNAUTHORIZED -> viewModelWithAuth?.logOut()
       else -> showErrorToast(message, R.string.unknown_error_message)
     }
   }
