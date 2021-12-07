@@ -3,7 +3,6 @@ package com.bangkit.team18.qhope.ui.base.view
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,14 +11,14 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.utils.view.DialogUtils
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModel
-import com.bangkit.team18.qhope.utils.Router
+import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import com.bangkit.team18.qhope.utils.PermissionUtil
+import com.bangkit.team18.qhope.utils.Router
 import com.bangkit.team18.qhope.utils.SnackbarUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.net.HttpURLConnection
@@ -35,6 +34,8 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
   protected val binding get() = _binding as VB
 
   protected val viewModel: VM by viewModel(viewModelClazz)
+
+  private var viewModelWithAuth: BaseViewModelWithAuth? = null
 
   protected lateinit var intentLauncher: ActivityResultLauncher<Intent>
 
@@ -114,7 +115,7 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
 
   private fun onHttpError(code: Int, message: String?) {
     when (code) {
-      HttpURLConnection.HTTP_UNAUTHORIZED -> (viewModel as? BaseViewModelWithAuth)?.logOut()
+      HttpURLConnection.HTTP_UNAUTHORIZED -> viewModelWithAuth?.logOut()
       else -> showErrorToast(message, R.string.unknown_error_message)
     }
   }

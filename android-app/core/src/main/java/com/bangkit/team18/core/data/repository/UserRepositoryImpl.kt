@@ -69,5 +69,4 @@ class UserRepositoryImpl(
       }
     }.updateData().flowOn(ioDispatcher)
   }
-  }
 }

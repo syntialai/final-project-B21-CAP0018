@@ -8,7 +8,6 @@ import androidx.core.widget.doOnTextChanged
 import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.domain.model.user.GenderType
 import com.bangkit.team18.core.domain.model.user.User
-import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.core.utils.view.DateUtils.toDateString
 import com.bangkit.team18.core.utils.view.PickerUtils
 import com.bangkit.team18.qhope.R
@@ -109,12 +108,11 @@ class EditPersonalDataFragment :
       }
       if (valid) {
         val name = editPersonalDataName.text.toString()
-        val ktpNumber = editPersonalDataKtpNumber.text.toString()
         val placeOfBirth = editPersonalDataPlaceOfBirth.text.toString()
         val address = editPersonalDataAddress.text.toString()
         val gender =
           if (editPersonalDataGenderMale.isChecked) GenderType.MALE else GenderType.FEMALE
-        viewModel.update(name, ktpNumber, placeOfBirth, address, gender)
+        viewModel.update(name, placeOfBirth, address, gender)
       }
     }
   }

@@ -1,6 +1,7 @@
 package com.bangkit.team18.qhope.ui.home.view
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.location.Geocoder
 import android.location.Location
 import android.view.View
@@ -99,12 +100,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   }
 
   @SuppressLint("MissingPermission")
-  override fun onPermissionGrantedChange(isGranted: Boolean) {
-    if (isGranted) {
-      locationManager.startUpdateLocation()
-    } else {
-      showErrorToast(defaultMessageId = R.string.failed_to_get_location_message)
-    }
+  override fun onPermissionsGranted() {
+    locationManager.startUpdateLocation()
+  }
+
+  override fun onAnyPermissionsDenied(permissions: List<String>) {
+    showErrorToast(defaultMessageId = R.string.failed_to_get_location_message)
   }
 
   override fun showLoadingState(isLoading: Boolean) {
