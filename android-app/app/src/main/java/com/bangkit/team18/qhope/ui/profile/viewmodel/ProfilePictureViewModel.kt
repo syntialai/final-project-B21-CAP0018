@@ -7,6 +7,7 @@ import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
 import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
+import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import id.zelory.compressor.Compressor
 import java.io.File
@@ -36,8 +37,8 @@ class ProfilePictureViewModel(
   fun save() {
     launchViewModelScope({
       profilePicture.value?.let {
-        userUseCase.updateUser(UpdateUserProfileRequest(), it).runFlow({ success ->
-          _saved.value = success
+        userUseCase.updateUser(UpdateUserProfileRequest(), it).runFlow({ user ->
+          _saved.value = user.isNotNull()
         })
       }
     })

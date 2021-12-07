@@ -8,6 +8,7 @@ import com.bangkit.team18.core.domain.model.user.GenderType
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
+import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.core.utils.view.DataUtils.orZero
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 
@@ -57,7 +58,7 @@ class EditPersonalDataViewModel(
     )
     launchViewModelScope({
       userUseCase.updateUser(request).runFlow({
-        _saved.value = it
+        _saved.value = it.isNotNull()
       })
     })
   }

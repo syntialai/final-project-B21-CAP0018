@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bangkit.team18.core.utils.view.FileUtil
+import com.bangkit.team18.core.utils.view.ViewUtils.loadImage
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentProfilePictureBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
@@ -28,13 +29,11 @@ class ProfilePictureFragment : BaseFragment<FragmentProfilePictureBinding, Profi
 
   override fun setupViews() {
     (mContext as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
-    binding.profilePictureImage.apply {
-      loadImage(
-        mContext,
-        args.photoUrl,
-        R.drawable.default_profile_picture
-      )
-    }
+    binding.profilePictureImage.loadImage(
+      mContext,
+      args.photoUrl,
+      R.drawable.default_profile_picture
+    )
     setHasOptionsMenu(true)
   }
 
