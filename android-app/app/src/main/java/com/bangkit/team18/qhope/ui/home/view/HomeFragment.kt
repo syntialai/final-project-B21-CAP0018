@@ -6,7 +6,7 @@ import android.location.Geocoder
 import android.location.Location
 import android.view.View
 import android.widget.SearchView
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.domain.model.user.VerificationStatus
 import com.bangkit.team18.core.utils.location.LocationManager
@@ -155,7 +155,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   )
 
   private fun setLocation(location: Location) {
-    viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+    if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
       val addresses = Geocoder(mContext, Locale.getDefault()).getFromLocation(
         location.latitude,
         location.longitude, 1
