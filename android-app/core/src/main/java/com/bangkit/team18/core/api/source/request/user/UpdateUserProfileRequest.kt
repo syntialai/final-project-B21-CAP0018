@@ -4,7 +4,7 @@ data class UpdateUserProfileRequest(
 
   var name: String? = null,
 
-  var date_of_birth: Long? = null,
+  var birth_date: Long? = null,
 
   var gender: String? = null,
 

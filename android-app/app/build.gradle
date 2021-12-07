@@ -78,6 +78,9 @@ dependencies {
 
   // Compressor
   implementation 'id.zelory:compressor:3.0.1'
+
+  // Dexter
+  implementation "com.karumi:dexter:6.2.3"
 }
 
 secrets {

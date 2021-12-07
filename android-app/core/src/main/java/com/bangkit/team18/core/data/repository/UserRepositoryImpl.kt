@@ -38,8 +38,7 @@ class UserRepositoryImpl(
     updateUserProfileRequest: UpdateUserProfileRequest,
     image: File?
   ): Flow<ResponseWrapper<Boolean>> {
-    return object :
-      UpdateDataWrapper<UserResponse>() {
+    return object : UpdateDataWrapper<UserResponse>() {
       override suspend fun doUpdate(): UserResponse {
         return userRemoteDataSource.updateUser(updateUserProfileRequest, image)
       }
@@ -69,5 +68,6 @@ class UserRepositoryImpl(
         return userRemoteDataSource.confirmUserIdentity(identityConfirmationRequest)
       }
     }.updateData().flowOn(ioDispatcher)
+  }
   }
 }

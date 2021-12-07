@@ -1,11 +1,14 @@
 package com.bangkit.team18.core.utils.view
 
 import android.content.Context
+import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
-import com.bangkit.team18.core.utils.view.GlideApp.with
 import com.bumptech.glide.Glide
+
 
 object ViewUtils {
 
@@ -13,7 +16,7 @@ object ViewUtils {
     context: Context, image: T,
     @DrawableRes placeholder: Int? = null
   ) {
-    with(context).load(image).apply {
+    Glide.with(context).load(image).apply {
       placeholder?.let {
         this.placeholder(it).error(it)
       }
@@ -46,5 +49,15 @@ object ViewUtils {
     } else {
       View.GONE
     }
+  }
+
+  @ColorInt
+  fun Context.getColorFromAttr(
+    @AttrRes attrColor: Int,
+    typedValue: TypedValue = TypedValue(),
+    resolveRefs: Boolean = true
+  ): Int {
+    theme.resolveAttribute(attrColor, typedValue, resolveRefs)
+    return typedValue.data
   }
 }

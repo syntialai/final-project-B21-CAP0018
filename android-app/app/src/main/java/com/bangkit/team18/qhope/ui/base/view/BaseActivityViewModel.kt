@@ -18,8 +18,8 @@ import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.utils.view.DialogUtils
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModel
-import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import com.bangkit.team18.qhope.utils.Router
+import com.bangkit.team18.qhope.utils.PermissionUtil
 import com.bangkit.team18.qhope.utils.SnackbarUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.net.HttpURLConnection
@@ -36,10 +36,7 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
 
   protected val viewModel: VM by viewModel(viewModelClazz)
 
-  private var viewModelWithAuth: BaseViewModelWithAuth? = null
-
   protected lateinit var intentLauncher: ActivityResultLauncher<Intent>
-  private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
   private var loadingDialog: Dialog? = null
 
@@ -59,14 +56,6 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
         if (result.resultCode == Activity.RESULT_OK) {
           onResultWithoutData(result)
           onIntentResult(result.data)
-        }
-      }
-    requestPermissionLauncher =
-      registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
-          onPermissionGranted()
-        } else {
-          onPermissionNotGranted()
         }
       }
   }
@@ -130,23 +119,20 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
     }
   }
 
-  protected fun checkPermission(permission: String) {
-    if (isPermissionGranted(permission)) {
-      onPermissionGranted()
-    } else {
-      requestPermissionLauncher.launch(permission)
-    }
-  }
-
-  protected fun isPermissionGranted(permission: String): Boolean {
-    return ContextCompat.checkSelfPermission(
+  protected fun checkPermissions(vararg permissions: String) {
+    PermissionUtil.checkPermissions(
       this,
-      permission
-    ) == PackageManager.PERMISSION_GRANTED
+      permissions.toList(),
+      this::onPermissionsGranted,
+      this::onAnyPermissionsDenied
+    )
   }
 
-  open fun onPermissionGranted() {}
-  open fun onPermissionNotGranted() {}
+  open fun onAnyPermissionsDenied(permissions: List<String>) {
+    PermissionUtil.onAnyPermissionsDenied(binding.root, permissions)
+  }
+
+  open fun onPermissionsGranted() {}
   open fun onIntentResult(data: Intent?) {}
   open fun onResultWithoutData(result: ActivityResult?) {}
 }

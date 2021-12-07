@@ -33,7 +33,7 @@ class RegistrationViewModel(
       launchViewModelScope({
         val request = UpdateUserProfileRequest(
           name = name,
-          date_of_birth = _birthDate.value
+          birth_date = _birthDate.value
         )
         userUseCase.updateUser(request, _profilePicture.value).runFlow({ success ->
           _isSubmitted.value = success

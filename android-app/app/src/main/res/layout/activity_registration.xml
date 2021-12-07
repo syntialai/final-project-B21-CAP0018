@@ -59,12 +59,15 @@
         android:layout_width="124dp"
         android:layout_height="124dp"
         android:layout_marginTop="@dimen/dp_32"
+        android:padding="@dimen/dp_1"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_person"
+        android:src="@drawable/default_profile_picture"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/registration_description_label"
-        app:shapeAppearance="@style/ShapeAppearance.QHope.LargeComponent" />
+        app:shapeAppearance="@style/ShapeAppearance.QHope.LargeComponent"
+        app:strokeColor="?colorOnSurface"
+        app:strokeWidth="@dimen/dp_1" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/registration_edit_profile_picture"

@@ -1,7 +1,6 @@
 package com.bangkit.team18.qhope.ui.home.view
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.location.Geocoder
 import android.location.Location
 import android.view.View
@@ -118,15 +117,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
   }
 
   private fun getLocation() {
-    checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    checkPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
   }
 
-  private fun getVerificationButtonText(status: VerificationStatus) = getString(when (status) {
-    VerificationStatus.ACCEPTED -> R.string.verification_status_accepted_button_label
-    VerificationStatus.VERIFIED -> R.string.verification_status_verified_button_label
-    VerificationStatus.REJECTED -> R.string.verification_status_not_verified_button_label
-    else -> R.string.verification_status_not_upload_button_label
-  })
+  private fun getVerificationButtonText(status: VerificationStatus) = getString(
+    when (status) {
+      VerificationStatus.ACCEPTED -> R.string.verification_status_accepted_button_label
+      VerificationStatus.VERIFIED -> R.string.verification_status_verified_button_label
+      VerificationStatus.REJECTED -> R.string.verification_status_not_verified_button_label
+      else -> R.string.verification_status_not_upload_button_label
+    }
+  )
 
   private fun getVerificationDrawable(status: VerificationStatus) = when (status) {
     VerificationStatus.ACCEPTED,
@@ -135,18 +136,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
     else -> R.drawable.drawable_verification_status_not_upload
   }
 
-  private fun getVerificationDescription(status: VerificationStatus) = getString(when (status) {
-    VerificationStatus.ACCEPTED -> R.string.verification_status_accepted_description
-    VerificationStatus.VERIFIED -> R.string.verification_status_verified_description
-    VerificationStatus.REJECTED -> R.string.verification_status_not_verified_description
-    else -> R.string.verification_status_not_upload_description
-  })
+  private fun getVerificationDescription(status: VerificationStatus) = getString(
+    when (status) {
+      VerificationStatus.ACCEPTED -> R.string.verification_status_accepted_description
+      VerificationStatus.VERIFIED -> R.string.verification_status_verified_description
+      VerificationStatus.REJECTED -> R.string.verification_status_not_verified_description
+      else -> R.string.verification_status_not_upload_description
+    }
+  )
 
-  private fun getVerificationTitle(status: VerificationStatus) = getString(when (status) {
-    VerificationStatus.NOT_UPLOAD -> R.string.verification_status_not_upload_title
-    VerificationStatus.UPLOADED -> R.string.verification_status_not_upload_title
-    else -> R.string.verification_status_uploaded_title
-  })
+  private fun getVerificationTitle(status: VerificationStatus) = getString(
+    when (status) {
+      VerificationStatus.NOT_UPLOAD -> R.string.verification_status_not_upload_title
+      VerificationStatus.UPLOADED -> R.string.verification_status_not_upload_title
+      else -> R.string.verification_status_uploaded_title
+    }
+  )
 
   private fun setLocation(location: Location) {
     viewLifecycleOwner.lifecycleScope.launchWhenResumed {
