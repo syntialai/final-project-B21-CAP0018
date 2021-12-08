@@ -18,11 +18,12 @@ object UserMapper {
     userResponse: com.bangkit.team18.core.api.source.response.user.UserResponse,
     maskNik: Boolean = false
   ): User {
-    val ktpNumber = userResponse.nik.orEmpty().also {
-      if (maskNik) {
-        maskText(it)
-      }
+    val ktpNumber = if (maskNik) {
+      maskText(userResponse.nik.orEmpty())
+    } else {
+      userResponse.nik.orEmpty()
     }
+
     return User(
       userResponse.id.orEmpty(),
       userResponse.name.orEmpty(),
@@ -50,10 +51,11 @@ object UserMapper {
   }
 
   private fun maskText(text: String, unmaskedCharCount: Int = 4): String {
+    val maskedText = Constants.MASK_CHARACTER_SYMBOL.repeat(text.length - unmaskedCharCount)
     return text.replaceRange(
       0,
       text.length - unmaskedCharCount,
-      Constants.MASK_CHARACTER_SYMBOL
+      maskedText
     )
   }
 
