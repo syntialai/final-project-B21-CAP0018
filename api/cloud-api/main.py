@@ -44,10 +44,12 @@ else:
 
 
 class TransactionStatus(enum.Enum):
-    ONGOING = 1
-    CONFIRMED = 2
-    FINISHED = 3
-    CANCELED = 4
+    ONGOING = 1  # after user book
+    CONFIRMED = 2  # after user confirm
+    PAID = 3  # after user pay
+    APPROVED = 4  # approved by hospital
+    FINISHED = 5  # released by hospital
+    CANCELED = 6  # canceled or not approved
 
     @classmethod
     def has_key(cls, name):
@@ -191,6 +193,27 @@ def token_required(f):
         except:
             raise werkzeug.exceptions.Unauthorized('Token is invalid.')
 
+        return f(decoded_token['uid'], decoded_token['role'], *args, **kwargs)
+
+    return decorator
+
+
+def patient_token_required(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        token = None
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+
+        if not token:
+            raise werkzeug.exceptions.Unauthorized('A valid token is missing.')
+        try:
+            decoded_token = auth.verify_id_token(token)
+            if decoded_token['role'] != 'PATIENT':
+                raise Exception()
+        except:
+            raise werkzeug.exceptions.Unauthorized('Token is invalid.')
+
         return f(decoded_token['uid'], *args, **kwargs)
 
     return decorator
@@ -223,6 +246,7 @@ def hospital_token_required(f):
 class AddHospitalAddressGeopointSchema(Schema):
     class Meta:
         unknown = EXCLUDE
+
     lat = fields.String(required=True)
     lng = fields.String(required=True)
 
@@ -230,6 +254,7 @@ class AddHospitalAddressGeopointSchema(Schema):
 class AddHospitalAddressSchema(Schema):
     class Meta:
         unknown = EXCLUDE
+
     name = fields.String(required=True)
     geopoint = fields.Dict(keys=fields.Str(), values=fields.Nested(AddHospitalAddressGeopointSchema()))
     description = fields.String(required=True)
@@ -243,6 +268,7 @@ class AddHospitalAddressSchema(Schema):
 class AddHospitalRoomSchema(Schema):
     class Meta:
         unknown = EXCLUDE
+
     type = fields.String(required=True, validate=validate.Length(max=64))
     available_room = fields.Integer(required=True)
     total_room = fields.Integer(required=True)
@@ -252,13 +278,14 @@ class AddHospitalRoomSchema(Schema):
 class UpdateHospitalRoomSchema(Schema):
     class Meta:
         unknown = EXCLUDE
+
     available_room = fields.Integer(required=True)
     total_room = fields.Integer(required=True)
     price = fields.Integer(required=True)
 
 
 @app.route('/hospitals', methods=['GET'])
-@token_required
+@patient_token_required
 def get_all_hospitals(uid):
     hospital_docs = db.collection(COLLECTION_HOSPITALS).stream()
     hospital_responses = []
@@ -281,7 +308,7 @@ def get_all_hospitals(uid):
 
 
 @app.route('/hospitals/<id>', methods=['GET'])
-@token_required
+@patient_token_required
 def get_hospital_by_id(uid, id):
     hospital_doc = db.collection(COLLECTION_HOSPITALS).document(id).get()
     validate_data_exists(hospital_doc)
@@ -431,7 +458,7 @@ class UpdateTransactionStatusSchema(Schema):
 
 
 @app.route('/transactions', methods=['GET'])
-@token_required
+@patient_token_required
 def get_user_transactions(user_id):
     transactions_doc = db.collection(COLLECTION_TRANSACTIONS).where('user_id', '==', user_id).stream()
     user_transaction_responses = map_to_dictionaries(transactions_doc)
@@ -447,7 +474,7 @@ def get_hospital_transactions(hospital_id):
 
 
 @app.route('/transactions', methods=['POST'])
-@token_required
+@patient_token_required
 def create_transaction(user_id):
     create_transaction_schema = CreateTransactionSchema()
     transaction_request = create_transaction_schema.load(request.json)
@@ -521,7 +548,8 @@ def get_transaction_by_id(id):
 
 
 @app.route('/transactions/<id>', methods=['PUT'])
-def update_transaction_status_by_id(id):
+@token_required
+def update_transaction_status_by_id(uid, role):
     update_transaction_status_schema = UpdateTransactionStatusSchema()
     transaction_request = update_transaction_status_schema.load(request.json)
     status = transaction_request.get('status')
@@ -550,7 +578,7 @@ def update_transaction_status_by_id(id):
 # ========================== Upload File API =============================
 
 @app.route('/upload/referral_letter', methods=['POST'])
-@token_required
+@patient_token_required
 def upload_referral_letter_by_user_id(user_id):
     if 'file' not in request.files:
         raise werkzeug.exceptions.BadRequest('File is not exist!')
@@ -566,7 +594,7 @@ def upload_referral_letter_by_user_id(user_id):
 
 
 @app.route('/upload/image', methods=['POST'])
-@token_required
+@patient_token_required
 def upload_image_by_user_id(user_id):
     if 'image' not in request.files:
         raise werkzeug.exceptions.BadRequest('Image is not exist!')
@@ -662,7 +690,7 @@ def update_payment_status_by_id(id):
 # ============================= User API =================================
 
 @app.route('/user', methods=['GET'])
-@token_required
+@patient_token_required
 def get_user(uid):
     user = db.collection(COLLECTION_USERS).document(uid).get()
     return jsonify(user.to_dict()), 200
@@ -686,6 +714,7 @@ def add_user(uid):
         user = db.collection(COLLECTION_USERS).document(uid).get()
         if user.exists:
             return jsonify(user.to_dict()), 200
+        auth.set_custom_user_claims(uid, {'role': 'PATIENT'})
         new_user = {'phone_number': phone_number, 'verification_status': VerificationStatus.NOT_UPLOAD.name}
         db.collection(COLLECTION_USERS).document(uid).set(new_user)
 
@@ -700,12 +729,12 @@ class UpdateUserSchema(Schema):
 
     photo = fields.Raw(type='file')
     name = fields.String()
-    birth_date = fields.Integer()
+    birth_date = fields.Field()
     address = fields.String()
 
 
 @app.route('/user', methods=['PATCH'])
-@token_required
+@patient_token_required
 def update_user(uid):
     schema = UpdateUserSchema()
     file_schema = schema.load(request.files)
@@ -715,6 +744,13 @@ def update_user(uid):
     photo = file_schema.get('photo')
     name = request_data.get('name')
     birth_date = request_data.get('birth_date')
+    if birth_date != 'null':
+        if not check_int(birth_date):
+            raise werkzeug.exceptions.BadRequest('Invalid birth date.')
+        birth_date = int(birth_date)
+    else:
+        birth_date = None
+
     address = request_data.get('address')
     user = {}
     check_user = user_ref.get().to_dict()
@@ -728,9 +764,9 @@ def update_user(uid):
     if address:
         user['address'] = address
     if not is_verified(check_user['verification_status']):
-        if name:
+        if name is not None:
             user['name'] = name
-        if birth_date and not is_verified(check_user['verification_status']):
+        if birth_date is not None and not is_verified(check_user['verification_status']):
             user['birth_date'] = birth_date
 
     if user:
@@ -749,7 +785,7 @@ class IdentityVerificationSchema(Schema):
 
 
 @app.route('/user/identity-verification', methods=['POST'])
-@token_required
+@patient_token_required
 def identity_verification(uid):
     schema = IdentityVerificationSchema()
     file_schema = schema.load(request.files)
@@ -832,7 +868,7 @@ class IdentityConfirmationSchema(Schema):
 
 
 @app.route('/user/identity-confirmation', methods=['POST'])
-@token_required
+@patient_token_required
 def identity_confirmation(uid):
     schema = IdentityConfirmationSchema()
     request_data = schema.load(request.json)
@@ -900,7 +936,18 @@ def is_uploaded(verification_status):
     return verification_status == VerificationStatus.UPLOADED.name
 
 
+def check_int(s):
+    if s[0] in ('-', '+'):
+        return s[1:].isdigit()
+    return s.isdigit()
+
+
 # ========================= End of User API ==============================
+
+
+@app.route('/', methods=['GET'])
+def home():
+    return get_success_response({'message': 'It works!'})
 
 
 # port = int(os.environ.get('PORT', 80))
