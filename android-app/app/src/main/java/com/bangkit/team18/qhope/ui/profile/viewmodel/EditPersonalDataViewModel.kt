@@ -9,7 +9,6 @@ import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
-import com.bangkit.team18.core.utils.view.DataUtils.orZero
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 
 class EditPersonalDataViewModel(
@@ -33,7 +32,7 @@ class EditPersonalDataViewModel(
 
   fun getUserDoc() {
     launchViewModelScope({
-      userUseCase.getUserProfile().runFlow({
+      userUseCase.getUserProfile(true).runFlow({
         _userDoc.value = it
       })
     })
@@ -54,7 +53,7 @@ class EditPersonalDataViewModel(
       birth_place = placeOfBirth,
       address = address,
       gender = gender.name,
-      birth_date = _birthDate.value.orZero()
+      birth_date = _birthDate.value
     )
     launchViewModelScope({
       userUseCase.updateUser(request).runFlow({

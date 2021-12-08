@@ -45,10 +45,12 @@ class ProfilePictureFragment : BaseFragment<FragmentProfilePictureBinding, Profi
 
   override fun setupObserver() {
     super.setupObserver()
+
     viewModel.profilePicture.observe(viewLifecycleOwner, {
       binding.profilePictureImage.loadImage<File>(mContext, it)
       changeOptionsMenuToSave()
     })
+
     viewModel.saved.observe(viewLifecycleOwner, {
       if (it) {
         findNavController().navigateUp()

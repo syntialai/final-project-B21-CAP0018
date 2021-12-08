@@ -19,7 +19,7 @@ class PersonalDataViewModel(
 
   fun getUserDoc() {
     launchViewModelScope({
-      userUseCase.getUserProfile().runFlow({
+      userUseCase.getUserProfile(true).runFlow({
         _userDoc.value = it
       })
     })

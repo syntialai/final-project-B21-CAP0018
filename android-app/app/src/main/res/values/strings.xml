@@ -155,6 +155,7 @@
     <string name="verified_label">Verified</string>
     <string name="accepted_label">Accepted</string>
     <string name="not_verified_label">Not Verified</string>
+
     <string name="intent_choose_capturer">Capture with …</string>
     <string name="permanently_denied_permission_message">You need to grant the permissions on your Device Settings.</string>
     <string name="denied_permission_message">You need to grant the permissions.</string>

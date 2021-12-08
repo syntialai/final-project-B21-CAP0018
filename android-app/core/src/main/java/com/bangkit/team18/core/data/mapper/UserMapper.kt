@@ -1,6 +1,7 @@
 package com.bangkit.team18.core.data.mapper
 
 import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
+import com.bangkit.team18.core.config.Constants
 import com.bangkit.team18.core.domain.model.user.GenderType
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.model.user.VerificationStatus
@@ -13,7 +14,15 @@ import java.io.File
 
 object UserMapper {
 
-  fun mapToUser(userResponse: com.bangkit.team18.core.api.source.response.user.UserResponse): User {
+  fun mapToUser(
+    userResponse: com.bangkit.team18.core.api.source.response.user.UserResponse,
+    maskNik: Boolean = false
+  ): User {
+    val ktpNumber = userResponse.nik.orEmpty().also {
+      if (maskNik) {
+        maskText(it)
+      }
+    }
     return User(
       userResponse.id.orEmpty(),
       userResponse.name.orEmpty(),
@@ -23,7 +32,7 @@ object UserMapper {
       userResponse.verification_status?.let {
         VerificationStatus.valueOf(it)
       } ?: VerificationStatus.NOT_UPLOAD,
-      userResponse.nik.orEmpty(),
+      ktpNumber,
       userResponse.gender?.let {
         GenderType.valueOf(it)
       } ?: GenderType.MALE,
@@ -37,6 +46,14 @@ object UserMapper {
       userResponse.neighborhood.orEmpty(),
       userResponse.hamlet.orEmpty(),
       userResponse.religion.orEmpty()
+    )
+  }
+
+  private fun maskText(text: String, unmaskedCharCount: Int = 4): String {
+    return text.replaceRange(
+      0,
+      text.length - unmaskedCharCount,
+      Constants.MASK_CHARACTER_SYMBOL
     )
   }
 
@@ -66,6 +83,6 @@ object UserMapper {
   }
 
   private fun getTextRequestBody(value: String?): RequestBody? {
-    return value?.toRequestBody("text/plain".toMediaTypeOrNull());
+    return value?.toRequestBody("text/plain".toMediaTypeOrNull())
   }
 }

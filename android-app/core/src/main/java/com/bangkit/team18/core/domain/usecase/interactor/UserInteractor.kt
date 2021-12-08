@@ -11,8 +11,8 @@ import java.io.File
 
 class UserInteractor(private val userRepository: UserRepository) : UserUseCase {
 
-  override suspend fun getUserProfile(): Flow<ResponseWrapper<User>> =
-    userRepository.getUserProfile()
+  override suspend fun getUserProfile(maskNik: Boolean): Flow<ResponseWrapper<User>> =
+    userRepository.getUserProfile(maskNik)
 
   override suspend fun updateUser(
     updateUserProfileRequest: UpdateUserProfileRequest,
