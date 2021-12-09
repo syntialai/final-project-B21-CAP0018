@@ -6,6 +6,7 @@ import com.bangkit.team18.core.domain.model.user.GenderType
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.model.user.VerificationStatus
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -77,6 +78,9 @@ object UserMapper {
     Timber.d("requestMap: $requestMap")
     return requestMap.toMap()
   }
+
+  fun constructImageFile(image: File?, photo: RequestBody): MultipartBody.Part =
+    MultipartBody.Part.createFormData("photo", image?.name, photo)
 
   private fun HashMap<String, RequestBody>.addIfNotNull(key: String, value: RequestBody?) {
     if (value != null) {

@@ -23,7 +23,9 @@ class UserRemoteDataSourceImpl(
     image: File?
   ): UserResponse {
     val requestMap = UserMapper.constructUpdateUserRequest(userProfileRequest, image)
-    return userService.updateUserProfile(requestMap)
+    val photoBody = requestMap["photo"]!!
+    val photo = UserMapper.constructImageFile(image, photoBody)
+    return userService.updateUserProfile(requestMap, photo)
   }
 
   override suspend fun getUserProfile(): UserResponse {
