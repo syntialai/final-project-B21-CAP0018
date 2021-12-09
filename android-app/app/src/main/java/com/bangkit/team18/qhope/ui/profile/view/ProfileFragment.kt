@@ -6,7 +6,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.model.user.VerificationStatus
-import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.core.utils.view.ViewUtils.getColorFromAttr
 import com.bangkit.team18.core.utils.view.ViewUtils.loadImage
 import com.bangkit.team18.qhope.R

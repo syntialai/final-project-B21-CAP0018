@@ -104,10 +104,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
     locationManager.startUpdateLocation()
   }
 
-  override fun onAnyPermissionsDenied(permissions: List<String>) {
-    showErrorToast(defaultMessageId = R.string.failed_to_get_location_message)
-  }
-
   override fun showLoadingState(isLoading: Boolean) {
     binding.apply {
       spinKitLoadHome.showOrRemove(isLoading)

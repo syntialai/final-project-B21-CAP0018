@@ -2,7 +2,9 @@ package com.bangkit.team18.qhope.ui.booking.view
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.view.View
+import androidx.core.net.toFile
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bangkit.team18.core.data.mapper.DataMapper
@@ -23,8 +25,8 @@ import com.bangkit.team18.qhope.ui.payment.MidtransPayment
 import com.bangkit.team18.qhope.ui.payment.PaymentStatusListener
 import com.bangkit.team18.qhope.ui.widget.callback.OnBannerActionButtonClickListener
 import com.bangkit.team18.qhope.utils.Router
-import java.io.File
 import java.util.*
+
 
 class BookingConfirmationFragment :
   BaseFragment<FragmentBookingConfirmationBinding, BookingConfirmationViewModel>(
@@ -88,10 +90,23 @@ class BookingConfirmationFragment :
 
   override fun onIntentResult(data: Intent?) {
     data?.data?.let { fileUri ->
-      FileUtil.getFileAbsolutePath(mContext.contentResolver, fileUri)?.let {
-        viewModel.uploadReferralLetter(File(it))
+      grantUriPermission(fileUri)
+      FileUtil.getFileAbsolutePath(mContext.contentResolver, fileUri)?.let { filePath ->
+        viewModel.uploadReferralLetter(fileUri.toFile())
       }
     }
+  }
+
+  private fun grantUriPermission(uri: Uri) {
+    activity?.grantUriPermission(
+      activity?.packageName.orEmpty(),
+      uri,
+      Intent.FLAG_GRANT_READ_URI_PERMISSION
+    )
+    activity?.contentResolver?.takePersistableUriPermission(
+      uri,
+      Intent.FLAG_GRANT_READ_URI_PERMISSION
+    )
   }
 
   override fun onClick(view: View?) {
@@ -191,8 +206,11 @@ class BookingConfirmationFragment :
   }
 
   private fun uploadPdf() {
-    val uploadPdfIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
+    val uploadPdfIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+      addCategory(Intent.CATEGORY_OPENABLE)
       type = APPLICATION_PDF_TYPE
+      addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+      addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
     intentLauncher.launch(uploadPdfIntent)
   }

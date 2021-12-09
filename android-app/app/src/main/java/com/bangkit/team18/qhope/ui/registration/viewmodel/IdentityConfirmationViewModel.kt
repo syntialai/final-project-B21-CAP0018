@@ -44,9 +44,23 @@ class IdentityConfirmationViewModel(
     address: String,
     district: String,
     city: String,
-    village: String
+    village: String,
+    hamlet: String,
+    bloodType: String,
+    religion: String
   ) {
-    val request = constructSaveRequest(name, gender, placeOfBirth, address, district, city, village)
+    val request = constructSaveRequest(
+      name,
+      gender,
+      placeOfBirth,
+      address,
+      district,
+      city,
+      village,
+      hamlet,
+      bloodType,
+      religion
+    )
     launchViewModelScope({
       userUseCase.confirmUserIdentity(request).runFlow({
         _saveEvent.value = true
@@ -63,22 +77,26 @@ class IdentityConfirmationViewModel(
     address: String,
     district: String,
     city: String,
-    village: String
+    village: String,
+    hamlet: String,
+    bloodType: String,
+    religion: String
   ): IdentityConfirmationRequest {
     val user = _userDoc.value
     return IdentityConfirmationRequest(
+      nik = user?.ktpNumber.orEmpty(),
       name = name,
       gender = gender.name,
       birth_place = placeOfBirth,
       date_of_birth = user?.birthDate ?: 0L,
-      blood_type = user?.bloodType.orEmpty(),
+      blood_type = bloodType,
       ktp_address = address,
       district = district,
       village = village,
       city = city,
       neighborhood = user?.neighborhood.orEmpty() ,
-      hamlet = user?.hamlet.orEmpty(),
-      religion = user?.religion.orEmpty()
+      hamlet = hamlet,
+      religion = religion
     )
   }
 }

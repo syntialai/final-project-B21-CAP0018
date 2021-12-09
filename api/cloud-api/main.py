@@ -17,7 +17,8 @@ CORS(app)
 app.config['SECRET_KEY'] = 'cdf1791e499190767ec7267f2a1b1f8e'
 app.config['BUCKET_NAME'] = 'q-hope.appspot.com'
 app.config['IS_PRODUCTION'] = False
-cred = credentials.Certificate('q-hope-cred.json')
+# cred = credentials.Certificate('q-hope-cred.json')
+cred = credentials.Certificate('D:\\BANGKIT\\Capstone Project\\final-project-B21-CAP0018\\api\\cloud-api\\q-hope-cred.json')
 default_app = initialize_app(cred, {
     'storageBucket': app.config['BUCKET_NAME']
 })

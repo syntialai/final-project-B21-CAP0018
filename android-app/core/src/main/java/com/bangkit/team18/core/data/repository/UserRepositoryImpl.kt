@@ -22,14 +22,14 @@ class UserRepositoryImpl(
   private val ioDispatcher: CoroutineDispatcher
 ) : UserRepository {
 
-  override suspend fun getUserProfile(): Flow<ResponseWrapper<User>> {
+  override suspend fun getUserProfile(maskNik: Boolean): Flow<ResponseWrapper<User>> {
     return object : FetchDataWrapper<UserResponse, User>() {
       override suspend fun fetchData(): UserResponse {
         return userRemoteDataSource.getUserProfile()
       }
 
       override suspend fun mapData(response: UserResponse): User {
-        return UserMapper.mapToUser(response)
+        return UserMapper.mapToUser(response, maskNik)
       }
     }.getData().flowOn(ioDispatcher)
   }
@@ -37,10 +37,14 @@ class UserRepositoryImpl(
   override suspend fun updateUser(
     updateUserProfileRequest: UpdateUserProfileRequest,
     image: File?
-  ): Flow<ResponseWrapper<Boolean>> {
-    return object : UpdateDataWrapper<UserResponse>() {
-      override suspend fun doUpdate(): UserResponse {
+  ): Flow<ResponseWrapper<User>> {
+    return object : FetchDataWrapper<UserResponse, User>() {
+      override suspend fun fetchData(): UserResponse {
         return userRemoteDataSource.updateUser(updateUserProfileRequest, image)
+      }
+
+      override suspend fun mapData(response: UserResponse): User {
+        return UserMapper.mapToUser(response)
       }
     }.updateData().flowOn(ioDispatcher)
   }

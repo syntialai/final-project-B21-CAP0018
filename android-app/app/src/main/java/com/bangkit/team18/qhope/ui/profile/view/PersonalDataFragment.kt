@@ -4,7 +4,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.core.widget.doOnTextChanged
 import androidx.navigation.fragment.findNavController
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.utils.view.DataUtils.orHyphen
@@ -22,12 +21,6 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
   private var menu: Menu? = null
 
   override fun setupViews() {
-    binding.apply {
-      personalDataName.doOnTextChanged { _, _, _, _ ->
-        personalDataName.error = null
-      }
-    }
-
     setHasOptionsMenu(true)
   }
 

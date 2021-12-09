@@ -29,13 +29,11 @@ class ProfilePictureFragment : BaseFragment<FragmentProfilePictureBinding, Profi
 
   override fun setupViews() {
     (mContext as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
-    binding.profilePictureImage.apply {
-      loadImage(
-        mContext,
-        args.photoUrl,
-        R.drawable.default_profile_picture
-      )
-    }
+    binding.profilePictureImage.loadImage(
+      mContext,
+      args.photoUrl,
+      R.drawable.default_profile_picture
+    )
     setHasOptionsMenu(true)
   }
 
@@ -47,10 +45,12 @@ class ProfilePictureFragment : BaseFragment<FragmentProfilePictureBinding, Profi
 
   override fun setupObserver() {
     super.setupObserver()
+
     viewModel.profilePicture.observe(viewLifecycleOwner, {
       binding.profilePictureImage.loadImage<File>(mContext, it)
       changeOptionsMenuToSave()
     })
+
     viewModel.saved.observe(viewLifecycleOwner, {
       if (it) {
         findNavController().navigateUp()

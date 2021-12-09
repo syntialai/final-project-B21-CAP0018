@@ -8,9 +8,11 @@ import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 object FileUtil {
+
   fun getFileAbsolutePath(contentResolver: ContentResolver, uri: Uri): String? {
     var result: String? = null
     val projection = arrayOf(MediaStore.Images.Media.DATA)

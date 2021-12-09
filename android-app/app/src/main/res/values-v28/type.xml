@@ -46,7 +46,7 @@
         <item name="android:fontFamily">@font/raleway</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textFontWeight">600</item>
-        <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:textSize">@dimen/sp_20</item>
     </style>
 
     <style name="TextAppearance.QHope.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
