@@ -6,6 +6,7 @@ import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
 import com.bangkit.team18.core.data.repository.AuthSharedPrefRepository
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
+import com.bangkit.team18.core.utils.view.DataUtils.isNotNull
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import java.io.File
 
@@ -33,10 +34,10 @@ class RegistrationViewModel(
       launchViewModelScope({
         val request = UpdateUserProfileRequest(
           name = name,
-          date_of_birth = _birthDate.value
+          birth_date = _birthDate.value
         )
-        userUseCase.updateUser(request, _profilePicture.value).runFlow({ success ->
-          _isSubmitted.value = success
+        userUseCase.updateUser(request, _profilePicture.value).runFlow({ user ->
+          _isSubmitted.value = user.isNotNull()
         })
       })
     }

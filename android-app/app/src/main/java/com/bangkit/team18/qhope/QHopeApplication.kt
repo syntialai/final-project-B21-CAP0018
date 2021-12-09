@@ -1,6 +1,8 @@
 package com.bangkit.team18.qhope
 
-import android.app.Application
+import android.content.Context
+import androidx.multidex.MultiDex
+import androidx.multidex.MultiDexApplication
 import com.bangkit.team18.core.di.*
 import com.bangkit.team18.qhope.di.viewModelModule
 import com.google.firebase.FirebaseApp
@@ -12,7 +14,12 @@ import org.koin.core.logger.Level
 import timber.log.Timber
 
 @ExperimentalCoroutinesApi
-class QHopeApplication : Application() {
+class QHopeApplication : MultiDexApplication() {
+
+  override fun attachBaseContext(base: Context?) {
+    MultiDex.install(this)
+    super.attachBaseContext(base)
+  }
 
   override fun onCreate() {
     super.onCreate()

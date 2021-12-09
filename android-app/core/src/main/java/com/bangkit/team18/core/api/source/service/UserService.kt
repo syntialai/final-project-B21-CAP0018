@@ -21,7 +21,7 @@ interface UserService {
   @Multipart
   @PATCH(ApiConstants.USER)
   suspend fun updateUserProfile(
-    @PartMap requestMap: Map<String, RequestBody?>
+    @PartMap requestMap: @JvmSuppressWildcards Map<String, RequestBody>
   ): UserResponse
 
   @Multipart
@@ -31,7 +31,7 @@ interface UserService {
     @Part selfie: MultipartBody.Part
   ): UserResponse
 
-  @POST(ApiConstants.USER_IDENTITY_VERIFICATION)
+  @POST(ApiConstants.USER_IDENTITY_CONFIRMATION)
   suspend fun confirmUserIdentity(
     @Body identityConfirmationRequest: IdentityConfirmationRequest
   ): UserResponse

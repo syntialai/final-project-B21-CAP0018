@@ -118,34 +118,29 @@ class ProfileIdVerificationFragment :
     }
   }
 
-  override fun onPermissionGrantedChange(isGranted: Boolean) {
-    if (!isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-      checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-    } else if (!isPermissionGranted(Manifest.permission.CAMERA)) {
-      checkPermission(Manifest.permission.CAMERA)
-    } else {
-      viewModel.getTemporaryDocumentFile()?.let {
-        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-          putExtra(MediaStore.EXTRA_OUTPUT, FileUtil.getUri(mContext, it))
-        }
-        val openGalleryIntent = Intent(
-          Intent.ACTION_PICK,
-          MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        ).apply {
-          type = "image/*"
-        }
-        val chooserIntent = Intent.createChooser(openGalleryIntent, getString(R.string.intent_choose_capturer)).apply {
+  override fun onPermissionsGranted() {
+    viewModel.getTemporaryDocumentFile()?.let {
+      val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+        putExtra(MediaStore.EXTRA_OUTPUT, FileUtil.getUri(mContext, it))
+      }
+      val openGalleryIntent = Intent(
+        Intent.ACTION_PICK,
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+      ).apply {
+        type = "image/*"
+      }
+      val chooserIntent =
+        Intent.createChooser(openGalleryIntent, getString(R.string.intent_choose_capturer)).apply {
           putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(cameraIntent))
         }
-        intentLauncher.launch(chooserIntent)
-      }
+      intentLauncher.launch(chooserIntent)
     }
   }
 
   private fun openCamera(documentType: DocumentType) {
     viewModel.setDocumentType(documentType)
     viewModel.setTemporaryFile(FileUtil.createImageFile(mContext))
-    checkPermission(Manifest.permission.CAMERA)
+    checkPermissions(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
   }
 
   override fun onResultWithoutData(result: ActivityResult?) {

@@ -3,7 +3,6 @@ package com.bangkit.team18.qhope.ui.base.view
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +11,13 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.utils.view.DialogUtils
 import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModel
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
+import com.bangkit.team18.qhope.utils.PermissionUtil
 import com.bangkit.team18.qhope.utils.Router
 import com.bangkit.team18.qhope.utils.SnackbarUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -39,7 +38,6 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
   private var viewModelWithAuth: BaseViewModelWithAuth? = null
 
   protected lateinit var intentLauncher: ActivityResultLauncher<Intent>
-  private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
   private var loadingDialog: Dialog? = null
 
@@ -59,14 +57,6 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
         if (result.resultCode == Activity.RESULT_OK) {
           onResultWithoutData(result)
           onIntentResult(result.data)
-        }
-      }
-    requestPermissionLauncher =
-      registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
-          onPermissionGranted()
-        } else {
-          onPermissionNotGranted()
         }
       }
   }
@@ -125,28 +115,25 @@ abstract class BaseActivityViewModel<VB : ViewBinding, VM : BaseViewModel>(
 
   private fun onHttpError(code: Int, message: String?) {
     when (code) {
-      HttpURLConnection.HTTP_UNAUTHORIZED -> (viewModel as? BaseViewModelWithAuth)?.logOut()
+      HttpURLConnection.HTTP_UNAUTHORIZED -> viewModelWithAuth?.logOut()
       else -> showErrorToast(message, R.string.unknown_error_message)
     }
   }
 
-  protected fun checkPermission(permission: String) {
-    if (isPermissionGranted(permission)) {
-      onPermissionGranted()
-    } else {
-      requestPermissionLauncher.launch(permission)
-    }
-  }
-
-  protected fun isPermissionGranted(permission: String): Boolean {
-    return ContextCompat.checkSelfPermission(
+  protected fun checkPermissions(vararg permissions: String) {
+    PermissionUtil.checkPermissions(
       this,
-      permission
-    ) == PackageManager.PERMISSION_GRANTED
+      permissions.toList(),
+      this::onPermissionsGranted,
+      this::onAnyPermissionsDenied
+    )
   }
 
-  open fun onPermissionGranted() {}
-  open fun onPermissionNotGranted() {}
+  open fun onAnyPermissionsDenied(permissions: List<String>) {
+    PermissionUtil.onAnyPermissionsDenied(binding.root, permissions)
+  }
+
+  open fun onPermissionsGranted() {}
   open fun onIntentResult(data: Intent?) {}
   open fun onResultWithoutData(result: ActivityResult?) {}
 }

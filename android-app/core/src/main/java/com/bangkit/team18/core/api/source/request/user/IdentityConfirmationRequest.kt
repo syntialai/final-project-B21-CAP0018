@@ -2,6 +2,8 @@ package com.bangkit.team18.core.api.source.request.user
 
 data class IdentityConfirmationRequest(
 
+  var nik: String? = null,
+
   var name: String? = null,
 
   var date_of_birth: Long? = null,

@@ -4,14 +4,13 @@ import com.bangkit.team18.core.api.source.request.user.IdentityConfirmationReque
 import com.bangkit.team18.core.api.source.request.user.UpdateUserProfileRequest
 import com.bangkit.team18.core.api.source.response.user.UserResponse
 import com.bangkit.team18.core.api.source.service.UserService
+import com.bangkit.team18.core.data.mapper.UserMapper
 import com.bangkit.team18.core.data.source.UserRemoteDataSource
 import com.bangkit.team18.core.data.source.base.BaseRemoteDataSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 @ExperimentalCoroutinesApi
@@ -23,16 +22,7 @@ class UserRemoteDataSourceImpl(
     userProfileRequest: UpdateUserProfileRequest,
     image: File?
   ): UserResponse {
-    val imageFileBody = image?.asRequestBody("image/*".toMediaTypeOrNull())
-    val requestMap = mapOf(
-      "image" to imageFileBody,
-      "name" to getTextRequestBody(userProfileRequest.name),
-      "date_of_birth" to getTextRequestBody(userProfileRequest.date_of_birth.toString()),
-      "gender" to getTextRequestBody(userProfileRequest.gender),
-      "phone_number" to getTextRequestBody(userProfileRequest.phone_number),
-      "birth_place" to getTextRequestBody(userProfileRequest.birth_place),
-      "address" to getTextRequestBody(userProfileRequest.address)
-    )
+    val requestMap = UserMapper.constructUpdateUserRequest(userProfileRequest, image)
     return userService.updateUserProfile(requestMap)
   }
 
@@ -58,10 +48,6 @@ class UserRemoteDataSourceImpl(
     identityConfirmationRequest: IdentityConfirmationRequest
   ): UserResponse {
     return userService.confirmUserIdentity(identityConfirmationRequest)
-  }
-
-  private fun getTextRequestBody(value: String?): RequestBody {
-    return value.orEmpty().toRequestBody("text/plain".toMediaTypeOrNull());
   }
 }
 

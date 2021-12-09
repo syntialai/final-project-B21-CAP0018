@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/hospitalDetailFragment"
         android:name="com.bangkit.team18.qhope.ui.booking.view.HospitalDetailFragment"
-        android:label="fragment_hospital_detail"
+        android:label=""
         tools:layout="@layout/fragment_hospital_detail">
         <action
             android:id="@+id/action_hospitalDetailFragment_to_bookingConfirmationFragment"

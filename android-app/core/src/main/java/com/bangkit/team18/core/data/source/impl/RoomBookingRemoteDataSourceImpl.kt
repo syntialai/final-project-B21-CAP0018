@@ -33,8 +33,9 @@ class RoomBookingRemoteDataSourceImpl(
   }
 
   override suspend fun uploadReferralLetter(file: File): UploadReferralLetterResponse {
+    val name = System.currentTimeMillis().toString()
     val fileBody = file.asRequestBody("application/pdf".toMediaTypeOrNull())
-    val filePart = MultipartBody.Part.createFormData("file", file.name.orEmpty(), fileBody)
+    val filePart = MultipartBody.Part.createFormData("file", name, fileBody)
     return transactionService.uploadReferralLetter(filePart)
   }
 }

@@ -18,7 +18,7 @@ data class UserResponse(
 
   var gender: String? = null,
 
-  var place_of_birth: String? = null,
+  var birth_place: String? = null,
 
   var address: String? = null,
 

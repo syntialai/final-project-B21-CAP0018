@@ -104,15 +104,12 @@ class BookingConfirmationViewModel(
   }
 
   fun uploadReferralLetter(file: File) {
-//    launchViewModelScope({
-//      roomBookingUseCase.uploadReferralLetter(file).runFlow({ referralLetter ->
-//        _bookingDetail.value?.referralLetterUri = referralLetter.url
-//        _bookingDetail.value?.referralLetterName = referralLetter.name
-      _bookingDetail.value?.referralLetterUri = file.toURI().toString()
-        _bookingDetail.value?.referralLetterName = file.name
-        _bookingDetail.publishChanges()
-//      })
-//    })
+    launchViewModelScope({
+      roomBookingUseCase.uploadReferralLetter(file).runFlow({ referralLetter ->
+        _bookingDetail.value?.referralLetterUri = referralLetter.url
+        _bookingDetail.value?.referralLetterName = referralLetter.name
+      })
+    })
   }
 
   private fun addUserData(userDetails: User, phoneNumber: String) {
