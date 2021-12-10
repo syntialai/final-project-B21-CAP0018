@@ -107,7 +107,8 @@ class BookingConfirmationViewModel(
     launchViewModelScope({
       roomBookingUseCase.uploadReferralLetter(file).runFlow({ referralLetter ->
         _bookingDetail.value?.referralLetterUri = referralLetter.url
-        _bookingDetail.value?.referralLetterName = referralLetter.name
+        _bookingDetail.value?.referralLetterName = file.name
+        _bookingDetail.publishChanges()
       })
     })
   }

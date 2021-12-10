@@ -14,5 +14,5 @@ object ApiConstants {
   const val TRANSACTIONS = "transactions"
   const val TRANSACTIONS_ID = "transactions/{id}"
 
-  const val UPLOAD_REFERRAL_LETTER = "upload/referral-letter"
+  const val UPLOAD_REFERRAL_LETTER = "upload/referral_letter"
 }

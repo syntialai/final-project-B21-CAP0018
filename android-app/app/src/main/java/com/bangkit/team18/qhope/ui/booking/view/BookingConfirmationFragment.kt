@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.View
-import androidx.core.net.toFile
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bangkit.team18.core.data.mapper.DataMapper
@@ -91,9 +90,8 @@ class BookingConfirmationFragment :
   override fun onIntentResult(data: Intent?) {
     data?.data?.let { fileUri ->
       grantUriPermission(fileUri)
-      FileUtil.getFileAbsolutePath(mContext.contentResolver, fileUri)?.let { filePath ->
-        viewModel.uploadReferralLetter(fileUri.toFile())
-      }
+      FileUtil.getTemporaryFile(requireContext(), fileUri)
+        ?.let { viewModel.uploadReferralLetter(it) }
     }
   }
 
