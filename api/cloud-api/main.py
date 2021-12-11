@@ -36,7 +36,7 @@ if app.config['IS_PRODUCTION']:
     COLLECTION_HOSPITAL_ROOMS = 'hospital_rooms'
     COLLECTION_USERS = 'users'
 else:
-    COLLECTION_TRANSACTIONS = 'transactions_test'
+    COLLECTION_TRANSACTIONS = 'transaction'
     COLLECTION_PAYMENTS = 'payments_test'
     COLLECTION_HOSPITALS = 'hospitals_test'
     COLLECTION_HOSPITAL_ROOMS = 'hospital_rooms_test'
@@ -46,10 +46,11 @@ else:
 class TransactionStatus(enum.Enum):
     ONGOING = 1  # after user book
     CONFIRMED = 2  # after user confirm
-    PAID = 3  # after user pay
-    APPROVED = 4  # approved by hospital
-    FINISHED = 5  # released by hospital
-    CANCELED = 6  # canceled or not approved
+    CANCELED = 3  # canceled
+    PAID = 4  # after user pay
+    APPROVED = 5  # approved by hospital
+    REJECTED = 6  # rejected by hospital
+    FINISHED = 7  # released by hospital
 
     @classmethod
     def has_key(cls, name):
@@ -201,6 +202,7 @@ def token_required(f):
 def patient_token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
+        return f('', *args, **kwargs)
         token = None
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
@@ -549,18 +551,28 @@ def get_transaction_by_id(id):
 
 @app.route('/transactions/<id>', methods=['PUT'])
 @token_required
-def update_transaction_status_by_id(uid, role):
+def update_transaction_status_by_id(uid, role, id):
     update_transaction_status_schema = UpdateTransactionStatusSchema()
     transaction_request = update_transaction_status_schema.load(request.json)
     status = transaction_request.get('status')
 
-    if not TransactionStatus.has_key(status):
-        raise werkzeug.exceptions.BadRequest()
+    if not TransactionStatus.has_key(status)\
+            or (role == 'PATIENT' and status not in [TransactionStatus.CONFIRMED.name, TransactionStatus.CANCELED.name])\
+            or (role == 'HOSPITAL' and status not in [TransactionStatus.APPROVED.name, TransactionStatus.REJECTED.name, TransactionStatus.FINISHED.name]):
+        raise werkzeug.exceptions.BadRequest("Invalid status.")
 
     transaction_doc = db.collection(COLLECTION_TRANSACTIONS).document(id)
     transaction = transaction_doc.get()
-
     validate_data_exists(transaction)
+
+    check_transaction = transaction.to_dict()
+
+    if role == 'HOSPITAL' and check_transaction['hospital_id'] != uid or role == 'PATIENT' and check_transaction['user_id'] != uid:
+        raise werkzeug.exceptions.Forbidden("Cannot change the transaction.")
+    if check_transaction['status'] == status:
+        raise werkzeug.exceptions.BadRequest('Status cannot be same as current status.')
+    if check_transaction['status'] in [TransactionStatus.CANCELED.name, TransactionStatus.FINISHED.name, TransactionStatus.REJECTED.name]:
+        raise werkzeug.exceptions.BadRequest('Status cannot be changed.')
 
     status_update = {
         'status': status
@@ -705,7 +717,9 @@ class AddUserSchema(Schema):
 
 @app.route('/user', methods=['POST'])
 @token_required
-def add_user(uid):
+def add_user(uid, role):
+    if role == 'HOSPITAL':
+        raise werkzeug.exceptions.Forbidden("Cannot add an user.")
     request_data = request.json
     schema = AddUserSchema()
     try:
