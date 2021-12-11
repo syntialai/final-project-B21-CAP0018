@@ -36,7 +36,7 @@ if app.config['IS_PRODUCTION']:
     COLLECTION_HOSPITAL_ROOMS = 'hospital_rooms'
     COLLECTION_USERS = 'users'
 else:
-    COLLECTION_TRANSACTIONS = 'transaction'
+    COLLECTION_TRANSACTIONS = 'transactions_test'
     COLLECTION_PAYMENTS = 'payments_test'
     COLLECTION_HOSPITALS = 'hospitals_test'
     COLLECTION_HOSPITAL_ROOMS = 'hospital_rooms_test'
@@ -202,7 +202,6 @@ def token_required(f):
 def patient_token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
-        return f('', *args, **kwargs)
         token = None
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
