@@ -735,8 +735,6 @@ class AddUserSchema(Schema):
 @app.route('/user', methods=['POST'])
 @token_required
 def add_user(uid, role):
-    if role != '':
-        raise werkzeug.exceptions.Forbidden("Cannot add an user.")
     request_data = request.json
     schema = AddUserSchema()
     try:
@@ -745,6 +743,8 @@ def add_user(uid, role):
         user = db.collection(COLLECTION_USERS).document(uid).get()
         if user.exists:
             return jsonify(user.to_dict()), 200
+        if role != '':
+            raise werkzeug.exceptions.Forbidden("Could not add an user.")
         auth.set_custom_user_claims(uid, {'role': 'PATIENT'})
         new_user = {'phone_number': phone_number, 'verification_status': VerificationStatus.NOT_UPLOAD.name}
         db.collection(COLLECTION_USERS).document(uid).set(new_user)
