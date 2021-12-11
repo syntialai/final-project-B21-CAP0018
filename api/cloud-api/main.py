@@ -118,6 +118,8 @@ def get_current_timestamp():
 def map_to_dictionaries(documents):
     mapped_documents = []
     for document in documents:
+        document_data = document.to_dict()
+        document_data['id'] = document.id
         mapped_documents.append(document.to_dict())
     return mapped_documents
 
