@@ -9,8 +9,10 @@ import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import com.google.firebase.FirebaseException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
+import timber.log.Timber
 
 class LoginViewModel(
   private val authSharedPrefRepository: AuthSharedPrefRepository,
@@ -35,9 +37,6 @@ class LoginViewModel(
       credential.smsCode?.let {
         _detectedToken.postValue(it)
       }
-      launchViewModelScope({
-        authUseCase.signInWithCredential(credential).runFlow({})
-      })
     }
 
     override fun onVerificationFailed(e: FirebaseException) {
@@ -102,7 +101,12 @@ class LoginViewModel(
       }
       launchViewModelScope({
         val credential = authUseCase.getCredential(storedVerificationId, code)
-        authUseCase.signInWithCredential(credential).runFlow({})
+        try {
+          authUseCase.signInWithCredential(credential).runFlow({})
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+          e.message?.let { showErrorResponse(it) }
+          Timber.d(e)
+        }
       })
     }
   }
