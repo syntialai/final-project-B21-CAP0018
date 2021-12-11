@@ -191,10 +191,13 @@ def token_required(f):
             raise werkzeug.exceptions.Unauthorized('A valid token is missing.')
         try:
             decoded_token = auth.verify_id_token(token)
+            role = ''
+            if 'role' in decoded_token:
+                role = decoded_token['role']
         except:
             raise werkzeug.exceptions.Unauthorized('Token is invalid.')
 
-        return f(decoded_token['uid'], decoded_token['role'], *args, **kwargs)
+        return f(decoded_token['uid'], role, *args, **kwargs)
 
     return decorator
 
@@ -210,7 +213,7 @@ def patient_token_required(f):
             raise werkzeug.exceptions.Unauthorized('A valid token is missing.')
         try:
             decoded_token = auth.verify_id_token(token)
-            if decoded_token['role'] != 'PATIENT':
+            if 'role' not in decoded_token or decoded_token['role'] != 'PATIENT':
                 raise Exception()
         except:
             raise werkzeug.exceptions.Unauthorized('Token is invalid.')
@@ -231,7 +234,7 @@ def hospital_token_required(f):
             raise werkzeug.exceptions.Unauthorized('A valid token is missing.')
         try:
             decoded_token = auth.verify_id_token(token)
-            if decoded_token['role'] != 'HOSPITAL':
+            if 'role' not in decoded_token or decoded_token['role'] != 'HOSPITAL':
                 raise Exception()
         except:
             raise werkzeug.exceptions.Unauthorized('Token is invalid.')
@@ -718,7 +721,7 @@ class AddUserSchema(Schema):
 @app.route('/user', methods=['POST'])
 @token_required
 def add_user(uid, role):
-    if role == 'HOSPITAL':
+    if role != '':
         raise werkzeug.exceptions.Forbidden("Cannot add an user.")
     request_data = request.json
     schema = AddUserSchema()
