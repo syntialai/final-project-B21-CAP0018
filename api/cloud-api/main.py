@@ -452,6 +452,7 @@ class CreateTransactionSchema(Schema):
     referral_letter_url = fields.URL(required=True)
     referral_letter_name = fields.String(required=True)
     payment_type = fields.String(required=True)
+    selected_date_time =  fields.String(required=True)
 
 
 class UpdateTransactionStatusSchema(Schema):
@@ -600,6 +601,7 @@ def upload_referral_letter_by_user_id(user_id):
     blob.make_public()
 
     return get_success_create_response({
+        'name': file.filename,
         'url': blob.public_url
     })
 
