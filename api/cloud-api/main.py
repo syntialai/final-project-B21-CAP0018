@@ -575,10 +575,9 @@ def update_transaction_status_by_id(uid, role, id):
         raise werkzeug.exceptions.BadRequest('Status cannot be changed.')
 
     status_update = {
-        'status': status
+        'status': status,
+        'updated_at': get_current_timestamp()
     }
-    if status == TransactionStatus.FINISHED.name:
-        status_update['updatedAt'] = get_current_timestamp()
 
     transaction_doc.update(status_update)
     return get_success_response(status_update)
