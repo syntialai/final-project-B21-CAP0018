@@ -3,6 +3,7 @@ import jwt
 import werkzeug
 import os
 import midtransclient
+from midtransclient import MidtransAPIError
 import requests
 from datetime import datetime
 from functools import wraps
@@ -698,6 +699,19 @@ def update_payment_status_by_id(id):
 
     payment_doc.update(status_update)
     return get_success_response(status_update)
+
+
+@app.route('/charge', methods=['POST'])
+@patient_token_required
+def charge_payment(uid):
+    try:
+        transaction = snap.create_transaction(request.get_json())
+        return get_success_response(transaction)
+    except MidtransAPIError as e:
+        print(e.api_response_dict['error_messages'])
+        raise werkzeug.exceptions.BadRequest('Currently could not process transaction.')
+    except Exception as e:
+        raise werkzeug.exceptions.InternalServerError()
 
 
 # ======================== End of Payment API ============================
