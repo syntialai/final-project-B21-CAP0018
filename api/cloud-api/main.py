@@ -118,6 +118,8 @@ def get_current_timestamp():
 def map_to_dictionaries(documents):
     mapped_documents = []
     for document in documents:
+        document_data = document.to_dict()
+        document_data['id'] = document.id
         mapped_documents.append(document.to_dict())
     return mapped_documents
 
@@ -709,7 +711,7 @@ def charge_payment(uid):
         return get_success_response(transaction)
     except MidtransAPIError as e:
         print(e.api_response_dict['error_messages'])
-        raise werkzeug.exceptions.BadRequest('Currently could not process transaction.')
+        return jsonify(message=e.api_response_dict['error_messages']), e.http_status_code
     except Exception as e:
         raise werkzeug.exceptions.InternalServerError()
 
