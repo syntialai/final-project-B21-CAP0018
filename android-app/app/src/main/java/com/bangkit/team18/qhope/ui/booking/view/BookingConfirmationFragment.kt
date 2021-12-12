@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bangkit.team18.core.data.mapper.DataMapper
@@ -26,7 +27,7 @@ import com.bangkit.team18.qhope.ui.widget.callback.OnBannerActionButtonClickList
 import com.bangkit.team18.qhope.utils.Router
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.SdkUtil
-import timber.log.Timber
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -90,7 +91,6 @@ class BookingConfirmationFragment :
               }
             }
           })
-          Timber.d("Ceker ${SdkUtil.getSnapTokenRequestModel(midtransSDK.transactionRequest)}")
           viewModel.charge(SdkUtil.getSnapTokenRequestModel(midtransSDK.transactionRequest))
         }
       }
@@ -108,8 +108,10 @@ class BookingConfirmationFragment :
   override fun onIntentResult(data: Intent?) {
     data?.data?.let { fileUri ->
       grantUriPermission(fileUri)
-      FileUtil.getTemporaryFile(requireContext(), fileUri)
-        ?.let { viewModel.uploadReferralLetter(it) }
+      viewLifecycleOwner.lifecycleScope.launch {
+        FileUtil.getTemporaryFile(requireContext(), fileUri)
+          ?.let { viewModel.uploadReferralLetter(it) }
+      }
     }
   }
 
