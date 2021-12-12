@@ -79,4 +79,5 @@ dependencies {
 
   // Midtrans
   implementation 'com.midtrans:uikit:1.28.0-SANDBOX'
+  implementation 'com.midtrans:corekit:1.30.0-SANDBOX'
 }

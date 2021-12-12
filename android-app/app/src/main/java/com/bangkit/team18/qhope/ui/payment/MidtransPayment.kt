@@ -2,15 +2,26 @@ package com.bangkit.team18.qhope.ui.payment
 
 import android.content.Context
 import android.text.TextUtils
+import android.widget.Toast
 import com.bangkit.team18.core.BuildConfig
+import com.midtrans.sdk.corekit.callback.CheckoutCallback
+import com.midtrans.sdk.corekit.callback.TransactionCallback
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
+import com.midtrans.sdk.corekit.callback.TransactionOptionsCallback
+import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.PaymentType
-import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
+import com.midtrans.sdk.corekit.core.SdkCoreFlowBuilder
+import com.midtrans.sdk.corekit.core.TransactionRequest
+import com.midtrans.sdk.corekit.models.CustomerDetails
 import com.midtrans.sdk.corekit.models.PaymentMethodsModel
+import com.midtrans.sdk.corekit.models.TransactionResponse
 import com.midtrans.sdk.corekit.models.snap.EnabledPayment
+import com.midtrans.sdk.corekit.models.snap.Token
+import com.midtrans.sdk.corekit.models.snap.Transaction
 import com.midtrans.sdk.corekit.models.snap.TransactionResult
 import com.midtrans.sdk.uikit.PaymentMethods
-import com.midtrans.sdk.uikit.SdkUIFlowBuilder
+import timber.log.Timber
+
 
 class MidtransPayment(
   private val context: Context,
@@ -28,19 +39,104 @@ class MidtransPayment(
   }
 
   fun setupPayments() {
-    SdkUIFlowBuilder.init()
-      .setClientKey(BuildConfig.MIDTRANS_CLIENT_KEY)
-      .setContext(context)
-      .setTransactionFinishedCallback(getTransactionFinishedCallback())
-      .setMerchantBaseUrl(com.midtrans.sdk.corekit.BuildConfig.BASE_URL)
-      .setSelectedPaymentMethods(getPaymentMethodModels(context))
+//    SdkUIFlowBuilder.init()
+//      .setClientKey(BuildConfig.MIDTRANS_CLIENT_KEY)
+//      .setContext(context)
+//      .setTransactionFinishedCallback(getTransactionFinishedCallback())
+//      .setMerchantBaseUrl(com.midtrans.sdk.corekit.BuildConfig.BASE_URL)
+////      .setSelectedPaymentMethods(getPaymentMethodModels(context))
+//      .enableLog(true)
+//      .setColorTheme(CustomColorTheme("#2b90bf", "#1d5f8a", "#eb9570"))
+//      .setLanguage("en")
+//      .buildSDK()
+
+    SdkCoreFlowBuilder.init(
+      context,
+      BuildConfig.MIDTRANS_CLIENT_KEY,
+      BuildConfig.QHOPE_API_URL
+    )
       .enableLog(true)
-      .setColorTheme(CustomColorTheme("#2b90bf", "#1d5f8a", "#eb9570"))
-      .setLanguage("en")
       .buildSDK()
   }
 
-  private fun getTransactionFinishedCallback() : TransactionFinishedCallback {
+  fun initTransactionRequest(): TransactionRequest {
+    // Create new Transaction Request
+    val transactionRequestNew =
+      TransactionRequest(System.currentTimeMillis().toString() + "iniItuId", 666000.0)
+    transactionRequestNew.customerDetails = initCustomerDetails()
+//    transactionRequestNew.gopay = Gopay("mysamplesdk:://midtrans")
+//    transactionRequestNew.shopeepay = Shopeepay("mysamplesdk:://midtrans")
+    return transactionRequestNew
+  }
+
+  fun getCheckoutCallback(successCallback: () -> Unit): CheckoutCallback =
+    object : CheckoutCallback {
+      override fun onSuccess(token: Token) {
+        // Checkout token will be used to charge the transaction later
+        val checkoutToken: String = token.tokenId
+        // Action when succeded
+        getTransactionOptions(checkoutToken, successCallback)
+      }
+
+      override fun onFailure(token: Token?, reason: String?) {
+        // Action when failed
+        Timber.d("getCheckoutCallback failure ${token?.tokenId} $reason")
+        Toast.makeText(context, reason, Toast.LENGTH_SHORT).show()
+      }
+
+      override fun onError(error: Throwable) {
+        // Action when error
+        Timber.d("getCheckoutCallback error ${error.message}")
+        Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
+      }
+    }
+
+  fun getTransactionOptions(checkoutToken: String, successCallback: () -> Unit) =
+    MidtransSDK.getInstance()
+      .getTransactionOptions(checkoutToken, object : TransactionOptionsCallback {
+        override fun onSuccess(transaction: Transaction) {
+          // List of enabled payment method string
+          val enabledPayments: List<EnabledPayment> = transaction.enabledPayments
+          for (i in enabledPayments)
+            Timber.d("Ceker ${i.type} ${i.category} ${i.status} ${i.acquirer}")
+          successCallback.invoke()
+        }
+
+        override fun onFailure(transaction: Transaction?, reason: String?) {
+          Timber.d("getTransactionOptions failure $reason")
+          Toast.makeText(context, reason, Toast.LENGTH_SHORT).show()
+        }
+
+        override fun onError(error: Throwable) {
+          Timber.d("getTransactionOptions error ${error.message}")
+          Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
+        }
+      })
+
+  private fun initCustomerDetails(): CustomerDetails {
+    //define customer detail (mandatory for coreflow)
+    return CustomerDetails("First", "Last", "maulanadiaz@gmail.com", "081234567899")
+  }
+
+  fun getTransactionCallback(): TransactionCallback = object : TransactionCallback {
+    override fun onError(p0: Throwable?) {
+      Timber.d("getTransactionCallback error ${p0?.message}")
+      Toast.makeText(context, p0?.message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onSuccess(p0: TransactionResponse?) {
+      Timber.d("Ceker ${p0?.statusCode} ${p0?.statusMessage} ${p0?.fraudStatus} ${p0?.transactionStatus}")
+      Timber.d("Ceker ${p0?.bniVaNumber}")
+    }
+
+    override fun onFailure(p0: TransactionResponse?, p1: String?) {
+      Timber.d("getTransactionCallback failure $p1")
+      Toast.makeText(context, p1, Toast.LENGTH_SHORT).show()
+    }
+
+  }
+
+  fun getTransactionFinishedCallback(): TransactionFinishedCallback {
     return TransactionFinishedCallback { result ->
       result.response?.let { response ->
         val transactionId = response.transactionId

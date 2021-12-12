@@ -24,6 +24,9 @@ import com.bangkit.team18.qhope.ui.payment.MidtransPayment
 import com.bangkit.team18.qhope.ui.payment.PaymentStatusListener
 import com.bangkit.team18.qhope.ui.widget.callback.OnBannerActionButtonClickListener
 import com.bangkit.team18.qhope.utils.Router
+import com.midtrans.sdk.corekit.core.MidtransSDK
+import com.midtrans.sdk.corekit.core.SdkUtil
+import timber.log.Timber
 import java.util.*
 
 
@@ -70,10 +73,25 @@ class BookingConfirmationFragment :
         setReferralLetterData(bookingDetail.referralLetterName, bookingDetail.referralLetterUri)
       }
     })
-    viewModel.isBooked.observe(viewLifecycleOwner, {
+    viewModel.isBooked.observe(viewLifecycleOwner, { it ->
       it?.let { isBooked ->
         if (isBooked) {
           midtransPayment?.setupPayments()
+          val midtransSDK = MidtransSDK.getInstance()
+          midtransSDK.transactionRequest = midtransPayment?.initTransactionRequest()
+          viewModel.token.observe(viewLifecycleOwner, {
+            it?.tokenId?.let { checkoutToken ->
+              midtransPayment?.getTransactionOptions(checkoutToken) {
+                midtransPayment?.getTransactionCallback()?.let { it ->
+                  midtransSDK.paymentUsingBankTransferBni(
+                    checkoutToken, "maulanadiaz@gmail.com", it
+                  )
+                }
+              }
+            }
+          })
+          Timber.d("Ceker ${SdkUtil.getSnapTokenRequestModel(midtransSDK.transactionRequest)}")
+          viewModel.charge(SdkUtil.getSnapTokenRequestModel(midtransSDK.transactionRequest))
         }
       }
     })

@@ -26,7 +26,7 @@ val viewModelModule = module {
   viewModel { MainViewModel(get(), get()) }
   viewModel { HomeViewModel(get(), get(), get(), get()) }
   viewModel { HospitalDetailViewModel(get()) }
-  viewModel { BookingConfirmationViewModel(get(), get(), get(), get()) }
+  viewModel { BookingConfirmationViewModel(get(), get(), get(), get(), get()) }
   viewModel { HistoryViewModel(get(), get(), get()) }
   viewModel { HistoryDetailViewModel(get()) }
   viewModel { LoginViewModel(get(), get()) }

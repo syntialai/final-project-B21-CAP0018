@@ -11,11 +11,15 @@ import com.bangkit.team18.core.domain.model.hospital.RoomType
 import com.bangkit.team18.core.domain.model.user.User
 import com.bangkit.team18.core.domain.model.user.VerificationStatus
 import com.bangkit.team18.core.domain.usecase.AuthUseCase
+import com.bangkit.team18.core.domain.usecase.MerchantUseCase
 import com.bangkit.team18.core.domain.usecase.RoomBookingUseCase
 import com.bangkit.team18.core.domain.usecase.UserUseCase
 import com.bangkit.team18.core.utils.view.DataUtils.areNotEmpty
 import com.bangkit.team18.core.utils.view.DataUtils.orFalse
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
+import com.midtrans.sdk.corekit.models.TokenRequestModel
+import com.midtrans.sdk.corekit.models.snap.Token
+import timber.log.Timber
 import java.io.File
 import java.util.Calendar
 
@@ -23,7 +27,8 @@ class BookingConfirmationViewModel(
   private val authSharedPrefRepository: AuthSharedPrefRepository,
   private val roomBookingUseCase: RoomBookingUseCase,
   private val userUseCase: UserUseCase,
-  authUseCase: AuthUseCase
+  authUseCase: AuthUseCase,
+  private val merchantUseCase: MerchantUseCase
 ) : BaseViewModelWithAuth(authSharedPrefRepository, authUseCase) {
 
   private var _bookingDetail = MutableLiveData<BookingDetail>()
@@ -39,6 +44,9 @@ class BookingConfirmationViewModel(
   private var _isEnableBooking = MediatorLiveData<Pair<Boolean, Boolean>>()
   val isEnableBooking: LiveData<Pair<Boolean, Boolean>>
     get() = _isEnableBooking
+
+  private val _token = MutableLiveData<Token?>()
+  val token: LiveData<Token?> get() = _token
 
   init {
     setupIsEnableBookingMediator()
@@ -93,14 +101,18 @@ class BookingConfirmationViewModel(
         referral_letter_name = booking.referralLetterName,
         payment_type = ""
       )
-      launchViewModelScope({
-        roomBookingUseCase.createBooking(request).runFlow({
-          _isBooked.value = it
-        }, {
-          _isBooked.value = false
-        })
-      })
+      Timber.d("Ceker ${request.room_type_id}")
+//      launchViewModelScope({
+//        roomBookingUseCase.createBooking(request).runFlow({
+//          _isBooked.value = it
+//        }, {
+//          _isBooked.value = false
+//        })
+//      })
     }
+
+    //bypass to _isBooked
+    _isBooked.value = true
   }
 
   fun uploadReferralLetter(file: File) {
@@ -137,5 +149,15 @@ class BookingConfirmationViewModel(
         )
       )
     }
+  }
+
+  fun charge(var1: TokenRequestModel?) {
+    launchViewModelScope({
+      merchantUseCase.charge(var1).runFlow({
+        _token.value = it
+      }, {
+        showErrorResponse("No token.")
+      })
+    })
   }
 }
