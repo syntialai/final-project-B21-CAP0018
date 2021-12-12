@@ -19,7 +19,6 @@ import com.bangkit.team18.core.utils.view.DataUtils.orFalse
 import com.bangkit.team18.qhope.ui.base.viewmodel.BaseViewModelWithAuth
 import com.midtrans.sdk.corekit.models.TokenRequestModel
 import com.midtrans.sdk.corekit.models.snap.Token
-import timber.log.Timber
 import java.io.File
 import java.util.Calendar
 
@@ -98,21 +97,16 @@ class BookingConfirmationViewModel(
         room_type_id = booking.selectedRoomType.id,
         selected_date_time = booking.selectedDateTime.timeInMillis,
         referral_letter_url = booking.referralLetterUri,
-        referral_letter_name = booking.referralLetterName,
-        payment_type = ""
+        referral_letter_name = booking.referralLetterName
       )
-      Timber.d("Ceker ${request.room_type_id}")
-//      launchViewModelScope({
-//        roomBookingUseCase.createBooking(request).runFlow({
-//          _isBooked.value = it
-//        }, {
-//          _isBooked.value = false
-//        })
-//      })
+      launchViewModelScope({
+        roomBookingUseCase.createBooking(request).runFlow({
+          _isBooked.value = it
+        }, {
+          _isBooked.value = false
+        })
+      })
     }
-
-    //bypass to _isBooked
-    _isBooked.value = true
   }
 
   fun uploadReferralLetter(file: File) {

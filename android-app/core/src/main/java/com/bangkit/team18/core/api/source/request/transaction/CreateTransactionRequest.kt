@@ -11,6 +11,4 @@ data class CreateTransactionRequest(
   var referral_letter_url: String? = null,
 
   var referral_letter_name: String? = null,
-
-  var payment_type: String? = null
 )
