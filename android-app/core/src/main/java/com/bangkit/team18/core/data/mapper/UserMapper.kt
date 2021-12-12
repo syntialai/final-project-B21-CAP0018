@@ -79,8 +79,8 @@ object UserMapper {
     return requestMap.toMap()
   }
 
-  fun constructImageFile(image: File?, photo: RequestBody): MultipartBody.Part =
-    MultipartBody.Part.createFormData("photo", image?.name, photo)
+  fun constructImageFile(image: File?, photo: RequestBody?): MultipartBody.Part? =
+    photo?.let { MultipartBody.Part.createFormData("photo", image?.name, it) }
 
   private fun HashMap<String, RequestBody>.addIfNotNull(key: String, value: RequestBody?) {
     if (value != null) {

@@ -23,7 +23,7 @@ class UserRemoteDataSourceImpl(
     image: File?
   ): UserResponse {
     val requestMap = UserMapper.constructUpdateUserRequest(userProfileRequest, image)
-    val photoBody = requestMap["photo"]!!
+    val photoBody = requestMap["photo"]
     val photo = UserMapper.constructImageFile(image, photoBody)
     return userService.updateUserProfile(requestMap, photo)
   }
