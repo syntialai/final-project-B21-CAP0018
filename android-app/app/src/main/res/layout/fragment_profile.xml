@@ -101,6 +101,23 @@
             android:textColor="?attr/colorOnSurface"
             app:drawableEndCompat="@drawable/ic_navigate_next"
             app:drawableStartCompat="@drawable/ic_logout" />
+
+        <TextView
+            android:id="@+id/profile_terms_and_condition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/rounded_button_radius"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:drawablePadding="@dimen/dp_16"
+            android:focusable="true"
+            android:paddingHorizontal="@dimen/dp_16"
+            android:paddingVertical="@dimen/dp_12"
+            android:text="@string/terms_and_condition"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/colorOnSurface"
+            app:drawableEndCompat="@drawable/ic_navigate_next"
+            app:drawableStartCompat="@drawable/ic_terms_and_condition" />
     </LinearLayout>
 
     <LinearLayout

@@ -9,6 +9,7 @@ import com.bangkit.team18.qhope.ui.registration.view.IdVerificationActivity
 import com.bangkit.team18.qhope.ui.registration.view.IdentityConfirmationActivity
 import com.bangkit.team18.qhope.ui.registration.view.RegistrationActivity
 import com.bangkit.team18.qhope.ui.registration.view.VerificationResultActivity
+import com.bangkit.team18.qhope.ui.tnc.view.TermsAndConditionActivity
 
 object Router {
 
@@ -57,6 +58,11 @@ object Router {
     val intent = Intent(context, RegistrationActivity::class.java).apply {
       flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
+    context.startActivity(intent)
+  }
+
+  fun goToTermsAndCondition(context: Context) {
+    val intent = Intent(context, TermsAndConditionActivity::class.java)
     context.startActivity(intent)
   }
 

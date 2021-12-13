@@ -38,12 +38,12 @@ class RegistrationActivity :
       registrationLogOut.setOnClickListener(this@RegistrationActivity)
       registrationBirthDate.setOnClickListener(this@RegistrationActivity)
       registrationEditProfilePicture.setOnClickListener(this@RegistrationActivity)
-      registrationNext.setOnClickListener(this@RegistrationActivity)
+      bNext.setOnClickListener(this@RegistrationActivity)
       registrationName.doOnTextChanged { _, _, _, _ ->
-        registrationName.error = null
+        validateInput()
       }
       registrationBirthDate.doOnTextChanged { _, _, _, _ ->
-        registrationBirthDate.error = null
+        validateInput()
       }
     }
     setupDatePicker()
@@ -70,6 +70,7 @@ class RegistrationActivity :
 
   override fun onClick(v: View?) {
     when (v?.id) {
+      R.id.b_skip -> Router.goToIdVerification(this)
       R.id.registration_log_out -> viewModel.logOut()
       R.id.registration_birth_date -> {
         if (birthDatePicker.isAdded.not()) {
@@ -77,7 +78,7 @@ class RegistrationActivity :
         }
       }
       R.id.registration_edit_profile_picture -> checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)
-      R.id.registration_next -> {
+      R.id.b_next -> {
         if (validateInput()) {
           viewModel.submitData(binding.registrationName.text.toString())
         }
@@ -96,6 +97,7 @@ class RegistrationActivity :
         registrationBirthDate.error = getString(R.string.birth_date_field_error)
         valid = false
       }
+      bNext.isEnabled = valid
     }
     return valid
   }

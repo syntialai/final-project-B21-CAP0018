@@ -12,6 +12,7 @@ import com.google.firebase.auth.PhoneAuthProvider
 import kotlinx.coroutines.flow.Flow
 
 class AuthInteractor(private val authRepository: AuthRepository) : AuthUseCase {
+
   override fun signInWithCredential(credential: PhoneAuthCredential): Flow<ResponseWrapper<FirebaseUser>> =
     authRepository.signInWithCredential(credential)
 

@@ -12,6 +12,7 @@ import com.bangkit.team18.qhope.R
 import com.bangkit.team18.qhope.databinding.FragmentProfileBinding
 import com.bangkit.team18.qhope.ui.base.view.BaseFragment
 import com.bangkit.team18.qhope.ui.profile.viewmodel.ProfileViewModel
+import com.bangkit.team18.qhope.utils.Router
 
 class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(
   FragmentProfileBinding::inflate,
@@ -24,6 +25,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(
       profileIdVerification.setOnClickListener(this@ProfileFragment)
       profilePersonalData.setOnClickListener(this@ProfileFragment)
       profilePictureImage.setOnClickListener(this@ProfileFragment)
+      profileTermsAndCondition.setOnClickListener(this@ProfileFragment)
     }
   }
 
@@ -84,6 +86,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(
           viewModel.userDoc.value?.imageUrl
         )
       )
+      R.id.profile_terms_and_condition -> Router.goToTermsAndCondition(mContext)
     }
   }
 }
