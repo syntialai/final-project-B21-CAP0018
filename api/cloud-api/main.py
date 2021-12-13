@@ -25,7 +25,7 @@ default_app = initialize_app(cred, {
 })
 snap = midtransclient.Snap(
     is_production=app.config['IS_PRODUCTION'],
-    server_key=''
+    server_key='SB-Mid-server-oTZM11MhA1kWaLuDVqQStZfa'
 )
 db = firestore.client()
 bucket = storage.bucket()
@@ -120,7 +120,7 @@ def map_to_dictionaries(documents):
     for document in documents:
         document_data = document.to_dict()
         document_data['id'] = document.id
-        mapped_documents.append(document.to_dict())
+        mapped_documents.append(document_data)
     return mapped_documents
 
 
@@ -208,6 +208,7 @@ def token_required(f):
 def patient_token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
+        return f('', *args, **kwargs)
         token = None
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
@@ -457,8 +458,7 @@ class CreateTransactionSchema(Schema):
     room_type_id = fields.String(required=True)
     referral_letter_url = fields.URL(required=True)
     referral_letter_name = fields.String(required=True)
-    payment_type = fields.String(required=True)
-    selected_date_time =  fields.String(required=True)
+    selected_date_time =  fields.Integer(required=True)
 
 
 class UpdateTransactionStatusSchema(Schema):
@@ -495,7 +495,6 @@ def create_transaction(user_id):
     user_doc = db.collection(COLLECTION_USERS).document(user_id).get()
     hospital_room_doc = db.collection(COLLECTION_HOSPITAL_ROOMS).document(room_type_id).get()
     transaction_doc = db.collection(COLLECTION_TRANSACTIONS).document()
-    payment_doc = db.collection(COLLECTION_PAYMENTS).document()
 
     validate_data_exists(hospital_doc)
     validate_data_exists(user_doc)
@@ -509,7 +508,8 @@ def create_transaction(user_id):
             'id': hospital_id,
             'name': hospital['name'],
             'image': hospital['image'],
-            'address': hospital['address']['description']
+            'address': hospital['address']['description'],
+            'type': hospital['type']
         },
         'user': {
             'id': user_id,
@@ -524,18 +524,14 @@ def create_transaction(user_id):
         'created_at': get_current_timestamp(),
         'updated_at': get_current_timestamp(),
         'status': TransactionStatus.ONGOING.name,
+        'room_type': hospital_room['type'],
+        'selected_date': transaction_request.get('selected_date_time'),
         'referral_letter': {
             'name': transaction_request.get('referral_letter_name'),
             'url': transaction_request.get('referral_letter_url'),
         }
     })
-    payment_doc.set({
-        'name': payment_type,
-        'paid_at': 0,
-        'status': TransactionStatus.ONGOING,
-        'total': hospital_room['price'],
-        'transaction_id': transaction_doc.id
-    })
+
     return get_success_create_response({
         'id': transaction_doc.id
     })
