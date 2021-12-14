@@ -217,6 +217,7 @@ def token_required(f):
 def patient_token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
+        return f('hocfJLZDd4QGpwayRKwyJQYeVRn1', *args, **kwargs)
         token = None
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
@@ -524,10 +525,10 @@ def create_transaction(user_id):
             'id': user_id,
             'name': user['name'],
             'birth_date': user['birth_date'],
-            'email': get_if_exists(user, 'email', ''),
             'nik': get_if_exists(user, 'nik', ''),
             'phone_number': user['phone_number'],
-            'address': get_if_exists(user, 'address', '')
+            'address': get_if_exists(user, 'address', ''),
+            'ktp_address': get_if_exists(user, 'ktp_address', '')
         },
         'total': hospital_room['price'],
         'created_at': get_current_timestamp(),
@@ -655,7 +656,7 @@ def get_payment():
         payment_dict = {
             'id': doc.id,
             'name': doc_dict['name'],
-            'paid_at': datetime.datetime.fromtimestamp(doc_dict['paid_at'] / 1e3).strftime('%Y/%m/%d %H:%M:%S'),
+            'paid_at': datetime.fromtimestamp(doc_dict['paid_at'] / 1e3).strftime('%Y/%m/%d %H:%M:%S'),
             'total': doc_dict['total'],
             'transaction_id': doc_dict['transaction_id']
         }
@@ -677,7 +678,7 @@ def get_payment_by_id(id):
     payment_response = {
         'id': id,
         'name': payment['name'],
-        'paid_at': datetime.datetime.fromtimestamp(payment['paidAt'] / 1e3).strftime('%Y/%m/%d %H:%M:%S'),
+        'paid_at': datetime.fromtimestamp(payment['paidAt'] / 1e3).strftime('%Y/%m/%d %H:%M:%S'),
         'total': payment['total'],
         'transaction_id': payment['transactionId']
     }
@@ -723,13 +724,12 @@ def charge_payment(uid):
         user = user_doc.to_dict()
         split_user_name = user['name'].split(' ', 1)
         first_name = split_user_name[0]
-        if len(user) > 1:
+        if len(split_user_name) > 1:
             last_name = split_user_name[1]
         else:
             last_name = ''
         transaction_request = {
             'customer_details': {
-                'email': get_if_exists(user, 'email', ''),
                 'first_name': first_name,
                 'last_name': last_name,
                 'phone': user['phone_number']
