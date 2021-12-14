@@ -30,17 +30,15 @@ class RegistrationViewModel(
   }
 
   fun submitData(name: String) {
-    user.value?.let {
-      launchViewModelScope({
-        val request = UpdateUserProfileRequest(
-          name = name,
-          birth_date = _birthDate.value
-        )
-        userUseCase.updateUser(request, _profilePicture.value).runFlow({ user ->
-          _isSubmitted.value = user.isNotNull()
-        })
+    launchViewModelScope({
+      val request = UpdateUserProfileRequest(
+        name = name,
+        birth_date = _birthDate.value
+      )
+      userUseCase.updateUser(request, _profilePicture.value).runFlow({ user ->
+        _isSubmitted.value = user.isNotNull()
       })
-    }
+    })
   }
 
   fun setBirthDate(birthDate: Long) {
