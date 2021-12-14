@@ -1,12 +1,12 @@
 package com.bangkit.team18.core.data.repository
 
 import com.bangkit.team18.core.api.source.request.transaction.CreateTransactionRequest
+import com.bangkit.team18.core.api.source.response.transaction.CreateTransactionResponse
 import com.bangkit.team18.core.api.source.response.transaction.TransactionDetailResponse
 import com.bangkit.team18.core.api.source.response.transaction.TransactionResponse
 import com.bangkit.team18.core.api.source.response.transaction.UploadReferralLetterResponse
 import com.bangkit.team18.core.data.mapper.BookingMapper
 import com.bangkit.team18.core.data.repository.base.FetchDataWrapper
-import com.bangkit.team18.core.data.repository.base.UpdateDataWrapper
 import com.bangkit.team18.core.data.source.RoomBookingRemoteDataSource
 import com.bangkit.team18.core.data.source.response.wrapper.ResponseWrapper
 import com.bangkit.team18.core.domain.model.booking.ReferralLetter
@@ -48,10 +48,14 @@ class RoomBookingRepositoryImpl(
   }
 
   override suspend fun createBooking(
-    createTransactionRequest: CreateTransactionRequest): Flow<ResponseWrapper<Boolean>> {
-    return object : UpdateDataWrapper<Unit>() {
-      override suspend fun doUpdate() {
-        roomBookingRemoteDataSource.createBooking(createTransactionRequest)
+    createTransactionRequest: CreateTransactionRequest): Flow<ResponseWrapper<String?>> {
+    return object : FetchDataWrapper<CreateTransactionResponse, String?>() {
+      override suspend fun fetchData(): CreateTransactionResponse {
+        return roomBookingRemoteDataSource.createBooking(createTransactionRequest)
+      }
+
+      override suspend fun mapData(response: CreateTransactionResponse): String? {
+        return response.id
       }
     }.updateData().flowOn(ioDispatcher)
   }

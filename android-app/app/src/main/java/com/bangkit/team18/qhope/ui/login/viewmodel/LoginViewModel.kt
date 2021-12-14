@@ -93,22 +93,20 @@ class LoginViewModel(
   }
 
   fun verifyCode(code: String) {
-    if (detectedToken.value.isNullOrEmpty()) {
-      if (storedVerificationId.isEmpty()) {
-        clearCountDown()
-        showErrorResponse("Session is not valid, Try resend OTP again.")
-        return
-      }
-      launchViewModelScope({
-        val credential = authUseCase.getCredential(storedVerificationId, code)
-        try {
-          authUseCase.signInWithCredential(credential).runFlow({})
-        } catch (e: FirebaseAuthInvalidCredentialsException) {
-          e.message?.let { showErrorResponse(it) }
-          Timber.d(e)
-        }
-      })
+    if (storedVerificationId.isEmpty()) {
+      clearCountDown()
+      showErrorResponse("Session is not valid, Try resend OTP again.")
+      return
     }
+    launchViewModelScope({
+      val credential = authUseCase.getCredential(storedVerificationId, code)
+      try {
+        authUseCase.signInWithCredential(credential).runFlow({})
+      } catch (e: FirebaseAuthInvalidCredentialsException) {
+        e.message?.let { showErrorResponse(it) }
+        Timber.d(e)
+      }
+    })
   }
 
   fun registerUser() {

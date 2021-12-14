@@ -34,9 +34,9 @@ class BookingConfirmationViewModel(
   val bookingDetail: LiveData<BookingDetail>
     get() = _bookingDetail
 
-  private var _isBooked = MutableLiveData<Boolean>()
-  val isBooked: LiveData<Boolean>
-    get() = _isBooked
+  private var _transactionId = MutableLiveData<String?>()
+  val transactionId: LiveData<String?>
+    get() = _transactionId
 
   private var _userDetails = MutableLiveData<User>()
 
@@ -101,9 +101,9 @@ class BookingConfirmationViewModel(
       )
       launchViewModelScope({
         roomBookingUseCase.createBooking(request).runFlow({
-          _isBooked.value = it
+          _transactionId.value = it
         }, {
-          _isBooked.value = false
+          showErrorResponse("No transactionId.")
         })
       })
     }

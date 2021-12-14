@@ -15,7 +15,8 @@ interface RoomBookingRepository {
   suspend fun getUserBookingDetail(id: String): Flow<ResponseWrapper<HistoryDetail>>
 
   suspend fun createBooking(
-    createTransactionRequest: CreateTransactionRequest): Flow<ResponseWrapper<Boolean>>
+    createTransactionRequest: CreateTransactionRequest
+  ): Flow<ResponseWrapper<String?>>
 
   suspend fun uploadReferralLetter(file: File): Flow<ResponseWrapper<ReferralLetter>>
 }

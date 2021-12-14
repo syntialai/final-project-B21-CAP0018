@@ -71,6 +71,7 @@ class MainActivity : BaseActivityViewModel<ActivityMainBinding, MainViewModel>(
       destinationChangedListener = destinationChangedListener
     )
 
+    setSupportActionBar(binding.mainToolbar)
     controller.observeForever {
       setupActionBarWithNavController(it)
     }
