@@ -28,6 +28,7 @@ import com.bangkit.team18.qhope.utils.Router
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.SdkUtil
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 
 
@@ -74,25 +75,18 @@ class BookingConfirmationFragment :
         setReferralLetterData(bookingDetail.referralLetterName, bookingDetail.referralLetterUri)
       }
     })
-    viewModel.isBooked.observe(viewLifecycleOwner, { it ->
-      it?.let { isBooked ->
-        if (isBooked) {
-          midtransPayment?.setupPayments()
-          val midtransSDK = MidtransSDK.getInstance()
-          midtransSDK.transactionRequest = midtransPayment?.initTransactionRequest()
-          viewModel.token.observe(viewLifecycleOwner, {
-            it?.tokenId?.let { checkoutToken ->
-              midtransPayment?.getTransactionOptions(checkoutToken) {
-                midtransPayment?.getTransactionCallback()?.let { it ->
-                  midtransSDK.paymentUsingBankTransferBni(
-                    checkoutToken, "maulanadiaz@gmail.com", it
-                  )
-                }
-              }
-            }
-          })
-          viewModel.charge(SdkUtil.getSnapTokenRequestModel(midtransSDK.transactionRequest))
-        }
+    midtransPayment?.setupPayments()
+    viewModel.transactionId.observe(viewLifecycleOwner, {
+      it?.let { transactionId ->
+        val mSdk = MidtransSDK.getInstance()
+        mSdk.transactionRequest = midtransPayment?.initTransactionRequest(transactionId)
+        viewModel.charge(SdkUtil.getSnapTokenRequestModel(mSdk.transactionRequest))
+      }
+    })
+    viewModel.token.observe(viewLifecycleOwner, {
+      it?.tokenId?.let { checkoutToken ->
+        val mSdk = MidtransSDK.getInstance()
+        mSdk.startPaymentUiFlow(context, checkoutToken)
       }
     })
     viewModel.isEnableBooking.observe(viewLifecycleOwner, { isEnableBooking ->
@@ -238,7 +232,7 @@ class BookingConfirmationFragment :
   }
 
   override fun onPaymentPending(transactionId: String) {
-    // TODO
+    Timber.d(transactionId)
   }
 
   override fun onPaymentFailed(statusMessage: String) {

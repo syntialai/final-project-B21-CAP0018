@@ -18,7 +18,8 @@ class RoomBookingInteractor(private val roomBookingRepository: RoomBookingReposi
   ) = roomBookingRepository.getUserBookingDetail(id)
 
   override suspend fun createBooking(
-    createTransactionRequest: CreateTransactionRequest): Flow<ResponseWrapper<Boolean>> {
+    createTransactionRequest: CreateTransactionRequest
+  ): Flow<ResponseWrapper<String?>> {
     return roomBookingRepository.createBooking(createTransactionRequest)
   }
 
