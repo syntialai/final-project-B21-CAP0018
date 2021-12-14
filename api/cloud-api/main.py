@@ -36,12 +36,14 @@ if app.config['IS_PRODUCTION']:
     COLLECTION_HOSPITALS = 'hospitals'
     COLLECTION_HOSPITAL_ROOMS = 'hospital_rooms'
     COLLECTION_USERS = 'users'
+    COLLECTION_INFORMATION = 'information'
 else:
     COLLECTION_TRANSACTIONS = 'transactions_test'
     COLLECTION_PAYMENTS = 'payments_test'
     COLLECTION_HOSPITALS = 'hospitals_test'
     COLLECTION_HOSPITAL_ROOMS = 'hospital_rooms_test'
     COLLECTION_USERS = 'users_test'
+    COLLECTION_INFORMATION = 'information_test'
 
 
 class TransactionStatus(enum.Enum):
@@ -122,6 +124,13 @@ def map_to_dictionaries(documents):
         document_data['id'] = document.id
         mapped_documents.append(document_data)
     return mapped_documents
+
+
+def get_if_exists(data, key, default):
+    if key in data:
+        return data[key]
+    else:
+        return default
 
 
 # ===================== Error handling ============================
@@ -208,7 +217,6 @@ def token_required(f):
 def patient_token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
-        return f('', *args, **kwargs)
         token = None
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
@@ -468,7 +476,7 @@ class UpdateTransactionStatusSchema(Schema):
 @app.route('/transactions', methods=['GET'])
 @patient_token_required
 def get_user_transactions(user_id):
-    transactions_doc = db.collection(COLLECTION_TRANSACTIONS).where('user_id', '==', user_id).stream()
+    transactions_doc = db.collection(COLLECTION_TRANSACTIONS).where('user.id', '==', user_id).stream()
     user_transaction_responses = map_to_dictionaries(transactions_doc)
     return get_success_response(user_transaction_responses)
 
@@ -476,7 +484,7 @@ def get_user_transactions(user_id):
 @app.route('/hospital/transactions', methods=['GET'])
 @hospital_token_required
 def get_hospital_transactions(hospital_id):
-    transactions_doc = db.collection(COLLECTION_TRANSACTIONS).where('hospital_id', '==', hospital_id).stream()
+    transactions_doc = db.collection(COLLECTION_TRANSACTIONS).where('hospital.id', '==', hospital_id).stream()
     hospital_transaction_responses = map_to_dictionaries(transactions_doc)
     return get_success_response(hospital_transaction_responses)
 
@@ -489,7 +497,6 @@ def create_transaction(user_id):
 
     hospital_id = transaction_request.get('hospital_id')
     room_type_id = transaction_request.get('room_type_id')
-    payment_type = transaction_request.get('payment_type')
 
     hospital_doc = db.collection(COLLECTION_HOSPITALS).document(hospital_id).get()
     user_doc = db.collection(COLLECTION_USERS).document(user_id).get()
@@ -502,6 +509,8 @@ def create_transaction(user_id):
 
     hospital = hospital_doc.to_dict()
     user = user_doc.to_dict()
+    if not is_verified(user['verification_status']):
+        raise werkzeug.exceptions.BadRequest('User\'s identity has not been verified.')
     hospital_room = hospital_room_doc.to_dict()
     transaction_doc.set({
         'hospital': {
@@ -515,10 +524,10 @@ def create_transaction(user_id):
             'id': user_id,
             'name': user['name'],
             'birth_date': user['birth_date'],
-            'email': user['email'],
-            'nik': user['nik'],
+            'email': get_if_exists(user, 'email', ''),
+            'nik': get_if_exists(user, 'nik', ''),
             'phone_number': user['phone_number'],
-            'address': user['address']
+            'address': get_if_exists(user, 'address', '')
         },
         'total': hospital_room['price'],
         'created_at': get_current_timestamp(),
@@ -702,9 +711,35 @@ def update_payment_status_by_id(id):
 @app.route('/charge', methods=['POST'])
 @patient_token_required
 def charge_payment(uid):
+    params = request.get_json()
+    transaction_id = params['transaction_details']['order_id']
+    transaction_doc = db.collection(COLLECTION_TRANSACTIONS).document(transaction_id).get()
+    validate_data_exists(transaction_doc)
+    transaction = transaction_doc.to_dict()
+    if transaction['user']['id'] != uid:
+        raise werkzeug.exceptions.NotFound('Transaction not found.')
     try:
-        transaction = snap.create_transaction(request.get_json())
-        return get_success_response(transaction)
+        user_doc = db.collection(COLLECTION_USERS).document(uid).get()
+        user = user_doc.to_dict()
+        split_user_name = user['name'].split(' ', 1)
+        first_name = split_user_name[0]
+        if len(user) > 1:
+            last_name = split_user_name[1]
+        else:
+            last_name = ''
+        transaction_request = {
+            'customer_details': {
+                'email': get_if_exists(user, 'email', ''),
+                'first_name': first_name,
+                'last_name': last_name,
+                'phone': user['phone_number']
+            },
+            'item_details': [],
+            'transaction_details': params['transaction_details']
+        }
+        transaction_request['transaction_details']['gross_amount'] = transaction['total']
+        post_transaction = snap.create_transaction(transaction_request)
+        return get_success_response(post_transaction)
     except MidtransAPIError as e:
         print(e.api_response_dict['error_messages'])
         return jsonify(message=e.api_response_dict['error_messages']), e.http_status_code
@@ -972,6 +1007,22 @@ def check_int(s):
 
 
 # ========================= End of User API ==============================
+
+
+# ============================= Information API =================================
+
+
+@app.route('/information/<id>', methods=['GET'])
+def get_information_by_id(id):
+    information_doc = db.collection(COLLECTION_INFORMATION).document(id).get()
+    validate_data_exists(information_doc)
+    information = information_doc.to_dict()
+    information['id'] = information_doc.id
+
+    return get_success_response(information)
+
+
+# ========================= End of Information API ==============================
 
 
 @app.route('/', methods=['GET'])
