@@ -19,7 +19,7 @@ object UserMapper {
     userResponse: com.bangkit.team18.core.api.source.response.user.UserResponse,
     maskNik: Boolean = false
   ): User {
-    val ktpNumber = if (maskNik) {
+    val ktpNumber = if (maskNik && userResponse.nik.isNullOrBlank().not()) {
       maskText(userResponse.nik.orEmpty())
     } else {
       userResponse.nik.orEmpty()

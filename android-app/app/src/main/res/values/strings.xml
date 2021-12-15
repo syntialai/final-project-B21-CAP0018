@@ -53,7 +53,7 @@
     <string name="back">Kembali</string>
 
     <!-- Payment -->
-    <string name="payment_method_label">Payment Method</string>
+    <string name="payment_method_label">Metode Pembayaran</string>
     <string name="payment_policy_agreement">By continuing you agree to our Terms of Use and Privacy Policy</string>
     <string name="terms_of_use">Terms of Use</string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -69,28 +69,28 @@
         <item quantity="one">●  %d malam</item>
         <item quantity="other">●  %d malam</item>
     </plurals>
-    <string name="booking_id_label">Booking ID</string>
-    <string name="booking_date_label">Booked at</string>
+    <string name="booking_id_label">ID Pesanan</string>
+    <string name="booking_date_label">Waktu pemesanan</string>
     <string name="booking_status_label">Status</string>
-    <string name="booking_refundable_label">Refundable</string>
-    <string name="booked_hospital_label">Booked Hospital</string>
-    <string name="booking_info_label">Booking Info</string>
-    <string name="check_in_at_label">Check In at</string>
-    <string name="check_out_at_label">Check Out at</string>
-    <string name="room_cost_per_day_label">Room Cost per Day</string>
-    <string name="patient_data_label">Patient Data</string>
-    <string name="patient_name_label">Full Name</string>
-    <string name="patient_birth_date_label">Birth Date</string>
+    <string name="booking_refundable_label">Dapat di refund</string>
+    <string name="booked_hospital_label">Rumah Sakit</string>
+    <string name="booking_info_label">Informasi Pesanan</string>
+    <string name="check_in_at_label">Check In pada</string>
+    <string name="check_out_at_label">Check Out pada</string>
+    <string name="room_cost_per_day_label">Harga tempat tidur per hari</string>
+    <string name="patient_data_label">Data pasien</string>
+    <string name="patient_name_label">Nama Lengkap</string>
+    <string name="patient_birth_date_label">Tanggal Lahir</string>
     <string name="patient_email_label">Email</string>
-    <string name="patient_phone_number_label">Phone Number</string>
-    <string name="patient_no_ktp_label">Patient KTP Number</string>
-    <string name="patient_address_label">Patient Address in KTP</string>
-    <string name="patient_gender_label">Gender</string>
-    <string name="patient_referral_letter_label">Patient Referral Letter</string>
-    <string name="continue_payment_description">Please continue your payment before %s to process the booking.</string>
+    <string name="patient_phone_number_label">Nomor HP</string>
+    <string name="patient_no_ktp_label">Nomor KTP Pasien</string>
+    <string name="patient_address_label">Alamat KTP Pasien</string>
+    <string name="patient_gender_label">Jenis Kelamin</string>
+    <string name="patient_referral_letter_label">Surat Rujukan Pasien</string>
+    <string name="continue_payment_description">Lanjutkan pembayaran sebelum %s untuk memproses pemesanan.</string>
 
     <!-- Profile -->
-    <string name="profile_label">Profile</string>
+    <string name="profile_label">Profil</string>
 
     <!-- Search -->
     <string name="search_hint">Find hospital</string>
@@ -99,43 +99,43 @@
     <string name="indonesian_phone_code">+62</string>
     <string name="indonesian_phone_code_pattern">+62%s</string>
     <string name="phone_number_hint">8xxxxx</string>
-    <string name="login_information">Enter your mobile number to sign in or create a new account</string>
-    <string name="continue_label">continue</string>
-    <string name="otp_information">Enter OTP code sent to your phone</string>
-    <string name="otp_sent_information">We already sent the code to the number</string>
-    <string name="resend_otp_label">Resend OTP</string>
-    <string name="resend_otp_count_down">Resend OTP (%s)</string>
+    <string name="login_information">Masukkan nomor hp untuk log in atau membuat akun baru.</string>
+    <string name="continue_label">Lanjut</string>
+    <string name="otp_information">Masukkan kode OTP yang dikirim ke hp kamu.</string>
+    <string name="otp_sent_information">Kode telah dikirimkan ke nomor kamu.</string>
+    <string name="resend_otp_label">Kirim ulang OTP</string>
+    <string name="resend_otp_count_down">Kirim ulang OTP (%s)</string>
 
     <!-- Register -->
-    <string name="hi_label">Hi!</string>
-    <string name="let_us_know_about_you">Let us know a little bit about you.</string>
-    <string name="name_hint">Name</string>
-    <string name="birth_date_hint">Birth Date</string>
-    <string name="logout_label">Log Out</string>
-    <string name="next_label">Next</string>
-    <string name="name_field_error">Name cannot be empty.</string>
-    <string name="birth_date_field_error">Birth date cannot be empty.</string>
+    <string name="hi_label">Hai!</string>
+    <string name="let_us_know_about_you">Kenalan yuk.</string>
+    <string name="name_hint">Nama</string>
+    <string name="birth_date_hint">Tanggal Lahir</string>
+    <string name="logout_label">Keluar</string>
+    <string name="next_label">Lanjut</string>
+    <string name="name_field_error">Nama tidak boleh kosong.</string>
+    <string name="birth_date_field_error">Tanggal lahir tidak boleh kosong.</string>
 
     <!-- ID Verification -->
     <string name="e_ktp_label">e-KTP</string>
-    <string name="selfie_ktp_label">Selfie with e-KTP</string>
-    <string name="submit_label">Submit</string>
-    <string name="verification_information">Your data are <b>secure</b> and only be used for <b>verification purposes</b>.</string>
-    <string name="skip_label">Skip</string>
-    <string name="got_it">Got It!</string>
-    <string name="verified_message">Verified!</string>
-    <string name="verified_message_description">You can start <b>book</b> now.</string>
-    <string name="uploaded_message">Uploaded!</string>
-    <string name="uploaded_message_description">Your document still on process. You can see the result in your profile later.</string>
-    <string name="rejected_message">Failed!</string>
-    <string name="rejected_message_description">Your document is not valid. Please re-submit the document later in your profile.</string>
+    <string name="selfie_ktp_label">Selfie dengan e-KTP</string>
+    <string name="submit_label">Kirim</string>
+    <string name="verification_information">Data kamu <b>aman</b> dan hanya digunakan untuk <b>kebutuhan verifikasi</b>.</string>
+    <string name="skip_label">Lewati</string>
+    <string name="got_it">Mengerti</string>
+    <string name="verified_message">Terverifikasi!</string>
+    <string name="verified_message_description">Kini kamu dapat <b>memesan tempat tidur</b> pada rumah sakit.</string>
+    <string name="uploaded_message">Telah diunggah!</string>
+    <string name="uploaded_message_description">Dokumen kamu masih dalam proses verifikasi. Kamu dapat melihat hasilnya di profil kamu.</string>
+    <string name="rejected_message">Ditolak!</string>
+    <string name="rejected_message_description">Dokumen yang kamu unggah tidak valid. Kamu dapat melakukan verifikasi ulang pada profil kamu.</string>
 
     <!-- Profile -->
-    <string name="id_verification_label">ID Verification</string>
-    <string name="personal_data_label">Personal Data</string>
+    <string name="id_verification_label">Verifikasi ID</string>
+    <string name="personal_data_label">Data kamu</string>
 
     <!-- Splash -->
-    <string name="fill_information_message">Please fill some information first.</string>
+    <string name="fill_information_message">Isikan beberapa informasi terlebih dahulu.</string>
 
     <!-- Terms and Condition -->
     <string name="terms_and_condition">Syarat dan Ketentuan</string>
@@ -177,35 +177,35 @@
     <!-- Other -->
     <string name="empty_state_label">Empty state</string>
     <string name="referral_letter_content_description">Pdf</string>
-    <string name="close_action">Close</string>
-    <string name="no_connection_message">Failed to connect. Please check your internet connection.</string>
-    <string name="unknown_error_message">An error occurred when retrieving the data. Please try again later.</string>
-    <string name="ktp_number_hint">KTP Number</string>
-    <string name="place_of_birth_hint">Place of Birth</string>
-    <string name="address_hint">Address</string>
-    <string name="ktp_address_hint">KTP Address</string>
-    <string name="male_label">Male</string>
-    <string name="female_label">Female</string>
-    <string name="edit_label">Edit</string>
-    <string name="save_label">Save</string>
-    <string name="gender_field_error">You need to select one.</string>
-    <string name="verified_label">Verified</string>
-    <string name="accepted_label">Accepted</string>
-    <string name="not_verified_label">Not Verified</string>
+    <string name="close_action">Tutup</string>
+    <string name="no_connection_message">Gagal terhubung dengan server. Cek kembali koneksi internet kamu.</string>
+    <string name="unknown_error_message">Terjadi kesalahan. Silakan coba lagi.</string>
+    <string name="ktp_number_hint">Nomor KTP</string>
+    <string name="place_of_birth_hint">Tempat Lahir</string>
+    <string name="address_hint">Alamat</string>
+    <string name="ktp_address_hint">Alamat KTP</string>
+    <string name="male_label">Pria</string>
+    <string name="female_label">Wanita</string>
+    <string name="edit_label">Ubah</string>
+    <string name="save_label">Simpan</string>
+    <string name="gender_field_error">Pilih salah satu.</string>
+    <string name="verified_label">Terverifikasi</string>
+    <string name="accepted_label">Diterima</string>
+    <string name="not_verified_label">Verifikasi Ditolak</string>
 
-    <string name="intent_choose_capturer">Capture with …</string>
-    <string name="permanently_denied_permission_message">You need to grant the permissions on your Device Settings.</string>
-    <string name="denied_permission_message">You need to grant the permissions.</string>
+    <string name="intent_choose_capturer">Lakukan dengan …</string>
+    <string name="permanently_denied_permission_message">Kamu perlu memberikan akses melalui Pengaturan Device kamu.</string>
+    <string name="denied_permission_message">Kamu perlu memberi akses.</string>
 
-    <string name="district_hint">District</string>
-    <string name="village_hint">Village</string>
-    <string name="city_hint">City</string>
-    <string name="hamlet_hint">Hamlet</string>
-    <string name="religion_hint">Religion</string>
-    <string name="blood_type_hint">Blood type</string>
-    <string name="confirm_identity">Confirm Identity</string>
-    <string name="confirm_identity_title">Submit your identity?</string>
-    <string name="confirm_identity_description">After submit, your identity will be saved and won\'t be able to be updated. Make sure your data is correct.</string>
+    <string name="district_hint">Kecamatan</string>
+    <string name="village_hint">Desa/kelurahan</string>
+    <string name="city_hint">Kota</string>
+    <string name="hamlet_hint">RT/RW</string>
+    <string name="religion_hint">Agama</string>
+    <string name="blood_type_hint">Golongan Darah</string>
+    <string name="confirm_identity">Konfirmasi Identitas</string>
+    <string name="confirm_identity_title">Kirim?</string>
+    <string name="confirm_identity_description">Setelah mengirim, identitas kamu akan disimpan dan tidak dapat diubah lagi. Pastikan data yang kamu isi sudah benar.</string>
 
     <string-array name="blood_types">
         <item>A</item>
