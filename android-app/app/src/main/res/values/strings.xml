@@ -191,7 +191,7 @@
     <string name="gender_field_error">Pilih salah satu.</string>
     <string name="verified_label">Terverifikasi</string>
     <string name="accepted_label">Diterima</string>
-    <string name="not_verified_label">Verifikasi Ditolak</string>
+    <string name="not_verified_label">Ditolak</string>
 
     <string name="intent_choose_capturer">Lakukan dengan …</string>
     <string name="permanently_denied_permission_message">Kamu perlu memberikan akses melalui Pengaturan Device kamu.</string>
