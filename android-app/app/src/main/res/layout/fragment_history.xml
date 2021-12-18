@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="@dimen/dp_16"
+    android:clipChildren="false"
     tools:context=".ui.history.view.HistoryFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_16"
         android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/dp_16"
         android:paddingBottom="@dimen/dp_16"
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -36,6 +37,7 @@
         android:id="@+id/view_history_empty_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/dp_16"
         android:visibility="gone"
         app:description="@string/history_empty_state_description"
         app:image="@drawable/drawable_booking_history_empty"

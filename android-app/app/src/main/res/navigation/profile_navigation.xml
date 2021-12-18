@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_profileFragment_to_profilePictureFragment"
             app:destination="@id/profilePictureFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_termsAndConditionFragment"
+            app:destination="@id/termsAndConditionFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileIdVerificationFragment"
@@ -68,4 +71,9 @@
         android:name="com.qhope.app.ui.profile.view.EditPersonalDataFragment"
         android:label="@string/edit_label"
         tools:layout="@layout/fragment_edit_personal_data" />
+    <fragment
+        android:id="@+id/termsAndConditionFragment"
+        android:name="com.qhope.app.ui.tnc.view.TermsAndConditionFragment"
+        android:label="fragment_terms_and_condition"
+        tools:layout="@layout/fragment_terms_and_condition" />
 </navigation>

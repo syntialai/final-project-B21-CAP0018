@@ -9,6 +9,7 @@ import com.qhope.app.R
 import com.qhope.app.databinding.FragmentPersonalDataBinding
 import com.qhope.app.ui.base.view.BaseFragment
 import com.qhope.app.ui.profile.viewmodel.PersonalDataViewModel
+import com.qhope.core.domain.model.user.GenderType
 import com.qhope.core.domain.model.user.User
 import com.qhope.core.utils.view.DataUtils.orHyphen
 import com.qhope.core.utils.view.DateUtils.toDateString
@@ -35,9 +36,10 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding, PersonalD
       binding.apply {
         personalDataName.text = user.name.orHyphen()
         personalDataKtpNumber.text = user.ktpNumber.orHyphen()
-        personalDataBirthDate.text = user.birthDate?.toDateString("dd MMMM yyyy").orHyphen()
+        personalDataBirthDate.text = user.birthDate?.toDateString("dd MMMM yyyy", true).orHyphen()
         personalDataPlaceOfBirth.text = user.placeOfBirth.orHyphen()
         personalDataAddress.text = user.address.orHyphen()
+        personalDataGender.text = user.gender?.name ?: GenderType.MALE.name
       }
     }
   }

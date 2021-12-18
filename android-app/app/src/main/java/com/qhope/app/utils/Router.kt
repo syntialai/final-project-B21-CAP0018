@@ -9,7 +9,7 @@ import com.qhope.app.ui.registration.view.IdVerificationActivity
 import com.qhope.app.ui.registration.view.IdentityConfirmationActivity
 import com.qhope.app.ui.registration.view.RegistrationActivity
 import com.qhope.app.ui.registration.view.VerificationResultActivity
-import com.qhope.app.ui.tnc.view.TermsAndConditionActivity
+import com.qhope.app.ui.tnc.view.TermsAndConditionFragment
 
 object Router {
 
@@ -58,11 +58,6 @@ object Router {
     val intent = Intent(context, RegistrationActivity::class.java).apply {
       flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
-    context.startActivity(intent)
-  }
-
-  fun goToTermsAndCondition(context: Context) {
-    val intent = Intent(context, TermsAndConditionActivity::class.java)
     context.startActivity(intent)
   }
 

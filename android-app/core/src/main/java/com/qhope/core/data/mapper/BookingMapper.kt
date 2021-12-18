@@ -2,7 +2,6 @@ package com.qhope.core.data.mapper
 
 import com.google.firebase.Timestamp
 import com.qhope.core.api.source.response.transaction.TransactionDetailResponse
-import com.qhope.core.api.source.response.transaction.TransactionResponse
 import com.qhope.core.api.source.response.transaction.TransactionUserResponse
 import com.qhope.core.api.source.response.transaction.UploadReferralLetterResponse
 import com.qhope.core.domain.model.booking.ReferralLetter
@@ -47,13 +46,13 @@ object BookingMapper {
     hospitalId = response.hospital?.id.orEmpty(),
     hospitalImagePath = response.hospital?.image.orEmpty(),
     hospitalName = response.hospital?.name.orEmpty(),
-    startDate = response.created_at?.toDateString(DataUtils.MMMM_D_YYYY_HH_MM_A).orHyphen(),
+    startDate = response.created_at?.toDateString(DataUtils.MMMM_D_YYYY_HH_MM_A, true).orHyphen(),
     endDate = "",
-    nightCount = 0,
+    nightCount = 1,
     status = response.status?.let {
       HistoryStatus.valueOf(it)
     } ?: HistoryStatus.ONGOING,
-    bookedAt = response.created_at?.toDateString(DataUtils.MMMM_D_YYYY_HH_MM_A).orHyphen(),
+    bookedAt = response.selected_date?.toDateString(DataUtils.MMMM_D_YYYY_HH_MM_A, true).orHyphen(),
     hospitalAddress = response.hospital?.address.orHyphen(),
     hospitalType = response.hospital?.type.orEmpty(),
     roomType = mapToRoomTypeHistory(response.room_type),

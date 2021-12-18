@@ -1,32 +1,29 @@
 package com.qhope.app.ui.tnc.view
 
-import android.os.Bundle
 import android.view.View
 import com.qhope.app.R
-import com.qhope.app.databinding.ActivityTermsAndConditionBinding
-import com.qhope.app.ui.base.view.BaseActivity
+import com.qhope.app.databinding.FragmentTermsAndConditionBinding
+import com.qhope.app.ui.base.view.BaseFragment
+import com.qhope.app.ui.base.viewmodel.BaseViewModel
 import com.qhope.app.ui.tnc.adapter.TermsAndConditionAdapter
 
-class TermsAndConditionActivity :
-  BaseActivity<ActivityTermsAndConditionBinding>(ActivityTermsAndConditionBinding::inflate) {
+class TermsAndConditionFragment :
+  BaseFragment<FragmentTermsAndConditionBinding, BaseViewModel>(
+    FragmentTermsAndConditionBinding::inflate,
+    BaseViewModel::class
+  ) {
 
   private val termsAndConditionAdapter by lazy {
     TermsAndConditionAdapter()
   }
 
-  override fun setupViews(savedInstanceState: Bundle?) {
-    binding.apply {
-      toolbarTnc.setNavigationOnClickListener(this@TermsAndConditionActivity)
-
-      rvTnc.adapter = termsAndConditionAdapter
-    }
+  override fun setupViews() {
+    binding.rvTnc.adapter = termsAndConditionAdapter
     termsAndConditionAdapter.submitList(getData())
   }
 
   override fun onClick(v: View?) {
-    when (v) {
-      binding.toolbarTnc -> onBackPressed()
-    }
+    // No implementation needed
   }
 
   private fun getData(): List<Pair<String, String>> {

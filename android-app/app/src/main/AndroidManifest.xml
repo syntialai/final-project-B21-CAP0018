@@ -53,8 +53,6 @@
 
         <activity android:name=".ui.registration.view.IdentityConfirmationActivity" />
 
-        <activity android:name=".ui.tnc.view.TermsAndConditionActivity" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.qhope.qhope.fileprovider"

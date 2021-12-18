@@ -20,5 +20,7 @@ data class TransactionDetailResponse(
 
   var user: TransactionUserResponse? = null,
 
-  var referral_letter: UploadReferralLetterResponse? = null
+  var referral_letter: UploadReferralLetterResponse? = null,
+
+  var selected_date: Long? = null
 )

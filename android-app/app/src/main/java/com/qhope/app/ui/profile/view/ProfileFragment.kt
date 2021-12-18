@@ -8,7 +8,6 @@ import com.qhope.app.R
 import com.qhope.app.databinding.FragmentProfileBinding
 import com.qhope.app.ui.base.view.BaseFragment
 import com.qhope.app.ui.profile.viewmodel.ProfileViewModel
-import com.qhope.app.utils.Router
 import com.qhope.core.domain.model.user.User
 import com.qhope.core.domain.model.user.VerificationStatus
 import com.qhope.core.utils.view.ViewUtils.getColorFromAttr
@@ -76,19 +75,24 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(
             findNavController()
               .navigate(ProfileFragmentDirections.actionProfileFragmentToProfileIdVerificationFragment())
           } else {
-            findNavController()
-              .navigate(ProfileFragmentDirections.actionProfileFragmentToProfileVerificationResultFragment2())
+            findNavController().navigate(
+              ProfileFragmentDirections.actionProfileFragmentToProfileVerificationResultFragment2()
+            )
           }
         }
       }
-      R.id.profile_personal_data -> findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToPersonalDataFragment())
+      R.id.profile_personal_data -> findNavController().navigate(
+        ProfileFragmentDirections.actionProfileFragmentToPersonalDataFragment()
+      )
       R.id.profile_log_out -> viewModelWithAuth?.logOut()
       R.id.profile_picture_image -> findNavController().navigate(
         ProfileFragmentDirections.actionProfileFragmentToProfilePictureFragment(
           viewModel.userDoc.value?.imageUrl
         )
       )
-      R.id.profile_terms_and_condition -> Router.goToTermsAndCondition(mContext)
+      R.id.profile_terms_and_condition -> findNavController().navigate(
+        ProfileFragmentDirections.actionProfileFragmentToTermsAndConditionFragment()
+      )
     }
   }
 }
