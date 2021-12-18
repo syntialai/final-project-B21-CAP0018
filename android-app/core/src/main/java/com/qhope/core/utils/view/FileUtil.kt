@@ -73,7 +73,7 @@ object FileUtil {
   fun getUri(context: Context, file: File): Uri {
     return FileProvider.getUriForFile(
       context,
-      "com.bangkit.team18.qhope.fileprovider",
+      "com.qhope.app",
       file
     )
   }
