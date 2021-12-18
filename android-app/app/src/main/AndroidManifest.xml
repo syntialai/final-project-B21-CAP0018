@@ -55,7 +55,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.qhope.qhope.fileprovider"
+            android:authorities="com.qhope.app.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
