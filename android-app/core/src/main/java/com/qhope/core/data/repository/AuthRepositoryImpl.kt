@@ -8,7 +8,7 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.qhope.core.api.source.response.user.UserResponse
+import com.qhope.core.data.source.response.user.UserResponse
 import com.qhope.core.data.mapper.UserMapper
 import com.qhope.core.data.repository.base.FetchDataWrapper
 import com.qhope.core.data.source.AuthRemoteDataSource

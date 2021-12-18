@@ -1,9 +1,9 @@
 package com.qhope.core.data.mapper
 
 import com.google.android.gms.maps.model.LatLng
-import com.qhope.core.api.source.response.hospital.HospitalDetailResponse
-import com.qhope.core.api.source.response.hospital.HospitalResponse
-import com.qhope.core.api.source.response.hospital.HospitalRoomTypeResponse
+import com.qhope.core.data.source.response.hospital.HospitalDetailResponse
+import com.qhope.core.data.source.response.hospital.HospitalResponse
+import com.qhope.core.data.source.response.hospital.HospitalRoomTypeResponse
 import com.qhope.core.domain.model.booking.BookedHospital
 import com.qhope.core.domain.model.home.Hospital
 import com.qhope.core.domain.model.hospital.HospitalDetail

@@ -3,7 +3,7 @@ package com.qhope.core.data.source
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.PhoneAuthCredential
-import com.qhope.core.api.source.response.user.UserResponse
+import com.qhope.core.data.source.response.user.UserResponse
 import com.qhope.core.data.source.response.wrapper.ResponseWrapper
 import kotlinx.coroutines.flow.Flow
 

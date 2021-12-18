@@ -1,7 +1,7 @@
 package com.qhope.core.data.repository
 
-import com.qhope.core.api.source.response.hospital.HospitalDetailResponse
-import com.qhope.core.api.source.response.hospital.HospitalResponse
+import com.qhope.core.data.source.response.hospital.HospitalDetailResponse
+import com.qhope.core.data.source.response.hospital.HospitalResponse
 import com.qhope.core.data.mapper.HospitalMapper
 import com.qhope.core.data.repository.base.FetchDataWrapper
 import com.qhope.core.data.source.HospitalRemoteDataSource

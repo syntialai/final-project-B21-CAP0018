@@ -1,10 +1,10 @@
 package com.qhope.core.di
 
-import com.qhope.core.api.source.service.AuthService
-import com.qhope.core.api.source.service.HospitalService
-import com.qhope.core.api.source.service.MerchantService
-import com.qhope.core.api.source.service.TransactionService
-import com.qhope.core.api.source.service.UserService
+import com.qhope.core.data.source.service.AuthService
+import com.qhope.core.data.source.service.HospitalService
+import com.qhope.core.data.source.service.MerchantService
+import com.qhope.core.data.source.service.TransactionService
+import com.qhope.core.data.source.service.UserService
 import com.qhope.core.data.repository.AuthRepositoryImpl
 import com.qhope.core.data.repository.AuthSharedPrefRepository
 import com.qhope.core.data.repository.HospitalRepositoryImpl

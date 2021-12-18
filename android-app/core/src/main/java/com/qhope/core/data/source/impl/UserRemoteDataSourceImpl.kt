@@ -1,9 +1,9 @@
 package com.qhope.core.data.source.impl
 
-import com.qhope.core.api.source.request.user.IdentityConfirmationRequest
-import com.qhope.core.api.source.request.user.UpdateUserProfileRequest
-import com.qhope.core.api.source.response.user.UserResponse
-import com.qhope.core.api.source.service.UserService
+import com.qhope.core.data.source.request.user.IdentityConfirmationRequest
+import com.qhope.core.data.source.request.user.UpdateUserProfileRequest
+import com.qhope.core.data.source.response.user.UserResponse
+import com.qhope.core.data.source.service.UserService
 import com.qhope.core.data.mapper.UserMapper
 import com.qhope.core.data.source.UserRemoteDataSource
 import com.qhope.core.data.source.base.BaseRemoteDataSource

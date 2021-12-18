@@ -1,6 +1,6 @@
 package com.qhope.core.domain.usecase.interactor
 
-import com.qhope.core.api.source.request.transaction.CreateTransactionRequest
+import com.qhope.core.data.source.request.transaction.CreateTransactionRequest
 import com.qhope.core.data.source.response.wrapper.ResponseWrapper
 import com.qhope.core.domain.model.booking.ReferralLetter
 import com.qhope.core.domain.repository.RoomBookingRepository

@@ -3,7 +3,7 @@ package com.qhope.app.ui.profile.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.qhope.app.ui.base.viewmodel.BaseViewModelWithAuth
-import com.qhope.core.api.source.request.user.UpdateUserProfileRequest
+import com.qhope.core.data.source.request.user.UpdateUserProfileRequest
 import com.qhope.core.data.repository.AuthSharedPrefRepository
 import com.qhope.core.domain.model.user.GenderType
 import com.qhope.core.domain.model.user.User

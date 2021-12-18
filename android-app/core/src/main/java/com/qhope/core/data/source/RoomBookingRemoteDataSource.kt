@@ -1,9 +1,9 @@
 package com.qhope.core.data.source
 
-import com.qhope.core.api.source.request.transaction.CreateTransactionRequest
-import com.qhope.core.api.source.response.transaction.CreateTransactionResponse
-import com.qhope.core.api.source.response.transaction.TransactionDetailResponse
-import com.qhope.core.api.source.response.transaction.UploadReferralLetterResponse
+import com.qhope.core.data.source.request.transaction.CreateTransactionRequest
+import com.qhope.core.data.source.response.transaction.CreateTransactionResponse
+import com.qhope.core.data.source.response.transaction.TransactionDetailResponse
+import com.qhope.core.data.source.response.transaction.UploadReferralLetterResponse
 import java.io.File
 
 interface RoomBookingRemoteDataSource {

@@ -1,9 +1,9 @@
 package com.qhope.core.data.mapper
 
 import com.google.firebase.Timestamp
-import com.qhope.core.api.source.response.transaction.TransactionDetailResponse
-import com.qhope.core.api.source.response.transaction.TransactionUserResponse
-import com.qhope.core.api.source.response.transaction.UploadReferralLetterResponse
+import com.qhope.core.data.source.response.transaction.TransactionDetailResponse
+import com.qhope.core.data.source.response.transaction.TransactionUserResponse
+import com.qhope.core.data.source.response.transaction.UploadReferralLetterResponse
 import com.qhope.core.domain.model.booking.ReferralLetter
 import com.qhope.core.domain.model.history.History
 import com.qhope.core.domain.model.history.HistoryDetail

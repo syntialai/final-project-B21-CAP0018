@@ -1,8 +1,8 @@
 package com.qhope.core.data.repository
 
-import com.qhope.core.api.source.request.user.IdentityConfirmationRequest
-import com.qhope.core.api.source.request.user.UpdateUserProfileRequest
-import com.qhope.core.api.source.response.user.UserResponse
+import com.qhope.core.data.source.request.user.IdentityConfirmationRequest
+import com.qhope.core.data.source.request.user.UpdateUserProfileRequest
+import com.qhope.core.data.source.response.user.UserResponse
 import com.qhope.core.data.mapper.UserMapper
 import com.qhope.core.data.repository.base.FetchDataWrapper
 import com.qhope.core.data.repository.base.UpdateDataWrapper

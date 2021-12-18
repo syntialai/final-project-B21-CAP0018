@@ -1,34 +1,40 @@
 package com.qhope.core.data.source.response.user
 
-import com.google.firebase.Timestamp
-import com.google.firebase.firestore.DocumentId
-import com.qhope.core.domain.model.user.GenderType
-import com.qhope.core.domain.model.user.VerificationStatus
-
-@Suppress("unused")
 data class UserResponse(
-  @DocumentId
-  val id: String,
-  val name: String,
-  val phone_number: String,
-  val image_url: String,
-  val birth_date: Timestamp?,
-  val verification_status: VerificationStatus?,
-  val no_ktp: String,
-  val gender: GenderType?,
-  val place_of_birth: String,
-  val address: String
-) {
-  constructor() : this(
-    "",
-    "",
-    "",
-    "",
-    null,
-    null,
-    "",
-    null,
-    "",
-    ""
-  )
-}
+
+  var id: String? = null,
+
+  var name: String? = null,
+
+  var phone_number: String? = null,
+
+  var photo_url: String? = null,
+
+  var birth_date: Long? = null,
+
+  var verification_status: String? = null,
+
+  var nik: String? = null,
+
+  var gender: String? = null,
+
+  var birth_place: String? = null,
+
+  var address: String? = null,
+
+  var ktp_address: String? = null,
+
+  var blood_type: String? = null,
+
+  var district: String? = null,
+
+  var village: String? = null,
+
+  var city: String? = null,
+
+  var neighborhood: String? = null,
+
+  var hamlet: String? = null,
+
+  var religion: String? = null
+)

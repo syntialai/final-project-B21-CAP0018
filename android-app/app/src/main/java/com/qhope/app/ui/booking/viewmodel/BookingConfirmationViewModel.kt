@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.midtrans.sdk.corekit.models.TokenRequestModel
 import com.midtrans.sdk.corekit.models.snap.Token
 import com.qhope.app.ui.base.viewmodel.BaseViewModelWithAuth
-import com.qhope.core.api.source.request.transaction.CreateTransactionRequest
+import com.qhope.core.data.source.request.transaction.CreateTransactionRequest
 import com.qhope.core.data.repository.AuthSharedPrefRepository
 import com.qhope.core.domain.model.booking.BookedHospital
 import com.qhope.core.domain.model.booking.BookingDetail

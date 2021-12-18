@@ -1,6 +1,6 @@
 package com.qhope.core.data.mapper
 
-import com.qhope.core.api.source.request.user.UpdateUserProfileRequest
+import com.qhope.core.data.source.request.user.UpdateUserProfileRequest
 import com.qhope.core.config.Constants
 import com.qhope.core.domain.model.user.GenderType
 import com.qhope.core.domain.model.user.User
@@ -16,7 +16,7 @@ import java.io.File
 object UserMapper {
 
   fun mapToUser(
-    userResponse: com.qhope.core.api.source.response.user.UserResponse,
+    userResponse: com.qhope.core.data.source.response.user.UserResponse,
     maskNik: Boolean = false
   ): User {
     val ktpNumber = if (maskNik && userResponse.nik.isNullOrBlank().not()) {

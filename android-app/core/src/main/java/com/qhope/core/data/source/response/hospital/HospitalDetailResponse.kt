@@ -1,7 +1,7 @@
 package com.qhope.core.data.source.response.hospital
 
-data class HospitalResponse(
-  
+data class HospitalDetailResponse(
+
   var id: String? = null,
 
   var name: String? = null,
@@ -10,7 +10,13 @@ data class HospitalResponse(
 
   var type: String? = null,
 
+  var description: String? = null,
+
   var address: HospitalAddressResponse? = null,
 
-  var available_room_count: Int? = null
+  var telephone: String? = null,
+
+  var available_room_count: Int? = null,
+
+  var room_types: List<HospitalRoomTypeResponse>? = null
 )

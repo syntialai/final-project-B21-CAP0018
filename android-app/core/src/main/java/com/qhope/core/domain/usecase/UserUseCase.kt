@@ -1,7 +1,7 @@
 package com.qhope.core.domain.usecase
 
-import com.qhope.core.api.source.request.user.IdentityConfirmationRequest
-import com.qhope.core.api.source.request.user.UpdateUserProfileRequest
+import com.qhope.core.data.source.request.user.IdentityConfirmationRequest
+import com.qhope.core.data.source.request.user.UpdateUserProfileRequest
 import com.qhope.core.data.source.response.wrapper.ResponseWrapper
 import com.qhope.core.domain.model.user.User
 import kotlinx.coroutines.flow.Flow

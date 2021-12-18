@@ -1,8 +1,8 @@
 package com.qhope.core.data.source.impl
 
-import com.qhope.core.api.source.response.hospital.HospitalDetailResponse
-import com.qhope.core.api.source.response.hospital.HospitalResponse
-import com.qhope.core.api.source.service.HospitalService
+import com.qhope.core.data.source.response.hospital.HospitalDetailResponse
+import com.qhope.core.data.source.response.hospital.HospitalResponse
+import com.qhope.core.data.source.service.HospitalService
 import com.qhope.core.data.source.HospitalRemoteDataSource
 import com.qhope.core.data.source.base.BaseRemoteDataSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
