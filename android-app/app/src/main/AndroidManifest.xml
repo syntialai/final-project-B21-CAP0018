@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.bangkit.team18.qhope">
+    package="com.qhope.app">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,7 +20,7 @@
         android:required="false" />
 
     <application
-        android:name=".QHopeApplication"
+        android:name="com.qhope.app.QHopeApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -57,7 +57,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.bangkit.team18.qhope.fileprovider"
+            android:authorities="com.qhope.qhope.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

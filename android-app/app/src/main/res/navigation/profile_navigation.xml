@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.bangkit.team18.qhope.ui.profile.view.ProfileFragment"
+        android:name="com.qhope.app.ui.profile.view.ProfileFragment"
         android:label="@string/profile_label"
         tools:layout="@layout/fragment_profile">
         <action
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileIdVerificationFragment"
-        android:name="com.bangkit.team18.qhope.ui.profile.view.ProfileIdVerificationFragment"
+        android:name="com.qhope.app.ui.profile.view.ProfileIdVerificationFragment"
         android:label="@string/id_verification_label"
         tools:layout="@layout/fragment_profile_id_verification">
         <action
@@ -35,7 +35,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileVerificationResultFragment"
-        android:name="com.bangkit.team18.qhope.ui.profile.view.ProfileVerificationResultFragment"
+        android:name="com.qhope.app.ui.profile.view.ProfileVerificationResultFragment"
         android:label=""
         tools:layout="@layout/fragment_profile_verification_result">
         <action
@@ -46,7 +46,7 @@
     </fragment>
     <fragment
         android:id="@+id/personalDataFragment"
-        android:name="com.bangkit.team18.qhope.ui.profile.view.PersonalDataFragment"
+        android:name="com.qhope.app.ui.profile.view.PersonalDataFragment"
         android:label="@string/personal_data_label"
         tools:layout="@layout/fragment_personal_data">
         <action
@@ -55,7 +55,7 @@
     </fragment>
     <fragment
         android:id="@+id/profilePictureFragment"
-        android:name="com.bangkit.team18.qhope.ui.profile.view.ProfilePictureFragment"
+        android:name="com.qhope.app.ui.profile.view.ProfilePictureFragment"
         android:label=""
         tools:layout="@layout/fragment_profile_picture">
         <argument
@@ -65,7 +65,7 @@
     </fragment>
     <fragment
         android:id="@+id/editPersonalDataFragment"
-        android:name="com.bangkit.team18.qhope.ui.profile.view.EditPersonalDataFragment"
+        android:name="com.qhope.app.ui.profile.view.EditPersonalDataFragment"
         android:label="@string/edit_label"
         tools:layout="@layout/fragment_edit_personal_data" />
 </navigation>

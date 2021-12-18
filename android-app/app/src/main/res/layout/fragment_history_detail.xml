@@ -13,7 +13,7 @@
         android:paddingVertical="@dimen/dp_16"
         tools:context=".ui.history.view.HistoryDetailFragment">
 
-        <com.bangkit.team18.qhope.ui.widget.BannerInfo
+        <com.qhope.app.ui.widget.BannerInfo
             android:id="@+id/banner_info_continue_payment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

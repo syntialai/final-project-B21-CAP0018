@@ -15,7 +15,7 @@ android {
   buildToolsVersion "30.0.3"
 
   defaultConfig {
-    applicationId "com.bangkit.team18.qhope"
+    applicationId "com.qhope.app"
     minSdkVersion 23
     targetSdkVersion 30
     versionCode 1

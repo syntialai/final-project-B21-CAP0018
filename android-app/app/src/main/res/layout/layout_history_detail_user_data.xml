@@ -159,7 +159,7 @@
             android:textAppearance="?attr/textAppearanceCaption"
             android:textColor="?attr/colorTextMedium" />
 
-        <com.bangkit.team18.qhope.ui.widget.ReferralLetterCard
+        <com.qhope.app.ui.widget.ReferralLetterCard
             android:id="@+id/card_booking_user_referral_letter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
