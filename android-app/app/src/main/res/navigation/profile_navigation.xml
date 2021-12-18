@@ -74,6 +74,6 @@
     <fragment
         android:id="@+id/termsAndConditionFragment"
         android:name="com.qhope.app.ui.tnc.view.TermsAndConditionFragment"
-        android:label="fragment_terms_and_condition"
+        android:label="@string/terms_and_condition"
         tools:layout="@layout/fragment_terms_and_condition" />
 </navigation>

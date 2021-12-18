@@ -18,6 +18,7 @@ import com.qhope.app.ui.registration.viewmodel.IdentityConfirmationViewModel
 import com.qhope.app.ui.registration.viewmodel.RegistrationViewModel
 import com.qhope.app.ui.registration.viewmodel.VerificationResultViewModel
 import com.qhope.app.ui.splash.viewmodel.SplashScreenViewModel
+import com.qhope.app.ui.tnc.viewmodel.TermsAndConditionViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -40,4 +41,5 @@ val viewModelModule = module {
   viewModel { IdentityConfirmationViewModel(get(), get(), get()) }
   viewModel { ProfilePictureViewModel(get(), get(), get()) }
   viewModel { EditPersonalDataViewModel(get(), get(), get()) }
+  viewModel { TermsAndConditionViewModel(get(), get()) }
 }

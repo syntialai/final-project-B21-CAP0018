@@ -84,7 +84,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>(
       R.id.profile_personal_data -> findNavController().navigate(
         ProfileFragmentDirections.actionProfileFragmentToPersonalDataFragment()
       )
-      R.id.profile_log_out -> viewModelWithAuth?.logOut()
+      R.id.profile_log_out -> viewModel.logOut()
       R.id.profile_picture_image -> findNavController().navigate(
         ProfileFragmentDirections.actionProfileFragmentToProfilePictureFragment(
           viewModel.userDoc.value?.imageUrl

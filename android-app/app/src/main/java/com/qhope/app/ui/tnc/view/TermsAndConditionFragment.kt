@@ -6,11 +6,12 @@ import com.qhope.app.databinding.FragmentTermsAndConditionBinding
 import com.qhope.app.ui.base.view.BaseFragment
 import com.qhope.app.ui.base.viewmodel.BaseViewModel
 import com.qhope.app.ui.tnc.adapter.TermsAndConditionAdapter
+import com.qhope.app.ui.tnc.viewmodel.TermsAndConditionViewModel
 
 class TermsAndConditionFragment :
-  BaseFragment<FragmentTermsAndConditionBinding, BaseViewModel>(
+  BaseFragment<FragmentTermsAndConditionBinding, TermsAndConditionViewModel>(
     FragmentTermsAndConditionBinding::inflate,
-    BaseViewModel::class
+    TermsAndConditionViewModel::class
   ) {
 
   private val termsAndConditionAdapter by lazy {

@@ -9,7 +9,6 @@ import com.qhope.app.ui.registration.view.IdVerificationActivity
 import com.qhope.app.ui.registration.view.IdentityConfirmationActivity
 import com.qhope.app.ui.registration.view.RegistrationActivity
 import com.qhope.app.ui.registration.view.VerificationResultActivity
-import com.qhope.app.ui.tnc.view.TermsAndConditionFragment
 
 object Router {
 

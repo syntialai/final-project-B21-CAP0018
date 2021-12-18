@@ -1,11 +1,6 @@
 package com.qhope.app.ui.profile.view
 
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
-import androidx.navigation.fragment.findNavController
-import com.qhope.app.R
 import com.qhope.app.databinding.FragmentPersonalDataBinding
 import com.qhope.app.ui.base.view.BaseFragment
 import com.qhope.app.ui.profile.viewmodel.PersonalDataViewModel
