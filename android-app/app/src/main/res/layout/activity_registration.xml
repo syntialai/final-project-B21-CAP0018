@@ -1,127 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     tools:context=".ui.registration.view.RegistrationActivity">
 
-    <TextView
-        android:id="@+id/registration_welcome_label"
-        android:layout_width="@dimen/dp_0"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/dp_24"
-        android:layout_marginTop="@dimen/dp_76"
-        android:text="@string/hi_label"
-        android:textAppearance="?textAppearanceHeadline1"
-        android:textColor="?attr/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/registration_description_label"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <TextView
+                android:id="@+id/registration_welcome_label"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_24"
+                android:layout_marginTop="@dimen/dp_76"
+                android:text="@string/hi_label"
+                android:textAppearance="?textAppearanceHeadline1"
+                android:textColor="?attr/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/registration_description_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_24"
+                android:layout_marginTop="@dimen/dp_8"
+                android:text="@string/let_us_know_about_you"
+                android:textAppearance="?textAppearanceSubtitle1"
+                android:textColor="?colorOnSurface"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/registration_welcome_label" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/registration_log_out"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/dp_16"
+                android:text="@string/logout_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/b_skip"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/skip_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/registration_profile_picture"
+                android:layout_width="124dp"
+                android:layout_height="124dp"
+                android:layout_marginTop="@dimen/dp_32"
+                android:padding="@dimen/dp_1"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_profile_picture"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/registration_description_label"
+                app:shapeAppearance="@style/ShapeAppearance.QHope.LargeComponent"
+                app:strokeColor="?colorOnSurface"
+                app:strokeWidth="@dimen/dp_1" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/registration_edit_profile_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="?attr/colorSurface"
+                app:borderWidth="@dimen/dp_0"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toBottomOf="@id/registration_profile_picture"
+                app:layout_constraintEnd_toEndOf="@id/registration_profile_picture"
+                app:layout_constraintStart_toEndOf="@id/registration_profile_picture"
+                app:layout_constraintTop_toBottomOf="@id/registration_profile_picture"
+                app:srcCompat="@drawable/ic_edit_outline"
+                tools:ignore="ContentDescription" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/registration_name_container"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_24"
+                android:layout_marginTop="@dimen/dp_32"
+                android:hint="@string/name_hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/registration_profile_picture"
+                app:startIconDrawable="@drawable/ic_person_outline">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/registration_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/registration_birth_date_container"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_24"
+                android:layout_marginTop="@dimen/dp_8"
+                android:hint="@string/birth_date_hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/registration_name_container"
+                app:startIconDrawable="@drawable/ic_cake_outline">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/registration_birth_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:inputType="date" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/ll_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/dp_24"
-        android:layout_marginTop="@dimen/dp_8"
-        android:text="@string/let_us_know_about_you"
-        android:textAppearance="?textAppearanceSubtitle1"
-        android:textColor="?colorOnSurface"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registration_welcome_label" />
+        android:layout_gravity="bottom"
+        android:background="@drawable/drawable_elevation_background"
+        android:elevation="@dimen/dp_16"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/dp_12"
+        android:paddingVertical="@dimen/dp_8">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/registration_log_out"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/dp_16"
-        android:text="@string/logout_label"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/registration_next"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/next_label"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/registration_profile_picture"
-        android:layout_width="124dp"
-        android:layout_height="124dp"
-        android:layout_marginTop="@dimen/dp_32"
-        android:padding="@dimen/dp_1"
-        android:scaleType="centerCrop"
-        android:src="@drawable/default_profile_picture"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/registration_description_label"
-        app:shapeAppearance="@style/ShapeAppearance.QHope.LargeComponent"
-        app:strokeColor="?colorOnSurface"
-        app:strokeWidth="@dimen/dp_1" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/registration_edit_profile_picture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="?attr/colorSurface"
-        app:borderWidth="@dimen/dp_0"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="@id/registration_profile_picture"
-        app:layout_constraintEnd_toEndOf="@id/registration_profile_picture"
-        app:layout_constraintStart_toEndOf="@id/registration_profile_picture"
-        app:layout_constraintTop_toBottomOf="@id/registration_profile_picture"
-        app:srcCompat="@drawable/ic_edit_outline"
-        tools:ignore="ContentDescription" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/registration_name_container"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="@dimen/dp_0"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/dp_24"
-        android:layout_marginTop="@dimen/dp_32"
-        android:hint="@string/name_hint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/registration_profile_picture"
-        app:startIconDrawable="@drawable/ic_person_outline">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/registration_name"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/b_next"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:maxLines="1" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/registration_birth_date_container"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="@dimen/dp_0"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/dp_24"
-        android:layout_marginTop="@dimen/dp_8"
-        android:hint="@string/birth_date_hint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/registration_name_container"
-        app:startIconDrawable="@drawable/ic_cake_outline">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/registration_birth_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:inputType="date" />
-    </com.google.android.material.textfield.TextInputLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_gravity="bottom"
+            android:enabled="false"
+            android:text="@string/next" />
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
