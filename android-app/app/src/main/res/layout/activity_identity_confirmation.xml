@@ -20,6 +20,7 @@
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/t_identity_confirmation"
+                style="@style/Widget.QHope.Toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_16"
