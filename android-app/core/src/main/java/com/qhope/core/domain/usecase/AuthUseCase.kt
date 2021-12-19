@@ -1,0 +1,32 @@
+package com.qhope.core.domain.usecase
+
+import android.app.Activity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthProvider
+import com.qhope.core.data.source.response.wrapper.ResponseWrapper
+import com.qhope.core.domain.model.user.User
+import kotlinx.coroutines.flow.Flow
+
+interface AuthUseCase {
+
+  fun signInWithCredential(credential: PhoneAuthCredential): Flow<ResponseWrapper<FirebaseUser>>
+
+  fun requestToken(
+    activity: Activity,
+    phoneNumber: String,
+    resendToken: PhoneAuthProvider.ForceResendingToken?,
+    callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
+  )
+
+  fun getCredential(verificationId: String, token: String): PhoneAuthCredential
+
+  fun logout()
+
+  fun addAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener)
+
+  fun removeAuthStateListener(authStateListener: FirebaseAuth.AuthStateListener)
+
+  suspend fun registerUser(phoneNumber: String): Flow<ResponseWrapper<User>>
+}

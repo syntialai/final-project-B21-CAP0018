@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.bangkit.team18.qhope.ui.history.view.HistoryFragment"
+        android:name="com.qhope.app.ui.history.view.HistoryFragment"
         android:label="@string/history_label"
         tools:layout="@layout/fragment_history">
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/hospitalDetailFragment"
-        android:name="com.bangkit.team18.qhope.ui.booking.view.HospitalDetailFragment"
+        android:name="com.qhope.app.ui.booking.view.HospitalDetailFragment"
         android:label="fragment_hospital_detail"
         tools:layout="@layout/fragment_hospital_detail">
         <argument
@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/historyDetailFragment"
-        android:name="com.bangkit.team18.qhope.ui.history.view.HistoryDetailFragment"
+        android:name="com.qhope.app.ui.history.view.HistoryDetailFragment"
         android:label="@string/history_detail_label">
         <argument
             android:name="id"
