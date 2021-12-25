@@ -30,7 +30,9 @@ class ProfilePictureViewModel(
 
   fun setProfilePicture(context: Context, filePath: String) {
     launchViewModelScope({
-      _profilePicture.value = Compressor.compress(context, File(filePath))
+      Compressor.compress(context, File(filePath))?.let {
+        _profilePicture.value = it
+      }
     })
   }
 

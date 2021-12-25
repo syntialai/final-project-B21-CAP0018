@@ -70,7 +70,6 @@ class RegistrationActivity :
 
   override fun onClick(v: View?) {
     when (v?.id) {
-      R.id.b_skip -> Router.goToIdVerification(this)
       R.id.registration_log_out -> viewModel.logOut()
       R.id.registration_birth_date -> {
         if (birthDatePicker.isAdded.not()) {

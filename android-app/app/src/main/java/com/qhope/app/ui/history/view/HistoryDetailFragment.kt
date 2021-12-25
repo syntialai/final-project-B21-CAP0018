@@ -130,7 +130,7 @@ class HistoryDetailFragment :
       textViewBookingDataDate.text = createdAt
       textViewBookingDataStatus.text = status.getText()
 
-      if (status == HistoryStatus.COMPLETED) {
+      if (status == HistoryStatus.PAID) {
         textViewBookingDataStatus.setTextColor(getColor(mContext, R.color.green_700))
       } else if (status == HistoryStatus.CANCELLED) {
         textViewBookingDataStatus.setTextColor(getColor(mContext, R.color.red_700))

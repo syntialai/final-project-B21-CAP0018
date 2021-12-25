@@ -59,7 +59,7 @@ class HistoryAdapter(private val historyItemCallback: HistoryItemCallback) :
     }
 
     private fun getStatusColor(status: HistoryStatus?) = when (status) {
-      HistoryStatus.COMPLETED -> R.color.green_700
+      HistoryStatus.PAID -> R.color.green_700
       HistoryStatus.CANCELLED -> R.color.red_700
       else -> R.color.black
     }
